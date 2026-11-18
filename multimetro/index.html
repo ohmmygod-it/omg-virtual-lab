@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>OMG LAB · Multimetro virtuale</title>
+<style>
+:root{--navy:#16273b;--navy2:#253b52;--mint:#008d8b;--mintlight:#e4f7f4;--red:#e04f49;--yellow:#f8bf49;--paper:#f5f7fa;--line:#dce4eb;--muted:#627184;--green:#185e43;--deep:#132337}
+*{box-sizing:border-box}html,body{padding:0;margin:0}body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f0f4f8;color:var(--navy);font-size:14px;-webkit-font-smoothing:antialiased}
+.app{max-width:1190px;margin:0 auto;padding:22px 22px 30px}.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:17px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.17em;color:var(--mint);margin:0 0 5px}.topbar h1{font-size:clamp(24px,3.1vw,35px);letter-spacing:-.045em;line-height:1.12;margin:0}.topbar p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}.brand{border:1px solid #d4e3e5;background:white;border-radius:12px;color:var(--navy);font-size:11px;font-weight:900;letter-spacing:.09em;padding:10px 13px;white-space:nowrap}.brand b{color:var(--mint)}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 14px}.tab{background:white;border:1px solid #dce6ea;padding:12px 8px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;cursor:pointer;color:#586b7e;font-weight:800;font-size:13px;min-width:0;transition:.15s}.tab:hover{border-color:var(--mint)}.tab.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px #0d283c15}.tab .symbol{font-size:18px;font-weight:850}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 328px;gap:14px;align-items:stretch}.panel{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:0 5px 20px #0e273b09;overflow:hidden}.bench{display:flex;flex-direction:column;min-width:0}.paneltop{padding:18px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}.paneltop h2{font-size:16px;letter-spacing:-.02em;margin:0}.smallnote{color:var(--muted);font-size:11px}.scope{font-size:11px;color:#4b6576;background:#f3f8fa;border-radius:30px;padding:6px 10px;font-weight:750;white-space:nowrap}
+.board{margin:16px 17px 8px;background:#f8fbfd;border:1px solid #dce7ec;border-radius:15px;overflow:hidden;position:relative;min-height:282px}.board svg{width:100%;height:auto;display:block;user-select:none;touch-action:manipulation}.board .wire{stroke:#53748b;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}.board .resistor{stroke:#324d64;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}.board .device-label{font-size:15px;font-weight:850;fill:#344d61;text-anchor:middle}.board .minor-label{font-size:12px;font-weight:700;fill:#687d8b;text-anchor:middle}.board .batterytext{font-size:14px;font-weight:850;fill:#0e8381}.board .point-hit{cursor:pointer;outline:none}.board .point-hit:hover .point-outer,.board .point-hit:focus .point-outer{stroke:#009f9b;stroke-width:4}.board .point-outer{fill:#fff;stroke:#607d92;stroke-width:3}.board .point-inner{fill:#607d92}.board .point-letter{fill:#344d61;text-anchor:middle;font-weight:900;font-size:15px;pointer-events:none}.board .point-hit.red .point-outer{fill:#ffebeb;stroke:var(--red)}.board .point-hit.red .point-inner{fill:var(--red)}.board .point-hit.black .point-outer{fill:#e9edf2;stroke:#263c51}.board .point-hit.black .point-inner{fill:#263c51}.board .connection{fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:9 7;pointer-events:none;opacity:.9}.board .connection.red{stroke:var(--red)}.board .connection.black{stroke:#263c51}.board .switch-target{cursor:pointer}.board .switch-target:hover rect{fill:#d0eff0}.board .switch-target:focus{outline:none}.svg-note{font-size:12px;fill:#708595;font-weight:650;text-anchor:middle}
+.probebar{margin:4px 17px 10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}.probe{border:2px solid #dde5ea;background:white;border-radius:11px;padding:9px 12px;display:inline-flex;align-items:center;gap:8px;font-weight:800;color:#3e5365;cursor:pointer;transition:.15s}.probe.selected{border-color:#24a6a3;box-shadow:0 0 0 3px #00a49c1c}.probe .dot{width:12px;height:12px;border-radius:50%;display:block}.probe.red .dot{background:var(--red)}.probe.black .dot{background:#223449}.probe .value{font-weight:600;color:#6f8290;font-size:11px}.probe.selected .value{color:var(--mint)}.guide{font-size:11px;color:var(--muted);line-height:1.5;flex:1;min-width:150px}
+.mission{border:1px dashed #c7dce4;background:#f6fbfa;display:flex;gap:11px;align-items:flex-start;padding:12px 13px;margin:14px 17px 12px;border-radius:11px}.mission-icon{display:flex;align-items:center;justify-content:center;border-radius:9px;background:#e3f4f0;width:31px;height:31px;color:#087e77;font-size:20px;font-weight:900;flex:none}.mission strong{font-size:12px;color:#0f5d59}.mission p{margin:5px 0 0;font-size:12px;line-height:1.45;color:#607885}.controls{padding:12px 18px 16px;border-top:1px solid #e6edf1;margin-top:auto;background:#fcfefe}.controls-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.controls-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6c7b86;font-weight:900}.config{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.config .field{min-width:0}.field label{display:block;font-size:11px;color:#546a7c;margin-bottom:5px;font-weight:750}.field .unit{position:relative}.field input{width:100%;min-width:0;padding:9px 26px 9px 8px;border-radius:8px;border:1px solid #d6e2e7;background:white;color:#192d3e;font-size:14px;font-weight:800;outline:none}.field input:focus{border-color:var(--mint);box-shadow:0 0 0 2px #008d8b20}.field .suffix{position:absolute;right:8px;top:10px;font-size:11px;color:#81909e}.select-res{display:flex;gap:7px;flex-wrap:wrap}.pill{border:1px solid #d7e3e9;background:white;border-radius:8px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer;color:#445b6d}.pill.on{color:white;background:var(--navy);border-color:var(--navy)}.switch-row{display:flex;align-items:center;gap:12px;font-size:12px;color:#536879}.switch-btn{border:0;border-radius:9px;background:#dce8ef;padding:10px 14px;font-size:13px;font-weight:850;color:#334c5e;cursor:pointer}.switch-btn.closed{background:#d7f4e5;color:#176b44}
+.instrument{padding:14px 14px 16px;background:linear-gradient(160deg,#f6fafc,#edf3f8)}.instrument-title{text-align:center;letter-spacing:.12em;color:#637785;font-size:10px;font-weight:900;margin:0 0 10px}.meter{position:relative;margin:0 auto;max-width:290px;padding:17px 17px 16px;background:linear-gradient(128deg,#ffd46d,#f8b835 62%,#e9a229);border:4px solid #d99c2c;border-radius:20px 20px 28px 28px;box-shadow:inset 0 2px 3px #fff6,0 9px 14px #213a4d24;color:#1b3144}.meter-inner{background:#293948;border-radius:11px;padding:13px 11px 14px}.meter-brand{display:flex;align-items:center;justify-content:space-between;color:#f9c852;font-size:10px;font-weight:950;letter-spacing:.06em;margin-bottom:10px}.meter-brand em{color:#e9edef;font-weight:650;font-style:normal;font-size:9px}.screen{height:112px;padding:11px 11px 8px;border-radius:8px;background:linear-gradient(160deg,#d8edcd,#a9d0af);border:4px solid #698d85;box-shadow:inset 0 5px 8px #213d3024;color:#203d34;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;display:flex;flex-direction:column;justify-content:space-between}.lcd-top{display:flex;justify-content:space-between;font-size:10px;font-weight:900;letter-spacing:.04em}.lcd-display{font-size:clamp(28px,3.4vw,38px);font-weight:750;letter-spacing:-.075em;line-height:1.1;text-align:right;white-space:nowrap}.lcd-unit{font-size:13px;font-weight:850;letter-spacing:0;margin-left:3px}.lcd-bottom{font-size:10px;text-align:right;opacity:.8}.selector{position:relative;height:180px;margin-top:13px}.dial{position:absolute;left:50%;top:50%;width:106px;height:106px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 32% 30%,#778a99,#4d5f6d 53%,#1b2933);border:9px solid #1b2833;box-shadow:0 3px 8px #091d2a80,inset 0 2px 7px #a5b3ba80}.dial-indicator{position:absolute;top:7px;left:50%;width:9px;height:41px;margin-left:-4.5px;border-radius:5px;background:#f5c858;transform-origin:center 45px;transition:transform .2s}.dial-center{position:absolute;left:50%;top:50%;width:21px;height:21px;border-radius:50%;background:#263846;border:3px solid #98a6b0;transform:translate(-50%,-50%)}.modepick{position:absolute;border:1px solid transparent;border-radius:9px;color:#e4eef2;background:#ffffff10;cursor:pointer;font-weight:900;font-size:14px;min-width:43px;height:36px}.modepick:hover,.modepick.on{background:#ffffff25;color:#ffda73;border-color:#ffffff3d}.modepick.volts{left:16px;top:17px}.modepick.amps{right:15px;top:17px}.modepick.ohms{left:16px;bottom:16px}.modepick.cont{right:14px;bottom:16px}.modepick span{display:block;font-size:9px;font-weight:650;line-height:1.05;color:#bed0d9}
+.jack-label{margin:10px 0 7px;color:#e3edf1;font-size:9px;font-weight:800;text-align:center;letter-spacing:.04em}.jacks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.jack{border:2px solid #627483;border-radius:9px;background:#1a2935;cursor:pointer;min-height:57px;color:#dbe2e8;padding:6px 1px 4px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;font-size:10px;font-weight:800}.jack .socket{width:19px;height:19px;display:block;border-radius:50%;border:4px solid #121820;background:#526575;box-shadow:inset 0 0 0 3px #090d11}.jack.black .socket{background:#0f1215}.jack.red .socket{background:#8d2320}.jack.plugged{border-color:#f8d56d;background:#35424b}.jack.plugged .socket{box-shadow:0 0 0 2px #f4d274,inset 0 0 0 3px #090d11}.jack:disabled{cursor:default}.meter-foot{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:950;letter-spacing:.15em;margin-top:9px;color:#614a17}
+.readout{background:#fff;border:1px solid #dce5ea;border-radius:13px;margin:12px 0 0;padding:12px 13px;min-height:94px}.readout-head{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;margin:0 0 5px}.readout-head .light{width:9px;height:9px;border-radius:50%;background:#33a67d}.readout.warning .light{background:#ebaa44}.readout.error .light{background:#e36657}.readout p{font-size:12px;line-height:1.5;margin:0;color:#536879}
+.actionrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.act{border:1px solid #cbdee4;padding:9px 11px;border-radius:9px;background:white;color:#314b5e;font-size:11px;font-weight:850;cursor:pointer}.act:hover{background:#eef9f8;border-color:var(--mint)}.act.primary{background:#dff4ef;color:#006e6b;border-color:#b5ded8}
+.learning{margin-top:14px;border:1px solid #d7e4ea;background:white;border-radius:14px;display:grid;grid-template-columns:160px 1fr;gap:14px;padding:15px 18px;align-items:start}.learning-tag{font-size:11px;letter-spacing:.09em;color:var(--mint);font-weight:950;text-transform:uppercase;padding-top:2px}.learning-main h3{font-size:14px;margin:0 0 5px;letter-spacing:-.01em}.learning-main p{font-size:13px;line-height:1.55;margin:0;color:#516779}.safety{margin-top:10px;font-size:11px;color:#7a6370;line-height:1.5}.safety strong{color:#a44f4a}
+button{font:inherit}button:focus-visible,[tabindex]:focus-visible{outline:3px solid #1abbb5;outline-offset:3px}
+@media(max-width:930px){.workspace{grid-template-columns:1fr}.instrument{display:flex;flex-direction:column;align-items:center;padding:14px}.instrument .meter{width:290px}.instrument .readout{width:100%;max-width:550px}.instrument .actionrow{justify-content:center}.board{min-height:auto}.lcd-display{font-size:36px}}@media(max-width:610px){.app{padding:13px 10px 24px}.topbar h1{font-size:25px}.topbar p{font-size:12px}.brand{padding:7px 9px}.tabs{gap:5px}.tab{padding:10px 3px;font-size:11px;gap:3px;flex-direction:column;border-radius:9px}.tab .symbol{font-size:16px}.paneltop{padding:14px 13px 0}.paneltop h2{font-size:14px}.scope{font-size:9px}.board{margin:12px 8px 5px}.probebar{margin:4px 9px 11px;gap:6px}.probe{padding:8px 8px;font-size:11px;gap:5px}.probe .value{font-size:10px}.guide{flex-basis:100%;margin:0 0 3px}.controls{padding:12px 10px 15px}.mission{margin:10px 9px;padding:10px}.mission p{font-size:11px}.config{grid-template-columns:repeat(2,minmax(0,1fr))}.learning{grid-template-columns:1fr;gap:5px;padding:13px 14px}.learning-tag{font-size:10px}.board .device-label{font-size:17px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app" id="omgMultimeter">
+  <header class="topbar"><div><div class="eyebrow">OMG · LABORATORIO INTERATTIVO</div><h1>Il multimetro virtuale</h1><p>Misura tensione, corrente, resistenza e continuità. Qui puoi anche sbagliare senza bruciare il fusibile.</p></div><div class="brand"><b>OHM</b> MY GOD<span aria-hidden="true"> ⚡</span></div></header>
+  <nav class="tabs" aria-label="Scegli il tipo di esercizio">
+    <button type="button" class="tab active" data-scenario="volts"><span class="symbol">V⎓</span> Tensione</button>
+    <button type="button" class="tab" data-scenario="amps"><span class="symbol">A⎓</span> Corrente</button>
+    <button type="button" class="tab" data-scenario="ohms"><span class="symbol">Ω</span> Resistenza</button>
+    <button type="button" class="tab" data-scenario="cont"><span class="symbol">◖))</span> Continuità</button>
+  </nav>
+  <div class="workspace">
+    <section class="panel bench" aria-label="Banco di misura">
+      <div class="paneltop"><h2 id="workTitle">Misura della tensione</h2><span class="scope" id="scopeLabel">Circuito alimentato</span></div>
+      <div class="board" id="board" aria-label="Schema del circuito interattivo"></div>
+      <div class="probebar">
+        <button class="probe red selected" type="button" data-probe="red" draggable="true" aria-pressed="true"><span class="dot"></span> Rosso <span class="value" id="redStatus">non collegato</span></button>
+        <button class="probe black" type="button" data-probe="black" draggable="true" aria-pressed="false"><span class="dot"></span> Nero <span class="value" id="blackStatus">non collegato</span></button>
+        <span class="guide">Seleziona un puntale e tocca un contatto nello schema. Puoi anche trascinarlo sul contatto.</span>
+      </div>
+      <div class="mission"><div class="mission-icon">↗</div><div><strong id="missionTitle">MISSIONE · Trova la tensione totale</strong><p id="missionText">Imposta V⎓ e misura tra A e D. Quanto vale la caduta su R2?</p></div></div>
+      <div class="controls"><div class="controls-top"><span class="controls-title" id="controlTitle">Valori del circuito</span><span class="smallnote" id="controlNote">Modifica i valori e osserva la lettura</span></div><div id="config" class="config"></div></div>
+    </section>
+    <section class="panel instrument" aria-label="Multimetro digitale">
+      <p class="instrument-title">MULTIMETRO DIGITALE · SIMULAZIONE</p>
+      <div class="meter">
+        <div class="meter-inner">
+          <div class="meter-brand"><strong>OMG <span style="color:#e3ebec">METER</span></strong><em>MANUAL RANGE</em></div>
+          <div class="screen" aria-live="polite" aria-atomic="true">
+            <div class="lcd-top"><span id="lcdMode">DC V</span><span id="lcdAlert">AUTO</span></div>
+            <div class="lcd-display"><span id="lcdValue">- - - -</span><span class="lcd-unit" id="lcdUnit"></span></div>
+            <div class="lcd-bottom" id="lcdBottom">In attesa dei puntali</div>
+          </div>
+          <div class="selector" aria-label="Selettore rotativo di misura">
+            <button type="button" class="modepick volts on" data-mode="volts" aria-label="Seleziona tensione continua">V⎓<span>volt</span></button>
+            <button type="button" class="modepick amps" data-mode="amps" aria-label="Seleziona corrente continua">A⎓<span>ampere</span></button>
+            <div class="dial" aria-hidden="true"><div class="dial-indicator" id="dialIndicator" style="transform:rotate(-40deg)"></div><div class="dial-center"></div></div>
+            <button type="button" class="modepick ohms" data-mode="ohms" aria-label="Seleziona misura di resistenza">Ω<span>ohm</span></button>
+            <button type="button" class="modepick cont" data-mode="cont" aria-label="Seleziona test di continuità">◖))<span>buzzer</span></button>
+          </div>
+          <p class="jack-label">PRESE DEI PUNTALI · clicca la presa rossa</p>
+          <div class="jacks">
+            <button class="jack black plugged" disabled aria-label="Puntale nero fisso nella presa COM"><span>COM</span><span class="socket"></span></button>
+            <button class="jack red plugged" data-port="vohm" type="button" aria-pressed="true"><span>V Ω</span><span class="socket"></span></button>
+            <button class="jack red" data-port="ma" type="button" aria-pressed="false"><span>mA</span><span class="socket"></span></button>
+          </div>
+        </div>
+        <div class="meter-foot">OMG • OHMMYGOD.IT</div>
+      </div>
+      <div class="readout" id="feedback" role="status" aria-live="polite"><div class="readout-head"><span class="light"></span><span id="feedbackTitle">Pronto per misurare</span></div><p id="feedbackText">Collega i puntali ai contatti del circuito.</p></div>
+      <div class="actionrow"><button class="act primary" type="button" id="example">Mostra il collegamento corretto</button><button class="act" type="button" id="clear">Scollega i puntali</button><button class="act" type="button" id="sound" aria-pressed="true">♪ Suono: ON</button></div>
+    </section>
+  </div>
+  <section class="learning" aria-label="Spiegazione della misura"><div class="learning-tag">DA RICORDARE</div><div class="learning-main"><h3 id="learnTitle">Il voltmetro si collega in parallelo</h3><p id="learnText">Misura la differenza di potenziale fra due punti. Se scambi i puntali, il valore cambia segno.</p></div></section>
+  <div class="safety"><strong>⚠ Attenzione:</strong> è una simulazione didattica di circuiti a bassa tensione, non una guida alle misure su impianti reali. Per misurare corrente occorre aprire il circuito e inserire lo strumento in serie; la resistenza si misura su un componente non alimentato, preferibilmente isolato.</div>
+</main>
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const state={scenario:'volts',mode:'volts',port:'vohm',probe:'red',red:null,black:null,voltage:9,r1:220,r2:330,r3:470,ohm:330,closed:false,sound:true};
+const meta={
+ volts:{title:'Misura della tensione',scope:'Circuito alimentato',control:'Valori del circuito',note:'La tensione si misura in parallelo',learnTitle:'Il voltmetro si collega in parallelo',learn:'Con il selettore su V⎓ e il puntale rosso nella presa V Ω, scegli due nodi qualsiasi (A, B, C, D). La lettura è la differenza di potenziale tra il rosso e il nero.'},
+ amps:{title:'Misura della corrente',scope:'Circuito aperto per la misura',control:'Valori del circuito',note:'La corrente si misura in serie',learnTitle:'L’amperometro si inserisce in serie',learn:'Il circuito presenta una piccola interruzione tra P e Q. Sposta il rosso su mA, ruota su A⎓ e chiudi l’interruzione con i due puntali. Non collegare mai un amperometro direttamente ai poli di una batteria.'},
+ ohms:{title:'Misura di resistenza',scope:'Componente scollegato',control:'Resistenza di prova',note:'Nessuna alimentazione',learnTitle:'La resistenza si misura senza alimentazione',learn:'Seleziona Ω, usa COM e V Ω, quindi tocca P e Q. La resistenza è stata scollegata dal circuito: così gli altri componenti non falsano la lettura.'},
+ cont:{title:'Test di continuità',scope:'Circuito non alimentato',control:'Interruttore di prova',note:'Un percorso chiuso conduce',learnTitle:'La continuità cerca un percorso conduttivo',learn:'Seleziona ◖)) e usa COM e V Ω. Collega P e Q, poi apri e chiudi l’interruttore. Se esiste un collegamento a bassa resistenza, il multimetro emette un breve beep. Il limite varia con il modello reale.'}
+};
+const val=n=>Number(n).toLocaleString('it-IT',{maximumFractionDigits:0});
+const pointsByScenario={volts:['A','B','C','D'],amps:['P','Q'],ohms:['P','Q'],cont:['P','Q']};
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function node(name,x,y,labelY=52){const cs=(state.red===name?' red':'')+(state.black===name?' black':'');return `<text class="point-letter" x="${x}" y="${labelY}">${name}</text><g class="point-hit${cs}" data-point="${name}" role="button" tabindex="0" aria-label="Punto di misura ${name}" transform="translate(${x} ${y})"><circle class="point-outer" r="18"/><circle class="point-inner" r="5"/></g>`;}
+function zigzag(x1,x2,y){let n=9,dx=(x2-x1)/n,a=[`${x1},${y}`];for(let i=1;i<n;i++){a.push(`${(x1+i*dx).toFixed(2)},${y+(i%2? -13:13)}`);}a.push(`${x2},${y}`);return `<polyline class="resistor" points="${a.join(' ')}"/>`;}
+function battery(){return `<line class="wire" x1="96" y1="90" x2="96" y2="155"/><line class="wire" x1="96" y1="215" x2="96" y2="278"/><line stroke="#0e8f89" stroke-width="5" x1="66" y1="173" x2="126" y2="173"/><line stroke="#0e8f89" stroke-width="5" x1="78" y1="195" x2="114" y2="195"/><line stroke="#0e8f89" stroke-width="3" x1="96" y1="155" x2="96" y2="173"/><line stroke="#0e8f89" stroke-width="3" x1="96" y1="195" x2="96" y2="215"/><text class="batterytext" x="131" y="177">+</text><text class="batterytext" x="132" y="200">−</text><text class="minor-label" x="152" y="235">${String(state.voltage).replace('.',',')} V</text>`;}
+function svgShell(contents){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 328" aria-label="Schema circuitale con punti di misura interattivi"><rect x="0" y="0" width="720" height="328" fill="#f8fbfd"/><g opacity=".7" fill="#e8f0f3">${Array.from({length:15},(_,i)=>Array.from({length:7},(_,j)=>`<circle cx="${20+i*49}" cy="${17+j*49}" r="1.6"/>`).join('')).join('')}</g>${contents}</svg>`;}
+function leadLines(locations){let a='';for(const [lead,anchor] of [['red',[80,312]],['black',[640,312]]]){const p=state[lead];if(p&&locations[p]){const [x,y]=locations[p];a+=`<path class="connection ${lead}" d="M${anchor[0]} ${anchor[1]} Q ${lead==='red'?Math.max(25,x-80):Math.min(695,x+80)} 280 ${x} ${y+19}"/>`;}}return a;}
+function circuitSVG(){
+ if(state.scenario==='volts'){
+ const loc={A:[96,90],B:[271,90],C:[446,90],D:[620,90]};
+ const s=`<path class="wire" d="M96 90 H141 M226 90 H271 H316 M401 90 H446 H491 M576 90 H620 V278 H96"/>${battery()}${zigzag(141,226,90)}${zigzag(316,401,90)}${zigzag(491,576,90)}<text class="device-label" x="183" y="49">R1 · ${val(state.r1)} Ω</text><text class="device-label" x="359" y="49">R2 · ${val(state.r2)} Ω</text><text class="device-label" x="534" y="49">R3 · ${val(state.r3)} Ω</text><text class="minor-label" x="380" y="255">3 resistenze in serie</text><text class="minor-label" x="380" y="280">Tocca due nodi per misurare la tensione</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,130)).join('')}`;return svgShell(s);
+ }
+ if(state.scenario==='amps'){
+ const loc={P:[96,90],Q:[214,90]};
+ const s=`<path class="wire" d="M214 90 H249 M323 90 H351 M425 90 H453 M527 90 H620 V278 H96"/>${battery()}${zigzag(249,323,90)}${zigzag(351,425,90)}${zigzag(453,527,90)}<text class="device-label" x="286" y="48">R1</text><text class="device-label" x="388" y="48">R2</text><text class="device-label" x="491" y="48">R3</text><path d="M125 90 H184" stroke="#e7b4b2" stroke-width="4" stroke-dasharray="5 7"/><text x="155" y="64" class="svg-note" fill="#b14c4a">INTERRUZIONE</text><text class="minor-label" x="378" y="246">Inserisci il multimetro tra P e Q:</text><text class="minor-label" x="378" y="270">sarà in serie con i resistori</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,129)).join('')}`;return svgShell(s);
+ }
+ if(state.scenario==='ohms'){
+ const loc={P:[164,155],Q:[559,155]};
+ const s=`<path class="wire" d="M164 155 H303 M414 155 H559"/>${zigzag(303,414,155)}<text class="device-label" x="359" y="108">R = ${val(state.ohm)} Ω</text><text x="359" y="225" class="minor-label">Resistenza isolata, non alimentata</text><text x="359" y="251" class="minor-label">Misura tra P e Q</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,100)).join('')}`;return svgShell(s);
+ }
+ const loc={P:[170,155],Q:[553,155]},closed=state.closed;
+ const s=`<path class="wire" d="M170 155 H303 M414 155 H553"/><circle cx="308" cy="155" r="6" fill="#45677b"/><circle cx="408" cy="155" r="6" fill="#45677b"/><path d="M308 155 L${closed?'408 155':'391 113'}" stroke="${closed?'#1e9565':'#b56b4e'}" stroke-width="6" stroke-linecap="round"/><g class="switch-target" data-toggle="1" tabindex="0" role="button" aria-label="${closed?'Apri':'Chiudi'} interruttore"><rect x="285" y="95" width="149" height="88" rx="14" fill="#eaf4f6" opacity=".2" stroke="#bed6dc" stroke-dasharray="4 4"/><text x="360" y="84" class="device-label">Interruttore</text></g><text class="minor-label" x="359" y="225">Stato: ${closed?'CHIUSO — contatto conduttivo':'APERTO — circuito interrotto'}</text><text class="minor-label" x="359" y="252">Tocca l’interruttore per cambiarne lo stato</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,103)).join('')}`;return svgShell(s);
+}
+function controls(){
+ const host=$('#config');host.className='config';
+ if(['volts','amps'].includes(state.scenario)){host.innerHTML=[['voltage','Alimentazione','V',0.5,24,0.5],['r1','R1','Ω',1,10000,1],['r2','R2','Ω',1,10000,1],['r3','R3','Ω',1,10000,1]].map(([id,label,unit,min,max,step])=>`<div class="field"><label for="control-${id}">${label}</label><div class="unit"><input id="control-${id}" data-value="${id}" type="number" inputmode="decimal" step="${step}" min="${min}" max="${max}" value="${state[id]}"><span class="suffix">${unit}</span></div></div>`).join(''); }
+ else if(state.scenario==='ohms'){host.className='select-res';host.innerHTML=[100,220,330,470,1000,2200].map(v=>`<button type="button" class="pill ${state.ohm===v?'on':''}" data-res="${v}">${val(v)} Ω</button>`).join('');}
+ else{host.className='switch-row';host.innerHTML=`<button type="button" class="switch-btn ${state.closed?'closed':''}" id="switchBtn">${state.closed?'● CHIUSO':'○ APERTO'} — clicca</button><span>${state.closed?'Il filo conduce.':'Il collegamento è interrotto.'}</span>`;}
+}
+function dataReading(){
+ const scenario=state.scenario,mode=state.mode;
+ if(state.port !== (mode==='amps'?'ma':'vohm'))return {n:'LEAd',u:'',class:'error',title:'Controlla la presa del puntale rosso',text:mode==='amps'?'Per misurare la corrente devi spostare il puntale rosso nella presa mA. Il nero rimane in COM.':'Per questa misura il rosso deve stare nella presa V Ω. Usare la presa mA in parallelo può provocare un cortocircuito.'};
+ if(scenario!==mode)return {n:'Err',u:'',class:'warning',title:'Funzione del selettore non adatta',text:scenario==='volts'?'Il circuito è alimentato: per questa prova usa V⎓. Non misurare Ω o continuità su circuiti sotto tensione.':scenario==='amps'?'Per questa prova con il circuito interrotto seleziona A⎓ e collega il puntale rosso a mA.':scenario==='ohms'?'Questo componente non alimentato va misurato con Ω, non con V⎓ o A⎓.':'Per questa prova seleziona la modalità continuità ◖)) sul selettore.'};
+ if(!state.red||!state.black)return {n:'— — —',u:'',class:'warning',title:'Collega entrambi i puntali',text:scenario==='volts'?'Prova a mettere il rosso su A e il nero su D per misurare la tensione totale.':scenario==='amps'?'La corrente si misura tra P e Q: il multimetro deve chiudere l’interruzione.':'Tocca P e Q con i due puntali, in qualsiasi ordine.'};
+ const same=state.red===state.black;
+ if(scenario==='volts'){
+ const R=state.r1+state.r2+state.r3,i=state.voltage/R;
+ const potentials={A:state.voltage,B:state.voltage-i*state.r1,C:state.voltage-i*(state.r1+state.r2),D:0};
+ const v=potentials[state.red]-potentials[state.black];
+ const label=`${state.red} → ${state.black}`;
+ return {n:v.toFixed(2),u:'V',class:'ok',title:same?'Stesso nodo: differenza di potenziale nulla':'Tensione rilevata',text:same?'I due puntali toccano lo stesso nodo: la differenza di potenziale è zero. Scegli due punti differenti.':`Hai misurato ${label}: ${v.toFixed(2).replace('.',',')} V. Invertendo i puntali cambia il segno, non il valore assoluto.`};
+ }
+ if(scenario==='amps'){
+ if(same)return {n:'0.00',u:'mA',class:'warning',title:'La misura non è in serie',text:'I puntali devono chiudere l’interruzione tra P e Q. Sullo stesso contatto non completi il circuito.'};
+ const sign=(state.red==='P'&&state.black==='Q')?1:-1;
+ const current=sign*1000*state.voltage/(state.r1+state.r2+state.r3);
+ if(Math.abs(current)>200)return {n:'OL',u:'mA',class:'error',title:'Sovraccarico della presa mA',text:`La corrente teorica sarebbe ${Math.abs(current).toFixed(1).replace('.',',')} mA: supera il limite didattico di 200 mA impostato per questa presa. Un multimetro reale potrebbe bruciare il fusibile. Non effettuare questa misura con la presa mA.`};
+ return {n:current.toFixed(2),u:'mA',class:'ok',title:'Corrente nel circuito',text:`Il multimetro chiude il circuito e misura ${current.toFixed(2).replace('.',',')} mA. La corrente è la stessa in R1, R2 e R3 perché sono in serie.${sign<0?' Il segno meno indica i puntali invertiti.':''}`};
+ }
+ if(scenario==='ohms'){
+ if(same)return {n:'0.0',u:'Ω',class:'warning',title:'I puntali sono sullo stesso punto',text:'Tra un punto e se stesso non stai misurando la resistenza del componente. Collega P e Q.'};
+ const isK=state.ohm>=1000;
+ return {n:(isK?(state.ohm/1000).toFixed(2):state.ohm.toFixed(0)),u:isK?'kΩ':'Ω',class:'ok',title:'Resistenza misurata',text:`Il valore del componente isolato è ${val(state.ohm)} Ω. In modalità Ω la polarità dei puntali non cambia la lettura di una resistenza ideale.`};
+ }
+ if(same)return {n:'0.0',u:'Ω',class:'warning',title:'Puntali sullo stesso contatto',text:'Stai cortocircuitando i puntali sullo stesso nodo. Collega P e Q per verificare il percorso completo.'};
+ return state.closed?{n:'0.2',u:'Ω',class:'ok',title:'Continuità presente · BEEP!',text:'L’interruttore è chiuso. Il percorso ha una resistenza molto bassa (0,2 Ω simulati): il multimetro segnala continuità.'}:{n:'OL',u:'',class:'warning',title:'Nessuna continuità',text:'L’interruttore è aperto: non esiste un percorso conduttivo fra P e Q. OL significa circuito aperto / fuori scala.'};
+}
+function redraw(){
+ const m=meta[state.scenario];
+ const missions={volts:['MISSIONE · Esplora le cadute','Misura prima tra A e D, poi tra B e C. Inverti i puntali e osserva il segno.'],amps:['MISSIONE · Chiudi il circuito','Imposta A⎓, sposta il rosso su mA e collega P con Q. Poi cambia il valore di R1.'],ohms:['MISSIONE · Misura il componente','Seleziona Ω, collega i puntali e prova resistenze da 100 Ω fino a 2.200 Ω.'],cont:['MISSIONE · Trova il contatto','Con i puntali fra P e Q, apri e chiudi l’interruttore. Quando senti il beep?']};
+ $('#missionTitle').textContent=missions[state.scenario][0];$('#missionText').textContent=missions[state.scenario][1];
+ $$('#omgMultimeter .tab').forEach(el=>{el.classList.toggle('active',el.dataset.scenario===state.scenario);el.setAttribute('aria-pressed',String(el.dataset.scenario===state.scenario));});
+ $$('#omgMultimeter .modepick').forEach(el=>{el.classList.toggle('on',el.dataset.mode===state.mode);el.setAttribute('aria-pressed',String(el.dataset.mode===state.mode));});
+ $$('#omgMultimeter .jack[data-port]').forEach(el=>{el.classList.toggle('plugged',el.dataset.port===state.port);el.setAttribute('aria-pressed',String(el.dataset.port===state.port));});
+ $$('#omgMultimeter .probe').forEach(el=>{const on=el.dataset.probe===state.probe;el.classList.toggle('selected',on);el.setAttribute('aria-pressed',String(on));});
+ $('#dialIndicator').style.transform=`rotate(${({volts:-40,amps:40,ohms:-140,cont:140})[state.mode]}deg)`;
+ $('#workTitle').textContent=m.title;$('#scopeLabel').textContent=m.scope;$('#controlTitle').textContent=m.control;$('#controlNote').textContent=m.note;$('#learnTitle').textContent=m.learnTitle;$('#learnText').textContent=m.learn;
+ $('#board').innerHTML=circuitSVG();
+ $('#redStatus').textContent=state.red?`su ${state.red}`:'non collegato';$('#blackStatus').textContent=state.black?`su ${state.black}`:'non collegato';
+ controls();
+ const r=dataReading();$('#lcdValue').textContent=r.n;$('#lcdUnit').textContent=r.u;
+ $('#lcdMode').textContent=({volts:'DC V',amps:'DC mA',ohms:'Ω',cont:'))) Ω'})[state.mode];
+ $('#lcdAlert').textContent=r.class==='ok'?'MEASURE':r.class==='error'?'CHECK JACK':'READY';
+ $('#lcdBottom').textContent= r.class==='ok'?'Lettura simulata': 'Controlla i collegamenti';
+ const f=$('#feedback');f.className='readout '+(r.class==='ok'?'':r.class);$('#feedbackTitle').textContent=r.title;$('#feedbackText').textContent=r.text;
+ $('#sound').textContent=`♪ Suono: ${state.sound?'ON':'OFF'}`;$('#sound').setAttribute('aria-pressed',String(state.sound));
+}
+function putProbe(name){if(!pointsByScenario[state.scenario].includes(name))return;state[state.probe]=name;state.probe=state.probe==='red'?'black':'red';redraw();}
+let audioCtx;
+function beep(){if(!state.sound||state.scenario!=='cont'||!state.closed||!state.red||!state.black||state.red===state.black||state.port!=='vohm'||state.mode!=='cont')return;
+ try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioCtx=audioCtx||new Audio();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=1120;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.07,audioCtx.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.19);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.2);}catch(_e){}
+}
+function toggleSwitch(){state.closed=!state.closed;redraw();if(state.closed)beep();}
+function doScenario(s){if(!meta[s])return;state.scenario=s;state.mode=s;state.red=null;state.black=null;state.probe='red';redraw();}
+$$('.tab').forEach(el=>el.addEventListener('click',()=>doScenario(el.dataset.scenario)));
+$$('.modepick').forEach(el=>el.addEventListener('click',()=>{state.mode=el.dataset.mode;redraw();beep();}));
+$$('.jack[data-port]').forEach(el=>el.addEventListener('click',()=>{state.port=el.dataset.port;redraw();beep();}));
+$$('.probe').forEach(el=>{el.addEventListener('click',()=>{state.probe=el.dataset.probe;redraw();});el.addEventListener('dragstart',e=>{state.probe=el.dataset.probe;e.dataTransfer.setData('text/plain',state.probe);e.dataTransfer.effectAllowed='move';});});
+$('#board').addEventListener('click',e=>{const point=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(point){putProbe(point.dataset.point);beep();}else if(sw){toggleSwitch();}});
+$('#board').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const p=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(p||sw){e.preventDefault();if(p){putProbe(p.dataset.point);beep();}else toggleSwitch();}}});
+$('#board').addEventListener('dragover',e=>{if(e.target.closest('[data-point]'))e.preventDefault();});
+$('#board').addEventListener('drop',e=>{const point=e.target.closest('[data-point]');if(!point)return;e.preventDefault();const probe=e.dataTransfer.getData('text/plain');if(probe==='black'||probe==='red')state.probe=probe;putProbe(point.dataset.point);beep();});
+$('#config').addEventListener('change',e=>{const inp=e.target.closest('[data-value]');if(inp){const id=inp.dataset.value,min=Number(inp.min),max=Number(inp.max);const parsed=Number(String(inp.value).replace(',','.'));if(Number.isFinite(parsed))state[id]=Math.min(max,Math.max(min,parsed));redraw();}});
+$('#config').addEventListener('click',e=>{const r=e.target.closest('[data-res]');if(r){state.ohm=Number(r.dataset.res);redraw();}else if(e.target.closest('#switchBtn'))toggleSwitch();});
+$('#clear').addEventListener('click',()=>{state.red=null;state.black=null;state.probe='red';redraw();});
+$('#example').addEventListener('click',()=>{state.mode=state.scenario;state.port=state.scenario==='amps'?'ma':'vohm';state.red=state.scenario==='volts'?'A':'P';state.black=state.scenario==='volts'?'D':state.scenario==='amps'?'Q':'Q';state.probe='red';if(state.scenario==='cont')state.closed=true;redraw();beep();});
+$('#sound').addEventListener('click',()=>{state.sound=!state.sound;redraw();if(state.sound)beep();});
+redraw();
+})();
+</script>
+</body>
+</html>

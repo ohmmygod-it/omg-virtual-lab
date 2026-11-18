@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#152a42">
+<meta name="description" content="OMG Virtual Lab: osserva come la resistenza riduce il flusso di corrente, sperimenta la legge di Ohm e confronta i risultati con il multimetro.">
+<title>La corrente incontra la resistenza · OMG Virtual Lab</title>
+<style>
+:root{--navy:#152a42;--navy2:#0d2539;--ink:#20334b;--muted:#62788c;--paper:#f6f8fb;--line:#dce5eb;--blue:#176cba;--bluepale:#e9f4fd;--orange:#ec7837;--orangepale:#fff3e9;--green:#138364;--red:#b84338;--shadow:0 12px 38px rgba(20,42,65,.065)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #73b7f4;outline-offset:3px}
+.shell{max-width:1190px;margin:0 auto;padding:25px 22px 40px}
+.hero{border-radius:23px;background:var(--navy);color:#fff;position:relative;overflow:hidden;padding:26px 31px 29px}
+.hero:before{content:"";position:absolute;right:-95px;top:-80px;width:400px;height:280px;background:radial-gradient(circle,rgba(76,170,250,.18) 1.5px,transparent 2px) 0 0/17px 17px;transform:rotate(-10deg)}
+.hero .eyebrow{display:flex;gap:10px;align-items:center;position:relative;color:#8bcfff;text-transform:uppercase;letter-spacing:.17em;font-weight:800;font-size:11px}
+.mark{width:10px;height:10px;background:var(--orange);border-radius:3px;transform:rotate(45deg)}
+.hero h1{position:relative;font-size:clamp(28px,3.4vw,40px);line-height:1.15;letter-spacing:-.035em;margin:13px 0 8px}
+.hero p{position:relative;color:#d0ddea;max-width:740px;margin:0;font-size:15px}
+.navbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:19px 0 16px}
+.tabs{display:flex;gap:3px;padding:4px;background:#e5edf4;border-radius:13px}
+.tab{background:none;border:0;border-radius:10px;color:#536f84;font-weight:800;font-size:14px;padding:10px 18px}
+.tab[aria-selected=true]{background:#fff;color:#173a61;box-shadow:0 2px 9px #10283e16}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:800;border-radius:11px;padding:11px 16px;font-size:13px;min-height:43px}
+.btn:hover{background:#0c599d}.btn.secondary{background:#e3f0fb;color:#1a5f91}.btn.secondary:hover{background:#cee7f9}
+.btn.outline{background:#fff;color:#245e8e;border:1px solid #b9d8ed}.btn.orange{background:var(--orange)}.btn.orange:hover{background:#d05e1f}
+.mode-label{color:#72899d;font-size:12px;font-weight:700}
+.workspace{display:grid;grid-template-columns:minmax(0,1.53fr) minmax(318px,.87fr);gap:18px;align-items:stretch}
+.panel{border:1px solid #e4ebf1;border-radius:20px;background:#fff;padding:23px;box-shadow:var(--shadow);min-width:0}
+.panel h2{color:var(--navy);font-size:19px;letter-spacing:-.025em;margin:0}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-bottom:13px}
+.subdued{font-size:12px;color:#6b8297}
+.stage{position:relative;border-radius:17px;overflow:hidden;background:#10273e;border:1px solid #1e415e}
+.stage canvas{display:block;width:100%;height:auto;aspect-ratio:860 / 368}
+.stage-overlay{position:absolute;pointer-events:none;inset:0;padding:14px 17px;display:flex;justify-content:space-between;align-items:flex-start}
+.stage-overlay span{border:1px solid #45637b;background:rgba(11,31,50,.86);border-radius:99px;color:#c1e3fb;padding:5px 10px;font-size:10px;letter-spacing:.06em;font-weight:800}
+.stage-legend{display:flex;align-items:center;gap:11px;color:#59758b;font-size:12px;margin:10px 2px 1px;flex-wrap:wrap}
+.stage-legend i{display:inline-block;width:9px;height:9px;background:#ffbc63;border-radius:50%;box-shadow:0 0 9px #ffb76b7c;margin-right:3px}
+.stage-legend strong{color:#1c5e93}.pause{margin-left:auto;background:#ecf3f8;border:1px solid #deebf4;border-radius:8px;padding:5px 10px;color:#315a7b;font-size:12px;font-weight:750}
+.control-section{margin-top:21px;padding-top:20px;border-top:1px solid #e7edf2}
+.control-header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.control-title{font-weight:800;font-size:16px;color:#20394f}.control-value{color:#b75d27;font-size:24px;font-weight:850;letter-spacing:-.035em;line-height:1}
+.control-caption{font-size:12px;color:#6a8093;margin-top:3px}
+.slider-wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:13px}
+.endpoint{font-size:11px;color:#7d8e9b;min-width:36px}.endpoint:last-child{text-align:right}
+input[type=range]{width:100%;accent-color:var(--orange);cursor:pointer;height:30px;margin:0}
+.presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+.preset{background:#f6f9fc;border:1px solid #dfe8ee;color:#45647c;padding:7px 12px;border-radius:9px;font-weight:750;font-size:12px}
+.preset.active{background:#fff2e7;border-color:#f0bc94;color:#a94f18}
+.voltage-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}
+.voltage{background:#f6f9fc;border:1px solid #dfebf3;border-radius:10px;color:#45657d;min-height:42px;font-weight:800}
+.voltage:disabled{opacity:.66;cursor:not-allowed}.voltage[aria-pressed=true]{background:#e7f4ff;border-color:#73b8ec;color:#0f60a4;box-shadow:inset 0 0 0 1px #a3d2f3}
+.micro-note{font-size:12px;color:#667d90;margin:14px 0 0}
+.value-hero{background:#eff7ff;border:1px solid #cfe6f9;padding:20px;border-radius:15px;margin:12px 0 14px}
+.overline{font-weight:850;letter-spacing:.115em;text-transform:uppercase;font-size:10px;color:#627e98}
+.big-reading{color:#1263b1;font-size:clamp(32px,4vw,48px);font-weight:850;letter-spacing:-.05em;line-height:1.16;margin:5px 0 7px;font-variant-numeric:tabular-nums}
+.value-hero .tiny{font-size:12px;color:#456f91}
+.meter{height:8px;background:#d5e7f7;border-radius:20px;overflow:hidden;margin-top:15px}.meter>span{display:block;width:10%;height:100%;border-radius:20px;background:linear-gradient(90deg,#63c7f7,#1d79c3);transition:width .22s}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.data-box{border:1px solid #e1e9ee;background:#fafcfe;border-radius:12px;padding:12px 13px}
+.data-box small{color:#758ca0;font-size:11px;font-weight:750;display:block}.data-box strong{display:block;font-size:20px;letter-spacing:-.03em;color:#1f415f;margin-top:2px;font-variant-numeric:tabular-nums}
+.formula{border-top:1px solid #e7edf2;margin-top:20px;padding-top:16px}
+.formula h3{font-size:13px;color:#273f55;margin:0 0 10px}.equation{background:#f6f8fa;border:1px solid #e5edf2;border-radius:10px;padding:12px;text-align:center;color:#254b6b;font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.interpretation{margin-top:14px;background:#f7fbfe;border-left:3px solid #6eb5ea;border-radius:0 9px 9px 0;padding:11px 12px;color:#45627b;font-size:13px;line-height:1.52}
+.warn{display:none;background:#fff2e8;border:1px solid #f6c9a8;color:#955015;font-size:12px;border-radius:11px;margin-top:13px;padding:12px}.warn.show{display:block}
+.challenge{background:#fff7f0;border:1px solid #f4dfca;border-radius:15px;padding:17px 19px;margin-bottom:16px}
+.challenge-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.challenge h3{font-size:16px;margin:0;color:#9b511e}.challenge p{font-size:13px;color:#715d4e;margin:5px 0 10px}.challenge-target{font-size:22px;color:#a9541c;font-weight:850;letter-spacing:-.025em}.challenge-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.score{border-radius:999px;background:#ffe3c5;color:#92521b;font-size:12px;padding:5px 10px;font-weight:850}.feedback{font-size:13px;border-radius:9px;padding:10px 12px;margin-top:11px;display:none;font-weight:700}.feedback.visible{display:block}.feedback.good{background:#e5f6ee;color:#17734e}.feedback.bad{background:#feece7;color:#a3422e}
+.below{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:19px}.below .panel{box-shadow:none}
+.below h2{margin-bottom:8px}.steps{display:flex;gap:10px;align-items:flex-start;margin-top:15px}.step-num{min-width:26px;height:26px;display:grid;place-items:center;color:#1564a5;background:#e2f2ff;font-weight:800;border-radius:8px;font-size:12px}.steps p{margin:1px 0 0;color:#586f83;font-size:13px}
+.small-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:850;color:#6d8498}
+.log-head{display:flex;justify-content:space-between;gap:9px;align-items:baseline;flex-wrap:wrap}
+.log-empty{margin-top:16px;color:#71889d;font-size:13px;background:#f6f9fc;border-radius:10px;padding:16px;text-align:center}
+.table-scroll{overflow-x:auto;margin-top:13px}table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}th{text-align:left;color:#698197;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:9px 7px;border-bottom:1px solid #dfe8ef}td{padding:9px 7px;border-bottom:1px solid #edf1f5;font-variant-numeric:tabular-nums}
+td input{width:82px;max-width:100%;border:1px solid #cfdde7;border-radius:7px;padding:6px 7px;background:white;color:var(--ink);font-size:12px}
+.log-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.remove-row{background:transparent;color:#a44c46;border:0;font-size:18px;padding:0 5px}
+.footer{font-size:11px;color:#718498;text-align:center;margin:23px 0 0}.footer a{color:#4d789f;text-decoration:none}
+.hidden{display:none!important}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.below{grid-template-columns:1fr}.panel{padding:21px}}
+@media(max-width:570px){.shell{padding:11px 10px 26px}.hero{border-radius:17px;padding:21px}.hero p{font-size:13px}.navbar{gap:9px}.tabs{width:100%}.tab{flex:1}.panel{padding:16px;border-radius:16px}.stage-overlay{padding:9px}.stage-overlay span{font-size:9px;padding:4px 7px}.control-value{font-size:22px}.stage-legend{font-size:11px}.control-section{margin-top:17px}.voltage-options{gap:5px}.data-box strong{font-size:17px}.value-hero{padding:16px}.below{gap:12px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="hero">
+  <div class="eyebrow"><i class="mark" aria-hidden="true"></i> OMG · Virtual Lab</div>
+  <h1>La corrente incontra la resistenza</h1>
+  <p>Più resistenza, meno corrente. Stringi il passaggio, osserva le cariche in movimento e scopri cosa cambia quando aumenti la tensione.</p>
+</header>
+<div class="navbar">
+  <div class="tabs" role="tablist" aria-label="Modalità laboratorio">
+    <button class="tab" type="button" role="tab" aria-selected="true" data-tab="explore">Esplora</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="challenge">Sfida</button>
+  </div>
+  <span class="mode-label">Esperienza 01 · Legge di Ohm</span>
+</div>
+<section id="challenge" class="challenge hidden" aria-label="Sfida">
+ <div class="challenge-top"><h3>Riesci a controllare il flusso?</h3><span class="score" id="score">0 punti</span></div>
+ <p id="challengeIntro">Modifica la resistenza per raggiungere la corrente richiesta.</p>
+ <div class="challenge-target" id="challengeTarget">10 mA</div>
+ <div class="challenge-actions"><button type="button" class="btn orange" id="checkChallenge">Verifica</button><button type="button" class="btn secondary" id="nextChallenge">Nuova sfida</button></div>
+ <div class="feedback" id="challengeFeedback" role="status" aria-live="polite"></div>
+</section>
+<section class="workspace" aria-label="Simulazione del flusso di corrente">
+  <div class="panel">
+    <div class="panel-head"><h2>Dentro il circuito</h2><span class="subdued">Modello visivo interattivo</span></div>
+    <div class="stage" id="stage">
+      <canvas id="flow" width="860" height="368" role="img" aria-label="Conduttore con strozzatura variabile e cariche elettriche in movimento"></canvas>
+      <div class="stage-overlay"><span id="directionLabel">→ CORRENTE CONVENZIONALE</span><span id="pinchLabel">RESTRINGIMENTO · 48%</span></div>
+    </div>
+    <div class="stage-legend"><span><i aria-hidden="true"></i> Puntini = rappresentazione delle cariche</span><button type="button" class="pause" id="pauseBtn" aria-pressed="false">Ⅱ Pausa</button></div>
+    <div class="control-section">
+      <div class="control-header"><div><div class="control-title">Resistenza <span style="font-weight:500;color:#7e91a1">R</span></div><div class="control-caption">Sposta il cursore: il passaggio cambia ampiezza</div></div><output class="control-value" id="resistanceOut" for="resistance">1 kΩ</output></div>
+      <div class="slider-wrap"><span class="endpoint">100 Ω</span><input type="range" id="resistance" min="0" max="12" step="1" value="6" aria-label="Valore della resistenza"><span class="endpoint">10 kΩ</span></div>
+      <div class="presets" aria-label="Valori rapidi della resistenza">
+        <button class="preset" type="button" data-r="220">220 Ω</button><button class="preset" type="button" data-r="1000">1 kΩ</button><button class="preset" type="button" data-r="2200">2,2 kΩ</button><button class="preset" type="button" data-r="4700">4,7 kΩ</button>
+      </div>
+    </div>
+    <div class="control-section">
+      <div class="control-header"><div><div class="control-title">Tensione del generatore <span style="font-weight:500;color:#7e91a1">V</span></div><div class="control-caption">Aumenta la spinta mantenendo la resistenza</div></div><output class="control-value" id="voltageOut" style="color:#156baa">5 V</output></div>
+      <div class="voltage-options" aria-label="Selezione della tensione">
+        <button type="button" class="voltage" data-v="3" aria-pressed="false">3 V</button><button type="button" class="voltage" data-v="5" aria-pressed="true">5 V</button><button type="button" class="voltage" data-v="9" aria-pressed="false">9 V</button><button type="button" class="voltage" data-v="12" aria-pressed="false">12 V</button>
+      </div>
+      <p class="micro-note"><label><input type="checkbox" id="electrons"> Mostra il verso degli elettroni invece della corrente convenzionale</label></p>
+    </div>
+  </div>
+  <aside class="panel" aria-label="Letture e spiegazioni">
+    <div class="panel-head"><h2>Che cosa sta succedendo?</h2><span class="subdued">Calcoli in tempo reale</span></div>
+    <div class="value-hero">
+      <div class="overline">Intensità della corrente · I</div>
+      <div class="big-reading" id="currentReadout" aria-live="polite">5,00 mA</div>
+      <div class="tiny">A tensione costante, aumentando R diminuisce I.</div>
+      <div class="meter" aria-hidden="true"><span id="meterFill"></span></div>
+    </div>
+    <div class="data-grid">
+      <div class="data-box"><small>Tensione · V</small><strong id="voltageReadout">5 V</strong></div>
+      <div class="data-box"><small>Resistenza · R</small><strong id="resistanceReadout">1 kΩ</strong></div>
+      <div class="data-box" style="grid-column:span 2"><small>Potenza dissipata · P</small><strong id="powerReadout">25 mW</strong></div>
+    </div>
+    <div class="formula"><h3>La legge di Ohm</h3><div class="equation" id="equation">I = V ÷ R = 5 V ÷ 1000 Ω = 5 mA</div><p class="interpretation" id="interpretation">La resistenza limita la corrente che attraversa il circuito.</p></div>
+    <div class="warn" id="powerWarning"><strong>Attenzione alla potenza!</strong><br>Questo carico supera 0,25 W: un normale resistore da ¼ W non è adeguato.</div>
+    <p class="micro-note"><strong>Nota sul modello:</strong> la strozzatura è un'analogia, non l'aspetto fisico del resistore. Nel circuito reale la corrente in serie è uguale in ogni punto: le cariche non si consumano e non si accumulano davanti alla resistenza. Animazione qualitativa, non in scala.</p>
+  </aside>
+</section>
+<section class="below" aria-label="Attività didattica">
+  <div class="panel">
+    <h2>Prova, osserva, ragiona</h2>
+    <div class="steps"><span class="step-num">1</span><p><strong>Fissa la tensione a 5 V.</strong> Porta la resistenza da 1 kΩ a 2,2 kΩ: la corrente aumenta o diminuisce?</p></div>
+    <div class="steps"><span class="step-num">2</span><p><strong>Blocca la resistenza a 1 kΩ.</strong> Passa da 3 V a 9 V: cosa cambia nell'animazione e nel valore calcolato?</p></div>
+    <div class="steps"><span class="step-num">3</span><p><strong>Vai al banco.</strong> Monta un circuito in sicurezza, misura la corrente con il multimetro collegato in serie e confronta il valore con <strong>I = V/R</strong>.</p></div>
+    <p class="micro-note">Nella simulazione è presente un unico resistore ideale e un generatore ideale. La situazione reale può differire per tolleranze e limiti degli strumenti e dell'alimentazione.</p>
+  </div>
+  <div class="panel">
+    <div class="log-head"><h2>Il tuo quaderno di misura</h2><span class="small-label">Teoria ↔ laboratorio</span></div>
+    <p class="micro-note" style="margin-top:0">Salva i valori della simulazione, poi inserisci la corrente misurata al banco (mA).</p>
+    <div id="logEmpty" class="log-empty">Nessuna misura registrata.</div>
+    <div class="table-scroll"><table id="logTable" class="hidden"><thead><tr><th>V</th><th>R</th><th>I teorica</th><th>I misurata (mA)</th><th>Errore %</th><th></th></tr></thead><tbody id="logBody"></tbody></table></div>
+    <div class="log-actions"><button class="btn secondary" type="button" id="addLog">+ Registra valori</button><button class="btn outline" type="button" id="exportLog" disabled>Esporta CSV</button><button class="btn outline" type="button" id="clearLog" disabled>Cancella</button></div>
+    <p class="micro-note" id="logMessage" role="status" aria-live="polite"></p>
+  </div>
+</section>
+<footer class="footer">OMG – Elettroni e dintorni · Virtual Lab · <a href="https://sites.google.com/view/omg-elettroniedintorni/" target="_blank" rel="noopener noreferrer">Torna al sito</a></footer>
+</main>
+<script>
+(()=>{'use strict';
+const values=[100,150,220,330,470,680,1000,1500,2200,3300,4700,6800,10000];
+const el=id=>document.getElementById(id);
+const Rinput=el('resistance');let R=1000,V=5,paused=false,electrons=false,mode='explore';let data=[];let score=0;let challengeIndex=-1;let completed=false;
+const challengeList=[{v:5,r:2200},{v:5,r:220},{v:9,r:1500},{v:3,r:330},{v:12,r:2200},{v:5,r:4700},{v:9,r:3300},{v:3,r:680}];
+const fmt=(n,d=2)=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:d}).format(n);
+const fmtR=r=>r>=1000?`${fmt(r/1000,2)} kΩ`:`${fmt(r)} Ω`;
+const fmtI=i=>i>=1?`${fmt(i,i<10?2:1)} mA`:`${fmt(i*1000,0)} µA`;
+const fmtP=p=>p>=1?`${fmt(p,3)} W`:`${fmt(p*1000,2)} mW`;
+function currentmA(){return V*1000/R}
+function setR(r){let idx=values.indexOf(r);if(idx<0)return;R=r;Rinput.value=String(idx);update()}
+function setV(v){V=v;update()}
+function update(){const I=currentmA(),P=V*V/R;
+ el('resistanceOut').textContent=fmtR(R);el('resistanceReadout').textContent=fmtR(R);
+ el('voltageOut').textContent=`${V} V`;el('voltageReadout').textContent=`${V} V`;
+ el('currentReadout').textContent=fmtI(I);el('powerReadout').textContent=fmtP(P);
+ el('meterFill').style.width=`${Math.max(2,Math.min(100,Math.pow(I/120,.52)*100))}%`;
+ el('equation').textContent=`I = ${V} V ÷ ${fmt(R)} Ω = ${fmtI(I)}`;
+ el('pinchLabel').textContent=`STROZZATURA · ${Math.round(pinch()*100)}%`;
+ const ratio=R/1000;
+ el('interpretation').textContent=R===1000?`Con ${V} V e 1 kΩ circolano ${fmtI(I)}. A tensione costante, raddoppiando R la corrente si dimezza.`:R>1000?`Rispetto a 1 kΩ (sempre a ${V} V), la corrente è ${fmt(ratio,2)} volte più piccola. Aumentare la resistenza riduce il flusso.`:`Rispetto a 1 kΩ (sempre a ${V} V), la corrente è ${fmt(1/ratio,2)} volte più grande. Ridurre la resistenza aumenta il flusso.`;
+ el('powerWarning').classList.toggle('show',P>0.25+1e-9);
+ document.querySelectorAll('[data-r]').forEach(b=>b.classList.toggle('active',Number(b.dataset.r)===R));
+ document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.v)===V)));
+ }
+// La strettoia è un'analogia geometrica: la corrente è identica in tutte le sezioni di un circuito in serie.
+function pinch(){return Math.log(R/values[0])/Math.log(values[values.length-1]/values[0])}
+Rinput.addEventListener('input',()=>setR(values[Number(Rinput.value)]));
+document.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>setR(Number(b.dataset.r))));
+document.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>setV(Number(b.dataset.v))));
+el('electrons').addEventListener('change',e=>{electrons=e.target.checked;el('directionLabel').textContent=electrons?'← MOVIMENTO DEGLI ELETTRONI':'→ CORRENTE CONVENZIONALE'});
+el('pauseBtn').addEventListener('click',()=>{paused=!paused;el('pauseBtn').textContent=paused?'▶ Riprendi':'Ⅱ Pausa';el('pauseBtn').setAttribute('aria-pressed',String(paused))});
+// Disegno responsive ad alta densità di pixel; l'animazione usa requestAnimationFrame, senza librerie.
+const canvas=el('flow'),ctx=canvas.getContext('2d');const W=860,H=368;const rand=(seed)=>{const x=Math.sin(seed*12.9898+78.233)*43758.5453;return x-Math.floor(x)};
+const particles=Array.from({length:82},(_,i)=>({p:(i+rand(i+7))/82,lane:rand(i*3+21)*1.55-.775,size:2+rand(i+81)*1.8,phase:rand(i+44)*6.28}));
+function halfAt(x){const n=pinch(),base=79,cut=n*63;return base-cut*Math.exp(-Math.pow((x-W/2)/119,4)/1.3)}
+function pathPipe(){ctx.beginPath();for(let x=22;x<=838;x+=5){let y=H/2-halfAt(x);if(x===22)ctx.moveTo(x,y);else ctx.lineTo(x,y)}for(let x=838;x>=22;x-=5){ctx.lineTo(x,H/2+halfAt(x))}ctx.closePath()}
+function draw(time){ctx.clearRect(0,0,W,H);
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#142d45');bg.addColorStop(1,'#091d32');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ ctx.strokeStyle='#fff';ctx.globalAlpha=.035;ctx.lineWidth=1;for(let x=20;x<W;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=20;y<H;y+=32){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.globalAlpha=1;
+ // Energia applicata tra le estremità; frecce esplicative, non collegamento elettrico completo.
+ ctx.save();ctx.font='800 18px system-ui';ctx.textBaseline='middle';ctx.fillStyle='#8bd3ff';ctx.fillText('+',25,184);ctx.fillStyle='#9eb5c8';ctx.fillText('−',823,184);ctx.restore();
+ ctx.save();ctx.shadowColor='#40b8ec';ctx.shadowBlur=25;pathPipe();ctx.fillStyle='#142f49';ctx.fill();ctx.restore();
+ pathPipe();const tint=ctx.createLinearGradient(0,0,0,H);tint.addColorStop(0,'#2d7196');tint.addColorStop(.5,'#236487');tint.addColorStop(1,'#2d7196');ctx.fillStyle=tint;ctx.fill();
+ ctx.save();pathPipe();ctx.clip();
+ // Filamenti che si adeguano alla variazione di sezione.
+ for(let j=-3;j<=3;j++){const f=j/4;ctx.beginPath();for(let x=25;x<=835;x+=6){const y=H/2+f*halfAt(x);if(x===25)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle=j===0?'rgba(126,219,244,.20)':'rgba(119,218,248,.095)';ctx.lineWidth=j===0?1.5:1;ctx.stroke()}
+ // Corrente come rate di trasporto: stessa velocità lungo tutte le sezioni, nessun accumulo alla strettoia.
+ for(const particle of particles){const x=22+particle.p*816;const y=H/2+particle.lane*halfAt(x)+Math.sin(time*.002+particle.phase)*1.2;
+   if(x<26||x>834)continue;
+   ctx.beginPath();ctx.arc(x,y,particle.size,0,Math.PI*2);ctx.fillStyle=electrons?'#9de6ff':'#ffc37a';ctx.shadowColor=electrons?'#6ecdf7':'#ffb15e';ctx.shadowBlur=11;ctx.fill();ctx.shadowBlur=0;
+ }
+ ctx.restore();
+ // Bordo della condotta, rinforzato sul restringimento.
+ pathPipe();ctx.strokeStyle='rgba(154,214,246,.63)';ctx.lineWidth=3;ctx.stroke();
+ ctx.beginPath();for(let x=290;x<=570;x+=4){let y=H/2-halfAt(x);if(x===290)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle='rgba(247,153,83,.65)';ctx.lineWidth=4;ctx.stroke();
+ ctx.beginPath();for(let x=290;x<=570;x+=4){let y=H/2+halfAt(x);if(x===290)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
+ // Tratti di quota che rendono leggibile l'ampiezza variabile.
+ const x=W/2;ctx.strokeStyle='#ffc384';ctx.lineWidth=1.3;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x,H/2-halfAt(x)+4);ctx.lineTo(x,H/2+halfAt(x)-4);ctx.stroke();ctx.setLineDash([]);
+ // Etichetta graduata inferiore.
+ ctx.fillStyle='#99b5c9';ctx.font='13px system-ui';ctx.textAlign='center';ctx.fillText('RESTRINGIMENTO VARIABILE',W/2,H-22);
+ // Indicatori estremi del percorso del flusso.
+ ctx.fillStyle='#77aaca';ctx.font='11px system-ui';ctx.fillText(electrons?'verso gli elettroni  ←':'corrente convenzionale  →',W/2,41);
+}
+let last=0;function animate(ts){let dt=Math.min(50,ts-(last||ts));last=ts;
+ if(!paused){const mA=currentmA();const speed=.06+1.32*Math.log1p(mA)/Math.log1p(120);const inc=dt/1000*speed*.31;
+  for(const part of particles){part.p+=(electrons?-1:1)*inc;if(part.p>1)part.p-=1;if(part.p<0)part.p+=1}
+ }
+ draw(ts);requestAnimationFrame(animate)
+}
+// Sfide verificano l'intensità, ma la soluzione viene controllata sul valore selezionato.
+function selectChallenge(){challengeIndex=(challengeIndex+1)%challengeList.length;completed=false;const t=challengeList[challengeIndex];setV(t.v);setR(1000);const target=t.v*1000/t.r;el('challengeIntro').textContent=`Con il generatore impostato a ${t.v} V, modifica soltanto la resistenza. Quale valore fa circolare la corrente richiesta?`;
+ el('challengeTarget').textContent=`Obiettivo: ${fmtI(target)}`;el('challengeFeedback').className='feedback';el('challengeFeedback').textContent='';}
+function selectMode(next){mode=next;document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===mode)));document.querySelectorAll('[data-v]').forEach(b=>b.disabled=mode==='challenge');el('challenge').classList.toggle('hidden',mode!=='challenge');if(mode==='challenge'&&challengeIndex<0)selectChallenge();}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>selectMode(b.dataset.tab)));
+el('nextChallenge').addEventListener('click',selectChallenge);
+el('checkChallenge').addEventListener('click',()=>{let f=el('challengeFeedback');const target=challengeList[challengeIndex];if(R===target.r&&V===target.v){if(!completed){score+=10;completed=true;}f.textContent=`Corretto! ${fmtR(R)} con ${V} V produce ${fmtI(currentmA())}. +10 punti alla prima soluzione.`;f.className='feedback visible good';}else{f.textContent=V!==target.v?`La tensione richiesta è ${target.v} V. Premi Nuova sfida per ripristinarla.`:`Non ancora: hai ${fmtI(currentmA())}. ${currentmA()>V*1000/target.r?'Serve una resistenza più alta.':'Serve una resistenza più bassa.'}`;f.className='feedback visible bad';}el('score').textContent=score+' punti';});
+// Quaderno. I dati rimangono solo nella pagina e possono essere esportati.
+function escapeCSV(v){return '"'+String(v).replace(/"/g,'""')+'"'}
+function renderLog(){const tbody=el('logBody');tbody.innerHTML='';data.forEach((row,i)=>{const tr=document.createElement('tr');
+ const elements=[`${row.v} V`,fmtR(row.r),`${fmt(row.i,3)} mA`];elements.forEach(t=>{const td=document.createElement('td');td.textContent=t;tr.appendChild(td)});
+ const measured=document.createElement('td'),inp=document.createElement('input');inp.type='number';inp.step='any';inp.min='0';inp.placeholder='mA';inp.setAttribute('aria-label',`Corrente misurata, riga ${i+1}`);inp.value=row.measured??'';measured.appendChild(inp);tr.appendChild(measured);
+ const delta=document.createElement('td');delta.textContent=row.measured===null?'—':`${fmt(Math.abs(row.measured-row.i)/row.i*100,2)}%`;tr.appendChild(delta);
+ inp.addEventListener('input',()=>{const s=inp.value.trim().replace(',','.');const n=s===''?null:Number(s);if(n!==null&&(!Number.isFinite(n)||n<0)){delta.textContent='—';return}row.measured=n;delta.textContent=n===null?'—':`${fmt(Math.abs(n-row.i)/row.i*100,2)}%`});
+ const lastcell=document.createElement('td'),remove=document.createElement('button');remove.type='button';remove.className='remove-row';remove.textContent='×';remove.title=`Elimina riga ${i+1}`;remove.setAttribute('aria-label',`Elimina riga ${i+1}`);remove.addEventListener('click',()=>{data.splice(i,1);renderLog()});lastcell.appendChild(remove);tr.appendChild(lastcell);tbody.appendChild(tr)});
+ el('logEmpty').classList.toggle('hidden',data.length>0);el('logTable').classList.toggle('hidden',data.length===0);el('exportLog').disabled=data.length===0;el('clearLog').disabled=data.length===0;}
+el('addLog').addEventListener('click',()=>{if(data.length>=12){el('logMessage').textContent='Massimo 12 misure. Esporta o cancella quelle già registrate.';return}data.push({v:V,r:R,i:currentmA(),measured:null});renderLog();el('logMessage').textContent='Configurazione salvata. Inserisci il valore misurato in mA.'});
+el('clearLog').addEventListener('click',()=>{data=[];renderLog();el('logMessage').textContent='Tabella svuotata.'});
+el('exportLog').addEventListener('click',()=>{const rows=[['Tensione (V)','Resistenza (ohm)','Corrente teorica (mA)','Corrente misurata (mA)','Scostamento (%)'],...data.map(d=>[d.v,d.r,d.i,d.measured??'',d.measured===null?'':Math.abs(d.measured-d.i)/d.i*100])];const csv='\ufeff'+rows.map(r=>r.map(escapeCSV).join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='OMG_misure_legge_di_ohm.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){paused=true;el('pauseBtn').textContent='▶ Riprendi';el('pauseBtn').setAttribute('aria-pressed','true')}
+update();renderLog();requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>

@@ -1,30 +1,23 @@
 # OMG Virtual Lab
 
-Simulazioni didattiche di elettronica ed elettrotecnica per il progetto **OMG — Elettroni e dintorni**.
+Simulatori didattici indipendenti, ospitati su GitHub Pages e collegabili alle lezioni di OMG – Elettroni e dintorni.
 
-## Struttura
+## Accesso
 
-- `index.html`: indice pubblico dei simulatori
-- `assets/omg.css`: stile condiviso
-- `resistenze-serie/index.html`: primo simulatore interattivo
-- `.nojekyll`: disattiva la trasformazione Jekyll su GitHub Pages
+- [Catalogo completo](https://ohmmygod-it.github.io/omg-virtual-lab/)
+- [Catalogo compatto per Google Sites](https://ohmmygod-it.github.io/omg-virtual-lab/catalogo/)
 
-## Pubblicazione senza terminale
+## Simulatori
 
-1. Su GitHub crea un repository **pubblico** denominato `omg-virtual-lab` (puoi inizializzare senza README).
-2. Estrai il file ZIP sul computer.
-3. Nel repository usa **Add file > Upload files** e trascina i **contenuti della cartella** `omg-virtual-lab` (non il file ZIP). Mantieni le sottocartelle.
-4. Conferma con **Commit changes**.
-5. Apri **Settings > Pages**. In **Build and deployment**, seleziona `Deploy from a branch`; Branch: `main`, Folder: `/(root)` e premi **Save**.
-6. Dopo la pubblicazione vai a `https://NOMEUTENTE.github.io/omg-virtual-lab/`.
-7. Per incorporare su Google Sites: **Inserisci > Incorpora > Per URL**, incolla `https://NOMEUTENTE.github.io/omg-virtual-lab/resistenze-serie/`, poi ridimensiona il riquadro.
+| Argomento | Percorso |
+|---|---|
+| Resistenze in serie | `resistenze-serie/` |
+| Codice colori | `codice-colori/` |
+| Resistenza e corrente | `resistenza-corrente/` |
+| Legge di Ohm | `legge-di-ohm/` |
+| Multimetro | `multimetro/` |
+| Breadboard | `breadboard/` |
 
-**Importante:** `NOMEUTENTE` è un segnaposto. Sostituiscilo con il nome del tuo account GitHub. Non configurare il dominio `ohmmygod.it` come dominio personalizzato di GitHub Pages: per il momento è già destinato a Google Sites.
+I cinque nuovi simulatori conservano il codice originale recuperato dalle versioni del 17 novembre 2026, da testare e perfezionare prima di considerarli definitivi. La grafica comune dell'indice è in `assets/omg.css`.
 
-## Aggiungere un simulatore
-
-Crea la cartella `nome-simulatore/` contenente `index.html`, includi `../assets/omg.css`, e aggiungi il relativo link all'indice generale. Ogni app rimane autonoma.
-
-## Verifiche didattiche
-
-La simulazione attuale usa resistori e generatore ideali. La corrente in serie è uniforme, la resistenza totale è la somma e le tensioni parziali rispettano la legge di Ohm. Nessun dato degli studenti viene raccolto o inviato.
+Per Google Sites: incorpora la pagina `catalogo/` o collega direttamente i singoli simulatori. Le schede del catalogo si aprono in una nuova scheda per evitare lo scorrimento interno nell'iframe.
