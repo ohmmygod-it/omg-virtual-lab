@@ -1,0 +1,60 @@
+/* OMG Virtual Lab — stile condiviso, v1.0 */
+:root {
+  --omg-ink: #17202d;
+  --omg-cyan: #00b9c8;
+  --omg-turquoise: #148e97;
+  --omg-yellow: #ffe45d;
+  --omg-magenta: #e42c75;
+  --omg-panel: #f4fafb;
+  --omg-muted: #56737e;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--omg-ink);
+  font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+a { color: #006e79; }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--omg-magenta);
+  outline-offset: 3px;
+}
+.omg-page { max-width: 1100px; margin: 0 auto; padding: 18px clamp(10px, 3vw, 28px) 38px; }
+.omg-brandline {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 8px 15px; margin-bottom: 14px;
+}
+.omg-wordmark {
+  color: var(--omg-ink); font-weight: 950; letter-spacing: -.07em;
+  font-size: 22px; line-height: 1.1; text-decoration: none;
+}
+.omg-wordmark b { color: #009fac; }
+.omg-kicker { color: #536b77; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.omg-back { font-size: 13px; font-weight: 750; }
+.omg-home-hero {
+  padding: clamp(18px, 4vw, 38px);
+  background: #eaf9fa;
+  border: 2px solid var(--omg-ink); border-radius: 19px;
+  box-shadow: 5px 5px 0 var(--omg-ink);
+}
+.omg-eyebrow {
+  display: inline-block; background: var(--omg-yellow); border: 2px solid var(--omg-ink);
+  border-radius: 7px; padding: 5px 9px; font-size: 12px; font-weight: 900;
+  box-shadow: 3px 3px 0 var(--omg-ink);
+}
+.omg-home-hero h1 { font-size: clamp(31px, 6vw, 54px); line-height: 1.02; letter-spacing: -.055em; margin: 15px 0 10px; }
+.omg-home-hero p { max-width: 680px; margin: 0; font-size: 16px; color: #3c5c67; }
+.omg-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 290px), 1fr)); gap: 17px; margin-top: 24px; }
+.omg-tile { padding: 20px; border: 2px solid var(--omg-ink); border-radius: 16px; background: #fff; }
+.omg-tile h2 { margin: 0 0 7px; font-size: 22px; letter-spacing: -.03em; }
+.omg-tile p { color: #536b77; margin: 0 0 16px; }
+.omg-link { display: inline-block; font-weight: 900; border-radius: 9px; border: 2px solid var(--omg-ink); background: var(--omg-yellow); color: var(--omg-ink); padding: 9px 14px; text-decoration: none; box-shadow: 3px 3px 0 var(--omg-ink); }
+.omg-link:hover { background: #ffed8e; }
+.omg-small { color: var(--omg-muted); font-size: 13px; }
+@media (max-width: 560px) {
+  .omg-page { padding: 12px 9px 22px; }
+  .omg-brandline { margin: 0 4px 10px; }
+  .omg-kicker { display: none; }
+}

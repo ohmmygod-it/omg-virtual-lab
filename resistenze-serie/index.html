@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#00b9c8">
+  <title>Resistenze in serie | OMG Virtual Lab</title>
+  <meta name="description" content="Simulatore didattico interattivo: resistenze in serie, tensione e corrente.">
+  <link rel="stylesheet" href="../assets/omg.css">
+</head>
+<body>
+  <main class="omg-page">
+    <div class="omg-brandline">
+      <a class="omg-wordmark" href="../">OMG <b>Virtual Lab</b></a>
+      <span class="omg-kicker">Elettroni e dintorni</span>
+    </div>
+<div id="omg-serie">
+  <style>
+    #omg-serie{font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--omg-ink);background:var(--omg-panel);border:2px solid var(--omg-ink);border-radius:19px;padding:clamp(12px,2.5vw,25px);max-width:960px;margin:auto;box-sizing:border-box;box-shadow:4px 4px 0 var(--omg-ink)}
+    #omg-serie *{box-sizing:border-box}
+    #omg-serie .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    #omg-serie .tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.07em;color:var(--omg-ink);background:var(--omg-yellow);border:2px solid var(--omg-ink);border-radius:6px;padding:4px 7px;text-transform:uppercase}
+    #omg-serie h2{font-size:clamp(23px,3.5vw,33px);margin:8px 0 0;line-height:1.1;letter-spacing:-.04em;font-weight:900}
+    #omg-serie .sub{color:#57717d;font-size:14px;margin:9px 0 18px}
+    #omg-serie button{border:2px solid var(--omg-ink);border-radius:9px;background:white;color:var(--omg-ink);font-weight:800;padding:8px 12px;cursor:pointer}
+    #omg-serie button:hover{background:#e7f6f6}
+    #omg-serie .controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+    #omg-serie .field{padding:12px 14px;background:#fff;border:1px solid #dcebed;border-radius:14px}
+    #omg-serie .field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}
+    #omg-serie .field input[type=number]{width:100%;padding:8px 10px;font:inherit;font-weight:700;border:1px solid #c9dbe0;border-radius:8px;color:#173b47;background:#fff}
+    #omg-serie .field .unit{font-size:12px;color:#6d8390}
+    #omg-serie .sliderrow{display:flex;align-items:center;gap:18px;padding:15px 16px;background:#e2f4f3;border-radius:14px}
+    #omg-serie .sliderrow label{font-size:14px;font-weight:800;white-space:nowrap}
+    #omg-serie .sliderrow input{flex:1;min-width:40px;accent-color:#119a9a;cursor:pointer}
+    #omg-serie .sliderrow output{font-size:20px;font-weight:850;color:#087f85;min-width:61px;text-align:right}
+    #omg-serie .circuit{background:white;border:1px solid #dcebed;border-radius:16px;overflow:hidden;padding:8px;margin-top:14px}
+    #omg-serie svg{width:100%;height:auto;display:block}
+    #omg-serie .wire{fill:none;stroke:#51717e;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+    #omg-serie .res{fill:#ffffff;stroke-width:3.5;rx:7}
+    #omg-serie .svgtxt{font-family:system-ui,-apple-system,Segoe UI,sans-serif;text-anchor:middle;fill:#193c49;font-size:19px;font-weight:800}
+    #omg-serie .svgsub{font-family:system-ui,-apple-system,Segoe UI,sans-serif;text-anchor:middle;fill:#607e89;font-size:17px;font-weight:600}
+    #omg-serie .summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0}
+    #omg-serie .metric{background:#17202d;color:white;padding:15px;border:2px solid var(--omg-ink);border-radius:12px}
+    #omg-serie .metric:nth-child(2){background:#00b9c8;color:#17202d}
+    #omg-serie .metric small{display:block;font-size:12px;opacity:.85;margin-bottom:5px}
+    #omg-serie .metric strong{display:block;font-size:clamp(22px,3vw,29px);line-height:1.15}
+    #omg-serie .drops{display:grid;gap:10px;background:#fff;border:1px solid #dcebed;border-radius:15px;padding:14px 16px}
+    #omg-serie .droprow{display:grid;grid-template-columns:60px 1fr 80px;align-items:center;gap:12px;font-size:13px;font-weight:800}
+    #omg-serie .track{height:9px;border-radius:20px;background:#eaf0f1;overflow:hidden}
+    #omg-serie .fill{height:100%;border-radius:20px;transition:width .18s ease}
+    #omg-serie .foot{font-size:13px;color:#587480;margin:12px 0 0}
+    #omg-serie .r1{color:#d78823} #omg-serie .r2{color:#168b9e} #omg-serie .r3{color:#765fc5}
+    @media(max-width:560px){#omg-serie .controls{grid-template-columns:1fr 1fr}#omg-serie .controls .field:last-child{grid-column:span 2}#omg-serie .sliderrow{gap:8px}#omg-serie .sliderrow label{font-size:12px}#omg-serie .circuit{padding:0}#omg-serie .droprow{grid-template-columns:36px 1fr 65px;gap:7px}#omg-serie .summary{gap:7px}#omg-serie .metric{padding:12px}}
+    #omg-serie .circuit .mobile-svg{display:none}
+    @media(max-width:560px){#omg-serie .circuit .desktop-svg{display:none}#omg-serie .circuit .mobile-svg{display:block}}
+  </style>
+
+  <div class="top"><div><div class="tag">OMG · Laboratorio interattivo</div><h2>Resistenze in serie</h2></div><button id="omg-reset" type="button">↺ Ripristina</button></div>
+  <p class="sub">Modifica la tensione e le resistenze. Osserva cosa accade alla corrente e alle cadute di tensione.</p>
+
+  <div class="sliderrow"><label for="omg-v">Alimentazione</label><input id="omg-v" type="range" min="0" max="24" step="0.5" value="12"><output id="omg-v-out">12 V</output></div>
+  <div class="controls">
+    <div class="field"><label class="r1" for="omg-r1">R₁ · Resistenza 1</label><input id="omg-r1" type="number" min="1" max="100000" step="1" value="100"><span class="unit">ohm (Ω)</span></div>
+    <div class="field"><label class="r2" for="omg-r2">R₂ · Resistenza 2</label><input id="omg-r2" type="number" min="1" max="100000" step="1" value="220"><span class="unit">ohm (Ω)</span></div>
+    <div class="field"><label class="r3" for="omg-r3">R₃ · Resistenza 3</label><input id="omg-r3" type="number" min="1" max="100000" step="1" value="330"><span class="unit">ohm (Ω)</span></div>
+  </div>
+
+  <div class="circuit">
+    <svg class="desktop-svg" viewBox="0 0 810 245" role="img" aria-label="Tre resistenze collegate in serie a un generatore di tensione continua">
+      <path class="wire" d="M77 65 H145 M258 65 H337 M450 65 H529 M642 65 H733 V217 H77 V179 M77 131 V65"/>
+      <circle cx="77" cy="155" r="24" fill="#edf9f9" stroke="#168b95" stroke-width="4"/>
+      <text x="77" y="153" class="svgtxt" style="fill:#168b95;font-size:22px">+</text>
+      <text x="77" y="171" class="svgtxt" style="fill:#168b95;font-size:20px">−</text>
+      <rect class="res" x="145" y="44" width="113" height="42" style="stroke:#d78823"/>
+      <rect class="res" x="337" y="44" width="113" height="42" style="stroke:#168b9e"/>
+      <rect class="res" x="529" y="44" width="113" height="42" style="stroke:#765fc5"/>
+      <text class="svgsub" x="201" y="29">R₁</text><text class="svgsub" x="393" y="29">R₂</text><text class="svgsub" x="585" y="29">R₃</text>
+      <text class="svgtxt" x="201" y="72" id="omg-s-r1">100 Ω</text>
+      <text class="svgtxt" x="393" y="72" id="omg-s-r2">220 Ω</text>
+      <text class="svgtxt" x="585" y="72" id="omg-s-r3">330 Ω</text>
+      <text class="svgsub" x="201" y="112" id="omg-s-u1">1,85 V</text>
+      <text class="svgsub" x="393" y="112" id="omg-s-u2">4,06 V</text>
+      <text class="svgsub" x="585" y="112" id="omg-s-u3">6,09 V</text>
+      <path d="M723 138 L743 138 L733 155 Z" fill="#17a5a1"/>
+      <text x="773" y="152" class="svgsub" style="fill:#087c83;font-weight:800">I</text>
+      <text x="404" y="205" class="svgsub">La stessa corrente attraversa R₁, R₂ e R₃</text>
+    </svg>
+    <svg class="mobile-svg" viewBox="0 0 370 260" role="img" aria-label="Schema verticale: tre resistenze in serie, con corrente uguale in tutti i componenti">
+      <path class="wire" d="M37 139 V52 H68 M160 52 H204 M296 52 H332 V212 H296 M204 212 H37 V199 M37 159 V139" />
+      <circle cx="37" cy="179" r="20" fill="#edf9f9" stroke="#168b95" stroke-width="4"/>
+      <text class="svgtxt" x="37" y="176" style="fill:#168b95;font-size:19px">+</text>
+      <text class="svgtxt" x="37" y="192" style="fill:#168b95;font-size:18px">−</text>
+      <rect class="res" x="68" y="34" width="92" height="36" style="stroke:#d78823"/>
+      <rect class="res" x="204" y="34" width="92" height="36" style="stroke:#168b9e"/>
+      <rect class="res" x="204" y="194" width="92" height="36" style="stroke:#765fc5"/>
+      <text class="svgsub" x="114" y="24" style="font-size:16px">R₁</text>
+      <text class="svgsub" x="250" y="24" style="font-size:16px">R₂</text>
+      <text class="svgsub" x="250" y="185" style="font-size:16px">R₃</text>
+      <text class="svgtxt" x="114" y="58" style="font-size:16px" id="omg-m-r1">100 Ω</text>
+      <text class="svgtxt" x="250" y="58" style="font-size:16px" id="omg-m-r2">220 Ω</text>
+      <text class="svgtxt" x="250" y="218" style="font-size:16px" id="omg-m-r3">330 Ω</text>
+      <text class="svgsub" x="114" y="89" style="font-size:15px" id="omg-m-u1">1,85 V</text>
+      <text class="svgsub" x="250" y="89" style="font-size:15px" id="omg-m-u2">4,06 V</text>
+      <text class="svgsub" x="250" y="248" style="font-size:15px" id="omg-m-u3">6,09 V</text>
+      <path d="M323 127 L341 127 L332 143 Z" fill="#17a5a1"/>
+      <text x="350" y="135" class="svgsub" style="fill:#087c83;font-size:16px;font-weight:800">I</text>
+      <text x="120" y="168" class="svgsub" style="font-size:14px">Corrente uguale</text>
+      <text x="120" y="186" class="svgsub" style="font-size:14px">in tutte le R</text>
+    </svg>
+  </div>
+
+  <div class="summary">
+    <div class="metric"><small>Resistenza totale · Rₜ</small><strong id="omg-total">650 Ω</strong></div>
+    <div class="metric"><small>Corrente in ogni resistenza · I</small><strong id="omg-i">18,46 mA</strong></div>
+  </div>
+  <div class="drops">
+    <div class="droprow"><span class="r1">U₁</span><div class="track"><div class="fill" id="omg-b1" style="background:#d78823;width:15.38%"></div></div><span id="omg-u1">1,85 V</span></div>
+    <div class="droprow"><span class="r2">U₂</span><div class="track"><div class="fill" id="omg-b2" style="background:#168b9e;width:33.85%"></div></div><span id="omg-u2">4,06 V</span></div>
+    <div class="droprow"><span class="r3">U₃</span><div class="track"><div class="fill" id="omg-b3" style="background:#765fc5;width:50.77%"></div></div><span id="omg-u3">6,09 V</span></div>
+  </div>
+  <p class="foot"><strong>Da ricordare:</strong> in serie la corrente è uguale ovunque, mentre le cadute di tensione si sommano: U₁ + U₂ + U₃ = U alimentazione. Simulazione con componenti ideali.</p>
+
+  <script>
+    (() => {
+      const root = document.getElementById('omg-serie');
+      const el = id => root.querySelector('#' + id);
+      const fmt = (value, digits = 2) => value.toLocaleString('it-IT', {minimumFractionDigits: digits, maximumFractionDigits: digits});
+      const fmtR = value => value >= 1000 ? fmt(value / 1000, value % 1000 ? 1 : 0) + ' kΩ' : fmt(value, 0) + ' Ω';
+      const v = el('omg-v');
+      const resistors = ['omg-r1','omg-r2','omg-r3'].map(el);
+      const getR = input => {
+        const value = Number(input.value);
+        return Number.isFinite(value) && value >= 1 ? Math.min(value,100000) : 1;
+      };
+      function update() {
+        const voltage = Number(v.value);
+        const r = resistors.map(getR);
+        const total = r.reduce((a,b) => a+b, 0);
+        const amp = voltage / total;
+        el('omg-v-out').textContent = fmt(voltage, voltage%1 ? 1 : 0) + ' V';
+        el('omg-total').textContent = fmt(total,0) + ' Ω';
+        el('omg-i').textContent = fmt(amp*1000,2) + ' mA';
+        r.forEach((value,index) => {
+          const k = index+1;
+          const drop = amp*value;
+          el('omg-s-r'+k).textContent = fmtR(value);
+          el('omg-s-u'+k).textContent = fmt(drop,2) + ' V';
+          el('omg-m-r'+k).textContent = fmtR(value);
+          el('omg-m-u'+k).textContent = fmt(drop,2) + ' V';
+          el('omg-u'+k).textContent = fmt(drop,2) + ' V';
+          el('omg-b'+k).style.width = (voltage > 0 ? 100*drop/voltage : 0) + '%';
+        });
+      }
+      v.addEventListener('input',update);
+      resistors.forEach(input => {
+        input.addEventListener('input',update);
+        input.addEventListener('change',() => {input.value = Math.round(getR(input));update();});
+      });
+      el('omg-reset').addEventListener('click',() => {
+        v.value = 12;
+        [100,220,330].forEach((value,i) => resistors[i].value = value);
+        update();
+      });
+      update();
+    })();
+  </script>
+</div>
+
+  </main>
+</body>
+</html>
