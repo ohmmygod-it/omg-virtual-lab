@@ -99,6 +99,16 @@
     .legend-chip i{width:11px;height:11px;border:1px solid #0003;border-radius:50%;display:inline-block}
     .footer{font-size:11px;color:#718498;text-align:center;margin:21px 0 0}
     .hidden{display:none!important}
+    .value-lookup{background:#f4f8fc;border:1px solid #dce8f3;border-radius:13px;padding:12px 13px;margin:14px 0 0}
+    .value-lookup .reverse-form{gap:8px;align-items:center}
+    .value-lookup label{font-size:12px;font-weight:800;color:#3b6283;margin-right:4px;white-space:nowrap}
+    .value-lookup .reverse-form input{width:108px;max-width:unset;min-width:75px;flex:1}
+    .value-lookup .reverse-form select{min-width:72px}
+    .value-lookup .reverse-form input,.value-lookup .reverse-form select{min-height:39px;padding:7px 9px}
+    .value-lookup .btn{min-height:39px;padding:8px 13px}
+    .challenge-step{font-size:12px;font-weight:700;color:#a47b53;letter-spacing:0}
+    .challenge-done{font-weight:800}
+    @media(max-width:590px){.value-lookup .reverse-form label{width:100%;margin:0}.value-lookup{padding:11px}.challenge-step{display:block;margin-top:2px}.value-lookup .reverse-form input{max-width:100%}}
     @media(max-width:880px){.workspace{grid-template-columns:1fr}.panel{padding:20px}.swatches{grid-template-columns:repeat(6,1fr)}}
     @media(max-width:590px){.shell{padding:12px 10px 26px}.hero{border-radius:17px;padding:21px}.hero p{font-size:13px}.toolbar{gap:10px}.tabs{width:100%;justify-content:space-between}.tab{flex:1;padding:10px 5px;font-size:13px}.band-count{width:100%}.count-btn{flex:1}.panel{border-radius:16px;padding:16px}.swatches{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.swatch{padding:8px 1px}.swatch-chip{height:24px;width:24px}.swatch-label{font-size:10px}.band-picks{gap:4px}.band-pick{padding:9px 2px}.band-role{font-size:9px}.band-name{font-size:10px}.resistor-wrap{padding:14px 5px 10px;margin:13px 0}.reverse-form input{width:110px}#reading{font-size:37px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
@@ -109,13 +119,12 @@
   <header class="hero">
     <div class="eyebrow"><span class="mark" aria-hidden="true"></span> OMG · Virtual Lab</div>
     <h1>Codice colori delle resistenze</h1>
-    <p>Tocca una banda, cambia colore e scopri il valore. Oppure parti dagli ohm e prova a ricostruire la resistenza.</p>
+    <p>Tocca una banda e scopri il valore, oppure inserisci direttamente gli ohm. Quando sei pronto, mettiti alla prova!</p>
   </header>
 
   <div class="toolbar">
     <div class="tabs" role="tablist" aria-label="Modalità laboratorio">
       <button type="button" class="tab" data-mode="explore" role="tab" aria-selected="true">Esplora</button>
-      <button type="button" class="tab" data-mode="reverse" role="tab" aria-selected="false">Valore → colori</button>
       <button type="button" class="tab" data-mode="challenge" role="tab" aria-selected="false">Sfida</button>
     </div>
     <div class="band-count" aria-label="Numero di bande">
@@ -124,25 +133,14 @@
     </div>
   </div>
 
-  <section class="special hidden" id="reverseBox" aria-label="Ricerca dal valore">
-    <h3>Conosci il valore? Trova le bande.</h3>
-    <p>Inserisci una resistenza: l'app sceglie i colori corrispondenti. Con 4 bande si usano due cifre significative, con 5 bande tre.</p>
-    <form id="reverseForm" class="reverse-form">
-      <input id="inputResistance" type="number" value="4.7" min="0.0000001" max="999999999999" step="any" aria-label="Valore della resistenza" required>
-      <select id="inputUnit" aria-label="Unità di misura"><option value="1">Ω</option><option selected value="1000">kΩ</option><option value="1000000">MΩ</option></select>
-      <button class="btn" type="submit">Trova colori</button>
-    </form>
-    <div class="feedback" id="reverseFeedback" role="status" aria-live="polite"></div>
-  </section>
-
   <section class="special hidden" id="challengeBox" aria-label="Sfida codice colori">
-    <div class="challenge-top"><h3>La sfida</h3><span class="score" id="score">0 punti</span></div>
-    <p>Riproduci questo valore scegliendo i colori sulle bande. Per controllare la risposta premi <strong>Verifica</strong>.</p>
+    <div class="challenge-top"><h3>La sfida <span class="challenge-step" id="challengeStep">· Prova 1 di 5</span></h3><span class="score" id="score">0/5 corrette</span></div>
+    <p>5 resistenze da ricostruire: scegli i colori delle bande e premi <strong>Verifica</strong>. Senza numeri nella tavolozza!</p>
     <div class="target" id="target">4,7 kΩ ±5%</div>
     <div class="challenge-actions">
       <button class="btn orange" id="checkBtn" type="button">Verifica</button>
       <button class="btn outline" id="revealBtn" type="button">Mostra soluzione</button>
-      <button class="btn secondary" id="nextBtn" type="button">Nuova sfida</button>
+      <button class="btn secondary" id="nextBtn" type="button">Prossima prova</button>
     </div>
     <div class="feedback" id="challengeFeedback" role="status" aria-live="polite"></div>
   </section>
@@ -150,6 +148,15 @@
   <section class="workspace" aria-label="Simulatore di resistenze">
     <div class="panel">
       <div class="panel-head"><h2>La tua resistenza</h2><p class="tiny" id="bandInfo">4 bande · 2 cifre + moltiplicatore + tolleranza</p></div>
+      <div class="value-lookup" id="valueLookup" aria-label="Trova le bande a partire dal valore">
+        <form id="reverseForm" class="reverse-form">
+          <label for="inputResistance">Parti da un valore</label>
+          <input id="inputResistance" type="number" value="4.7" min="0.0000001" max="999999999999" step="any" aria-label="Valore della resistenza" required>
+          <select id="inputUnit" aria-label="Unità di misura"><option value="1">Ω</option><option selected value="1000">kΩ</option><option value="1000000">MΩ</option></select>
+          <button class="btn" type="submit">Applica</button>
+        </form>
+        <div class="feedback" id="reverseFeedback" role="status" aria-live="polite"></div>
+      </div>
       <div class="resistor-wrap">
         <svg id="resistor" viewBox="0 0 800 215" role="img" aria-label="Resistenza con bande colorate interattive"></svg>
         <p class="resistor-hint">Clicca una banda sulla resistenza o selezionala qui sotto</p>
@@ -180,7 +187,7 @@
     </aside>
   </section>
 
-  <section class="legend" aria-label="Legenda dei colori">
+  <section class="legend" id="legendSection" aria-label="Legenda dei colori">
     <h2>Legenda rapida · cifre da 0 a 9</h2>
     <div class="legend-grid" id="legend"></div>
   </section>
@@ -210,7 +217,9 @@
     {id:'oro',percent:5},{id:'argento',percent:10}
   ].map(t=>({...COLOR_BY_ID[t.id],percent:t.percent}));
   const $=id=>document.getElementById(id);
-  const state={count:4,mode:'explore',bands:['giallo','viola','rosso','oro'],active:0,score:0,challenge:null,awarded:false,unmasked:false,challengeIndex:-1};
+  // Ogni giro della sfida propone cinque resistenze diverse, con ordine dei colori casuale.
+  const QUIZ_LENGTH=5;
+  const state={count:4,mode:'explore',bands:['giallo','viola','rosso','oro'],active:0,score:0,round:0,challenge:null,awarded:false,unmasked:false,finished:false,challengeQueue:[],paletteOrder:[]};
   const it=(num,digits=7)=>Number(Number(num).toPrecision(Math.min(12,Math.max(1,digits)))).toLocaleString('it-IT',{maximumFractionDigits:8});
   function unit(n){const abs=Math.abs(n);let scale=1,label='Ω';if(abs>=1e6){scale=1e6;label='MΩ'}else if(abs>=1e3){scale=1e3;label='kΩ'};return `${it(n/scale,8)} ${label}`;}
   function toleranceNumber(id){return TOLERANCES.find(c=>c.id===id)?.percent??5;}
@@ -233,6 +242,12 @@
     const solved=solve(value);if(!solved)return null;
     state.bands=[...solved.bands,TOLERANCES.some(t=>t.id===tol)?tol:'oro'];state.active=0;render();return solved;
   }
+  function shuffle(items){
+    const arr=[...items];
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+    return arr;
+  }
+  function shufflePalette(){state.paletteOrder=shuffle([...DIGITS,...EXTRA].map(c=>c.id));}
   function status(el,message,type=''){
     el.className='feedback'+(message?' show':'')+(type?' '+type:'');el.textContent=message;
   }
@@ -270,14 +285,18 @@
     document.querySelectorAll('[data-pick]').forEach(btn=>btn.addEventListener('click',()=>{state.active=Number(btn.dataset.pick);render()}));
   }
   function renderPalette(){
-    const list=candidates(state.active),role=getRoles()[state.active],sig=state.count-2;
+    const role=getRoles()[state.active],sig=state.count-2;
+    const challenge=state.mode==='challenge';
+    const list=[...candidates(state.active)];
+    if(challenge)list.sort((a,b)=>state.paletteOrder.indexOf(a.id)-state.paletteOrder.indexOf(b.id));
     $('paletteTitle').textContent='Scegli: '+role;
-    $('paletteHint').textContent=state.active<sig?'Una cifra da 0 a 9':state.active===sig?'Fattore moltiplicativo':'Precisione del valore';
+    $('paletteHint').textContent=challenge?'Scegli il colore corretto':state.active<sig?'Una cifra da 0 a 9':state.active===sig?'Fattore moltiplicativo':'Precisione del valore';
     $('swatches').innerHTML=list.map(c=>{
       const n=state.active<sig?DIGITS.findIndex(x=>x.id===c.id):state.active===sig?('×10'+sup(c.exp)):'±'+it(c.percent)+'%';
-      return `<button type="button" class="swatch ${state.bands[state.active]===c.id?'active':''}" data-color="${c.id}" aria-pressed="${state.bands[state.active]===c.id}" aria-label="${c.name}, ${n}"><span class="swatch-chip" style="background:${c.hex}"></span><span class="swatch-label">${c.name}</span><span class="swatch-value">${n}</span></button>`;
+      return `<button type="button" class="swatch ${state.bands[state.active]===c.id?'active':''}" data-color="${c.id}" aria-pressed="${state.bands[state.active]===c.id}" aria-label="${c.name}${challenge?'':', '+n}" ${challenge&&(state.finished||state.awarded)?'disabled':''}><span class="swatch-chip" style="background:${c.hex}"></span><span class="swatch-label">${c.name}</span>${challenge?'':`<span class="swatch-value">${n}</span>`}</button>`;
     }).join('');
     document.querySelectorAll('[data-color]').forEach(btn=>btn.addEventListener('click',()=>{
+      if(state.mode==='challenge'&&state.finished)return;
       state.bands[state.active]=btn.dataset.color;
       if(state.active<state.count-1)state.active++;
       if(state.mode==='challenge'){state.unmasked=false;status($('challengeFeedback'),'');}
@@ -302,42 +321,64 @@
   function render(){
     document.querySelectorAll('[data-count]').forEach(el=>el.setAttribute('aria-pressed',el.dataset.count===String(state.count)));
     document.querySelectorAll('[data-mode]').forEach(el=>el.setAttribute('aria-selected',String(el.dataset.mode===state.mode)));
-    $('reverseBox').classList.toggle('hidden',state.mode!=='reverse');
-    $('challengeBox').classList.toggle('hidden',state.mode!=='challenge');
+    const challenge=state.mode==='challenge';
+    $('valueLookup').classList.toggle('hidden',challenge);
+    $('challengeBox').classList.toggle('hidden',!challenge);
+    $('legendSection').classList.toggle('hidden',challenge);
     $('bandInfo').textContent=state.count+' bande · '+(state.count-2)+' cifre + moltiplicatore + tolleranza';
     drawResistor();renderPicks();renderPalette();renderResult();
-    $('score').textContent=state.score+' '+(state.score===1?'punto':'punti');
+    $('score').textContent=state.score+'/'+QUIZ_LENGTH+' corrette';
+    $('challengeStep').textContent=state.finished?'· Completata':'· Prova '+(state.round+1)+' di '+QUIZ_LENGTH;
+    $('nextBtn').textContent=state.finished?'Ricomincia':state.round===QUIZ_LENGTH-1?'Termina':'Prossima prova';
+    $('checkBtn').disabled=state.finished;
+    $('revealBtn').disabled=state.finished;
   }
-  function newChallenge(){
-    const options=state.count===4?
-      [[100,5],[220,5],[330,5],[470,5],[1000,5],[2200,5],[4700,5],[10000,5],[33000,5],[68000,5],[120000,5],[560000,5],[4.7,5]]:
-      [[100,1],[220,1],[470,1],[1000,1],[1210,1],[2200,1],[4750,1],[10000,1],[12400,1],[33000,1],[48700,1],[100000,1],[562000,1]];
-    let index=Math.floor(Math.random()*options.length);
-    if(options.length>1&&index===state.challengeIndex)index=(index+1)%options.length;
-    state.challengeIndex=index;
-    const [ohms,tol]=options[index];
+  const QUIZ_OPTIONS={
+    4:[[100,5],[220,5],[330,5],[470,5],[1000,5],[2200,5],[4700,5],[10000,5],[33000,5],[68000,5],[120000,5],[560000,5],[4.7,5]],
+    5:[[100,1],[220,1],[470,1],[1000,1],[1210,1],[2200,1],[4750,1],[10000,1],[12400,1],[33000,1],[48700,1],[100000,1],[562000,1]]
+  };
+  function startQuiz(){
+    state.score=0;state.round=0;state.finished=false;
+    state.challengeQueue=shuffle(QUIZ_OPTIONS[state.count]).slice(0,QUIZ_LENGTH);
+    loadRound();
+  }
+  function loadRound(){
+    const [ohms,tol]=state.challengeQueue[state.round];
     state.challenge={ohms,tol,encoded:solve(ohms)};
     state.awarded=false;state.unmasked=false;
     state.bands=state.count===4?['marrone','nero','rosso','oro']:['marrone','nero','nero','rosso','marrone'];
     state.active=0;
+    shufflePalette();
     $('target').textContent=unit(ohms)+' ±'+it(tol)+'%';
     status($('challengeFeedback'),'');render();
+  }
+  function finishQuiz(message=''){
+    state.finished=true;
+    render();
+    const summary='Hai completato le 5 prove: '+state.score+' risposte corrette su '+QUIZ_LENGTH+'. Premi Ricomincia per un altro giro.';
+    status($('challengeFeedback'),(message?message+' ':'')+summary,state.score===QUIZ_LENGTH?'ok':'');
+  }
+  function nextRound(){
+    if(state.finished){startQuiz();return;}
+    if(state.round===QUIZ_LENGTH-1){finishQuiz();return;}
+    state.round++;
+    loadRound();
   }
   function switchCount(count){
     const current=model(),oldTol=state.bands[state.count-1];
     state.count=count;
-    if(state.mode==='challenge')newChallenge();
+    if(state.mode==='challenge')startQuiz();
     else{
       const solved=solve(current.ohms);
       state.bands=solved?[...solved.bands,oldTol]:count===4?['giallo','viola','rosso','oro']:['giallo','viola','nero','marrone','oro'];
       state.active=0;render();
-      if(state.mode==='reverse'&&solved&&solved.error>1e-10)status($('reverseFeedback'),'Il nuovo numero di bande richiede un arrotondamento: '+unit(solved.actual)+'.');
+      if(solved&&solved.error>1e-10)status($('reverseFeedback'),'Il nuovo numero di bande richiede un arrotondamento: '+unit(solved.actual)+'.');
     }
   }
   document.querySelectorAll('[data-count]').forEach(el=>el.addEventListener('click',()=>{const count=Number(el.dataset.count);if(count!==state.count)switchCount(count)}));
   document.querySelectorAll('[data-mode]').forEach(el=>el.addEventListener('click',()=>{
     state.mode=el.dataset.mode;
-    if(state.mode==='challenge')newChallenge();else render();
+    if(state.mode==='challenge')startQuiz();else render();
   }));
   $('reverseForm').addEventListener('submit',e=>{
     e.preventDefault();
@@ -349,26 +390,29 @@
     else status($('reverseFeedback'),`Colori trovati: ${state.bands.map(id=>COLOR_BY_ID[id].name).join(' · ')}.`, 'ok');
   });
   $('checkBtn').addEventListener('click',()=>{
+    if(state.finished||state.awarded)return;
     const result=model();
     const correct=Math.abs(result.ohms-state.challenge.ohms)<=state.challenge.ohms*1e-9&&Math.abs(result.tolerance-state.challenge.tol)<1e-8;
     if(correct){
-      if(!state.awarded){state.score++;state.awarded=true;}
-      state.unmasked=true;
-      status($('challengeFeedback'),'Corretto! Hai ricostruito valore e tolleranza. Ottimo lavoro.','ok');
+      state.score++;state.awarded=true;state.unmasked=true;
+      if(state.round===QUIZ_LENGTH-1){finishQuiz('Corretto!');return;}
+      status($('challengeFeedback'),'Corretto! '+state.score+' su '+QUIZ_LENGTH+' indovinate. Passa alla prossima prova.','ok');
     }else{
-      status($('challengeFeedback'),`Non ancora: hai costruito ${unit(result.ohms)} ±${it(result.tolerance)}%. Controlla cifre, moltiplicatore e tolleranza.`, 'error');
+      status($('challengeFeedback'),`Non ancora: hai costruito ${unit(result.ohms)} ±${it(result.tolerance)}%. Riprova!`, 'error');
     }
     render();
   });
   $('revealBtn').addEventListener('click',()=>{
+    if(state.finished)return;
     const t=state.challenge;
     state.bands=[...t.encoded.bands,TOLERANCES.find(c=>c.percent===t.tol).id];
     state.awarded=true;state.unmasked=true;state.active=0;
-    status($('challengeFeedback'),'Soluzione mostrata. Prova una nuova sfida per guadagnare punti.');render();
+    if(state.round===QUIZ_LENGTH-1){finishQuiz('Soluzione mostrata.');return;}
+    status($('challengeFeedback'),'Soluzione mostrata: questa prova non assegna punti. Passa alla prossima.');render();
   });
-  $('nextBtn').addEventListener('click',newChallenge);
+  $('nextBtn').addEventListener('click',nextRound);
   $('resetBtn').addEventListener('click',()=>{
-    if(state.mode==='challenge')newChallenge();
+    if(state.mode==='challenge')startQuiz();
     else{state.bands=state.count===4?['giallo','viola','rosso','oro']:['giallo','viola','nero','marrone','oro'];state.active=0;status($('reverseFeedback'),'');render();}
   });
   $('legend').innerHTML=DIGITS.map((c,i)=>`<span class="legend-chip"><i style="background:${c.hex}"></i>${c.name} <strong>${i}</strong></span>`).join('');
