@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#00b9c8">
+<title>Resistenze in serie, parallelo e misto | OMG Virtual Lab</title>
+<!-- OMG Virtual Lab • v7: parallelo simmetrico a due rami, generatore sul lato inferiore -->
+<meta name="description" content="Simulatore interattivo delle resistenze in serie, parallelo e misto: correnti animate e formule con valori reali.">
+<style>
+:root{--ink:#17202d;--cyan:#00b9c8;--turquoise:#148e97;--yellow:#ffe45d;--orange:#d78823;--purple:#765fc5;--magenta:#d83f78;--panel:#f4fafb;--muted:#52717d;--wire:#5c7a86;--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--display:"Avenir Next","Trebuchet MS","Segoe UI",var(--font)}
+*{box-sizing:border-box}html{color-scheme:light}body{margin:0;background:#fff;font:15px/1.4 var(--font);color:var(--ink)}button,input,select{font:inherit}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--magenta);outline-offset:3px}
+.page{max-width:1060px;margin:auto;padding:14px clamp(9px,2vw,22px) 28px}.brand{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 3px 12px}.wordmark{font-family:var(--display);font-size:21px;font-weight:950;letter-spacing:-.065em;text-decoration:none;color:var(--ink)}.wordmark b{color:#008e9a}.brandhint{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+.lab{background:var(--panel);border:2px solid var(--ink);border-radius:17px;padding:clamp(11px,2vw,20px);box-shadow:4px 4px 0 var(--ink)}.header{display:flex;align-items:start;justify-content:space-between;gap:10px;flex-wrap:wrap}.tag{display:inline-block;background:var(--yellow);border:2px solid var(--ink);border-radius:6px;padding:3px 7px;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}h1{font:950 clamp(25px,3.4vw,33px)/1.07 var(--display);letter-spacing:-.045em;margin:7px 0 0}.lead{margin:7px 0 11px;color:#54717e;font-size:13px}.reset{border:2px solid var(--ink);border-radius:9px;background:white;color:var(--ink);padding:8px 11px;font-weight:900;cursor:pointer}.reset:hover{background:#e9f9fa}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:11px}.tab{border:2px solid #c4dade;border-radius:10px;background:#fff;color:#284754;font-weight:900;font-family:var(--display);padding:9px 5px;cursor:pointer;font-size:14px}.tab[aria-pressed=true]{border-color:var(--ink);background:var(--cyan);color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.circuit{background:#fff;border:1px solid #cce0e5;border-radius:14px;padding:7px 8px 3px;position:relative}.svgStage{width:100%}#circuitSVG{width:100%;height:auto;display:block}.wire{stroke:var(--wire);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round;fill:none}.bodyRes{fill:#fff;stroke-width:4.3;rx:5}.battery{fill:#e9f9f9;stroke:var(--turquoise);stroke-width:4.2}.join{fill:var(--wire);stroke:#fff;stroke-width:1.3}.resName{font:950 21px var(--display);fill:var(--ink);text-anchor:middle}.resVal{font:900 19px var(--display);fill:#243d49;text-anchor:middle}.dropText{font:800 17px var(--display);fill:#607e89;text-anchor:middle}.batteryMark{font:900 27px var(--display);fill:#117f8a;text-anchor:middle}.batteryVolts{font:900 18px var(--display);fill:#117f8a;text-anchor:end}.currentText{font:900 17px var(--display);fill:#087d87}.branchArrow{fill:none;stroke:#0d9ea5;stroke-width:4.2;stroke-linecap:round}.caption{font:850 17px var(--display);fill:#65828b;text-anchor:middle}.flowDot{stroke:#fff;stroke-width:.8}
+/* A single control row directly under the circuit */
+.controlStrip{display:flex;align-items:stretch;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;padding:10px 1px 7px;scrollbar-width:thin}.resControl{flex:1 1 160px;min-width:137px;background:#fff;border:1px solid #d4e6e9;border-radius:11px;padding:9px 11px 7px}.resControl[hidden]{display:none}.controlHead{display:flex;justify-content:space-between;align-items:center;gap:4px;white-space:nowrap;margin-bottom:3px}.controlHead label{font:950 15px var(--display)}.controlHead output{font:900 14px var(--display);color:#244350;tab-size:4}.resControl input{width:100%;display:block;margin:6px 0 0;accent-color:var(--turquoise);cursor:pointer}.voltageControl{flex:0 0 250px;min-width:215px;border-radius:11px;padding:9px 11px 7px;background:#e0f3f2}.voltageControl label{display:block;font:900 14px var(--display);margin-bottom:6px}.voltageButtons{display:flex;gap:4px}.volt{flex:1;min-width:0;padding:5px 3px;border:2px solid #a6cbd0;border-radius:7px;background:white;cursor:pointer;color:#325562;font-size:13px;font-weight:950}.volt[aria-pressed=true]{background:var(--yellow);color:var(--ink);border-color:var(--ink)}.voltageSelect{display:none}
+.resultGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:5px}.resultCard{border-radius:12px;border:2px solid var(--ink);padding:12px 14px 13px;min-width:0}.resultCard.eq{background:#17202d;color:#fff}.resultCard.i{background:var(--cyan);color:var(--ink)}.resultTitle{font:850 13px var(--display);margin-bottom:5px}.resultExpression{font:800 15px/1.5 var(--display);min-height:43px;overflow-wrap:anywhere}.resultValue{font:950 clamp(23px,3vw,31px)/1.1 var(--display);letter-spacing:-.035em;margin-top:3px}
+.breakdown{background:white;border:1px solid #d7e8eb;border-radius:12px;margin-top:10px;padding:10px 13px}.breakhead{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px;margin-bottom:7px}.breakhead strong{font:950 15px var(--display)}.breakhead span{font-size:11px;color:var(--muted)}.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.stat{background:#f5fafb;border:1px solid #e1edf0;border-radius:8px;padding:8px 10px}.statTitle{font:950 13px var(--display);margin-bottom:2px}.statLine{font-size:13px;color:#476270}.statLine b{color:#173340}.note{margin:9px 2px 0;color:#506d79;font-size:12px}.share{margin-top:7px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;font-weight:850;color:#355968}.share[hidden]{display:none}.share .track{display:flex;height:11px;border-radius:8px;overflow:hidden;flex:1 1 160px;background:#e0edf0;min-width:100px}.segment{height:100%;transition:width .18s ease}.shareLegend{font-size:11px;color:#567680}
+@media(max-width:680px){.page{padding:8px 6px 20px}.brand{margin-bottom:8px}.lab{padding:9px;border-radius:14px}.brandhint{display:none}.wordmark{font-size:18px}.lead{font-size:12px;line-height:1.35;margin-bottom:10px}h1{font-size:21px}.fullTitle{display:none}.header{position:relative;min-height:42px}.header>div{padding-right:35px}.tag{font-size:9px}.reset{position:absolute;right:0;top:0;font-size:17px;padding:2px 6px}.reset .resetText{display:none}.lead{display:none}.tabs{gap:5px;margin-bottom:8px}.tab{font-size:12px;padding:7px 2px}.circuit{padding:1px 2px 0}.controlStrip{gap:5px;padding-top:7px}.resControl{flex:1 0 100px;min-width:100px;padding:6px 7px 4px}.controlHead{display:block;margin-bottom:0}.controlHead label{font-size:13px}.controlHead output{font-size:12px;float:right}.resControl input{margin-top:7px}.voltageControl{flex:0 0 89px;min-width:89px;padding:6px 6px 4px}.voltageControl label{font-size:12px;line-height:1.2;margin:0 0 5px}.voltageButtons{display:none}.voltageSelect{display:block;width:100%;border:1px solid #8ac8c9;background:#fff;border-radius:6px;font-size:13px;font-weight:900;padding:5px 2px;color:#16414b}.controlStrip.mixedControls .resControl{flex:1 1 0;min-width:0;padding:5px 3px 4px}.controlStrip.mixedControls .controlHead{display:flex;flex-direction:column;align-items:center;gap:0}.controlStrip.mixedControls .controlHead label{font-size:12px}.controlStrip.mixedControls .controlHead output{float:none;font-size:11px}.controlStrip.mixedControls .voltageControl{flex:0 0 76px;min-width:76px;padding:5px 3px 4px}.controlStrip.mixedControls .voltageControl label{font-size:11px}.resultGrid{gap:6px;margin-top:3px}.resultCard{padding:9px 9px 10px;border-radius:10px}.resultTitle{font-size:12px}.resultExpression{font-size:12px;min-height:60px;line-height:1.4}.resultValue{font-size:21px}.breakdown{margin-top:8px;padding:9px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.stat{padding:6px 8px}.statLine{font-size:12px}.note{font-size:11px}}
+@media(min-width:681px) and (max-width:870px){.resControl{min-width:120px}.voltageControl{min-width:195px;flex-basis:195px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V4: wire-first schematic, labels only inside resistor symbols */
+.circuit{overflow:hidden;padding:8px 8px 0}
+.resName{font:950 22px var(--display);fill:#1d3c48;text-anchor:middle;dominant-baseline:middle}
+.flowDot{stroke:#fff;stroke-width:1.15;opacity:.97}
+.currentLane{fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.90}
+.branchArrowStatic{stroke:none}
+.circuit .share{display:flex;gap:9px;align-items:center;padding:10px 11px 11px;margin-top:1px;background:#eaf7f8;border-top:1px solid #d6ecef;color:#274957;border-radius:0 0 12px 12px;font-size:13px;font-weight:950}
+.circuit .share[hidden]{display:none}
+.circuit .share .track{height:14px;flex:1 1 220px;min-width:90px;box-shadow:inset 0 0 0 1px #ccdee2}
+.circuit .shareLegend{font-size:12px;font-weight:850;color:#335969}
+@media(max-width:680px){
+  .circuit{padding:2px 2px 0}
+  .circuit .share{display:grid;grid-template-columns:1fr auto;row-gap:3px;padding:7px 10px 8px;line-height:1.25;font-size:11px}
+  .circuit .share .track{grid-column:1/-1;grid-row:2;width:100%;height:12px;min-width:0}
+  .circuit .shareLegend{grid-column:1/-1;grid-row:3;font-size:11px;white-space:normal;text-align:left}
+}
+
+/* V6 • Etichette elettriche integrate nei simboli, leggibili ma discrete. */
+.resCaption{font:800 17px var(--display);fill:#526a76;text-anchor:middle}
+.resOhms{font:850 18px var(--display);fill:#26414a;text-anchor:middle}
+.branchCurrent{font:900 18px var(--display);text-anchor:middle}
+.totalCurrent{font:950 17px var(--display);fill:#bd376a;text-anchor:start}
+.bodyRes{fill:#fff;stroke-width:4;rx:8}
+@media(max-width:680px){
+  .circuit .share{margin-top:0}
+}
+</style>
+</head>
+<body>
+<main class="page">
+ <div class="brand"><a href="https://ohmmygod.it" class="wordmark" target="_blank" rel="noopener">OMG <b>Virtual Lab</b></a><span class="brandhint">Elettroni e dintorni</span></div>
+ <section class="lab" id="omgApp" aria-label="Simulatore resistenze serie parallelo e misto">
+  <div class="header"><div><span class="tag">OMG · Laboratorio interattivo</span><h1><span class="fullTitle">Resistenze: </span>Serie, parallelo e misto</h1></div><button id="reset" class="reset" type="button" aria-label="Ripristina i valori iniziali">↺ <span class="resetText">Ripristina</span></button></div>
+  <p class="lead">I percorsi colorati mostrano come la corrente si divide nei rami. Cambia le resistenze per confrontarla.</p>
+  <div class="tabs" role="group" aria-label="Scegli il tipo di circuito">
+   <button type="button" class="tab" data-mode="series" aria-pressed="true">Serie</button>
+   <button type="button" class="tab" data-mode="parallel" aria-pressed="false">Parallelo</button>
+   <button type="button" class="tab" data-mode="mixed" aria-pressed="false">Misto</button>
+  </div>
+  <div class="circuit"><div class="svgStage"><svg id="circuitSVG" viewBox="0 0 960 380" role="img" aria-label="Schema elettrico semplificato: correnti rappresentate da colori e punti animati">
+    <g id="wires"></g><g id="movingDots"></g><g id="symbols"></g><g id="texts"></g>
+  </svg></div><div class="share" id="share" hidden><span id="shareTitle">Divisione della corrente</span><div class="track"><span class="segment" id="seg1" style="background:var(--orange)"></span><span class="segment" id="seg2" style="background:var(--turquoise)"></span></div><span class="shareLegend" id="shareLabels"></span></div></div>
+  <div class="controlStrip" id="controlStrip" aria-label="Regolazione dei componenti">
+   <div class="resControl" data-index="0"><div class="controlHead"><label for="res1" style="color:var(--orange)">R₁</label><output id="out1">100 Ω</output></div><input id="res1" type="range" min="100" max="1000" step="10" value="100"></div>
+   <div class="resControl" data-index="1"><div class="controlHead"><label for="res2" style="color:var(--turquoise)">R₂</label><output id="out2">220 Ω</output></div><input id="res2" type="range" min="100" max="1000" step="10" value="220"></div>
+   <div class="resControl" data-index="2" hidden><div class="controlHead"><label for="res3" style="color:var(--purple)">R₃</label><output id="out3">470 Ω</output></div><input id="res3" type="range" min="100" max="1000" step="10" value="470"></div>
+   <div class="resControl" data-index="3" hidden><div class="controlHead"><label for="res4" style="color:var(--magenta)">R₄</label><output id="out4">150 Ω</output></div><input id="res4" type="range" min="100" max="1000" step="10" value="150"></div>
+   <div class="voltageControl"><label for="voltageSelect">Alimentazione</label><div class="voltageButtons" role="group" aria-label="Tensione"><button type="button" class="volt" data-v="3" aria-pressed="false">3 V</button><button type="button" class="volt" data-v="5" aria-pressed="true">5 V</button><button type="button" class="volt" data-v="9" aria-pressed="false">9 V</button><button type="button" class="volt" data-v="12" aria-pressed="false">12 V</button></div><select id="voltageSelect" class="voltageSelect" aria-label="Tensione di alimentazione"><option value="3">3 V</option><option value="5">5 V</option><option value="9">9 V</option><option value="12">12 V</option></select></div>
+  </div>
+  <div class="resultGrid">
+   <div class="resultCard eq"><div class="resultTitle">Resistenza equivalente · R<sub>eq</sub></div><div class="resultExpression" id="eqFormula"></div><div class="resultValue" id="eqResult"></div></div>
+   <div class="resultCard i"><div class="resultTitle">Corrente totale · I<sub>tot</sub></div><div class="resultExpression" id="iFormula"></div><div class="resultValue" id="iResult"></div></div>
+  </div>
+  
+  <div class="breakdown"><div class="breakhead"><strong>Valori sulle resistenze</strong><span>I: corrente nel ramo · V<sub>R</sub>: tensione ai capi</span></div><div id="stats" class="readouts"></div></div>
+  <p class="note" id="note"></p>
+ </section>
+</main>
+<script>
+(()=>{
+'use strict';
+const S='http://www.w3.org/2000/svg';
+const app=document.getElementById('omgApp');
+const q=s=>app.querySelector(s), qa=s=>Array.from(app.querySelectorAll(s));
+const svg=q('#circuitSVG'), wires=q('#wires'), movingDots=q('#movingDots'), symbols=q('#symbols'), texts=q('#texts');
+const COLORS=['#d78823','#148e97','#765fc5','#d83f78'];
+const DEFAULT=[100,220,470,150];
+const labels=['R₁','R₂','R₃','R₄'];
+let mode='series', V=5, R=DEFAULT.slice(), particles=[], prev=0;
+let mobile=window.matchMedia('(max-width:680px)').matches;
+function num(n,d=2){return Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function rfmt(n){return n>=1000?num(n/1000,Math.abs(n/1000-Math.round(n/1000))>1e-8?2:0)+' kΩ':num(n,Math.abs(n-Math.round(n))>1e-8?2:0)+' Ω'}
+function ifmt(n){return num(n*1000,2)+' mA'}
+function vfmt(n){return num(n,2)+' V'}
+function el(tag,at,parent){const a=document.createElementNS(S,tag);for(const k in at)a.setAttribute(k,at[k]);(parent||wires).appendChild(a);return a}
+function drawWire(d){return el('path',{d,class:'wire'},wires)}
+function write(x,y,text,cls='resName',opts={}){const t=el('text',{x,y,class:cls,...opts},texts);t.textContent=text;return t}
+function rect(x,y,w,h,stroke){return el('rect',{x,y,width:w,height:h,stroke,class:'bodyRes'},symbols)}
+function junction(x,y){return el('circle',{cx:x,cy:y,r:6,class:'join'},symbols)}
+function battery(x,y,r=29){el('circle',{cx:x,cy:y,r,class:'battery'},symbols);write(x,y-3,'+','batteryMark');write(x,y+20,'−','batteryMark');if(mobile){write(x+40,y+5,V+' V','batteryVolts',{style:'text-anchor:start;font-size:18px'})}else{write(x-35,y+5,V+' V','batteryVolts')}}
+function flowArrow(x1,y1,x2,y2,label,lx,ly,size){
+ const col='#0d9ea5';el('line',{x1,y1,x2,y2,stroke:col,'stroke-width':4,'stroke-linecap':'round'},texts);
+ const a=Math.atan2(y2-y1,x2-x1),len=12,w=5;
+ const bx=x2-len*Math.cos(a),by=y2-len*Math.sin(a);
+ el('polygon',{points:`${x2},${y2} ${bx-w*Math.sin(a)},${by+w*Math.cos(a)} ${bx+w*Math.sin(a)},${by-w*Math.cos(a)}`,fill:col},texts);
+ if(label)write(lx,ly,label,'currentText',size?{style:`font-size:${size}px`}:{});
+}
+function hRes(k,x,y,width,drop,compact){
+ const h=compact?30:40,left=x-width/2,right=x+width/2;
+ rect(left,y-h/2,width,h,COLORS[k]);
+ write(x,y-h/2-(compact?13:16),labels[k],'resName');
+ write(x,y+(compact?6:7),rfmt(R[k]),'resVal');
+ write(x,y+h/2+(compact?23:29),`V${labels[k]} = ${vfmt(drop)}`,'dropText',compact?{style:'font-size:16px'}:{});
+ return{left,right};
+}
+function vRes(k,x,y,height,drop,compact){
+ const width=compact?30:35,top=y-height/2,bottom=y+height/2;
+ rect(x-width/2,top,width,height,COLORS[k]);
+ write(x,top-(compact?20:25),labels[k],'resName');
+ write(x+width/2+13,y+6,rfmt(R[k]),'resVal',{style:`text-anchor:start;font-size:${compact?17:18}px`});
+ if(compact){const tx=k===1?205:349;write(tx,bottom+24,`V${labels[k]} = ${vfmt(drop)}`,'dropText',{style:'text-anchor:start;font-size:15px'})}else{const tx=k===1?511:850;write(tx,bottom+22,`V${labels[k]} = ${vfmt(drop)}`,'dropText',{style:'text-anchor:start;font-size:16px'})}
+ return{top,bottom};
+}
+function calc(){
+ const amps=[0,0,0,0],drop=[0,0,0,0];let req,total,rp=0;
+ if(mode==='series'){
+  req=R[0]+R[1];total=V/req;
+  for(let k=0;k<2;k++){amps[k]=total;drop[k]=total*R[k]}
+ }else if(mode==='parallel'){
+  req=R[0]*R[1]/(R[0]+R[1]);total=V/req;
+  for(let k=0;k<2;k++){amps[k]=V/R[k];drop[k]=V}
+ }else{
+  rp=R[1]*R[2]/(R[1]+R[2]);req=R[0]+rp+R[3];total=V/req;
+  amps[0]=total;amps[3]=total;amps[1]=total*rp/R[1];amps[2]=total*rp/R[2];
+  drop[0]=total*R[0];drop[3]=total*R[3];drop[1]=total*rp;drop[2]=total*rp;
+ }
+ return{req,total,amps,drop,rp};
+}
+// Schematic flow: one shared stream + independent colored branches.
+// Proportional dot count and highlighted track represent current distribution, not electron drift speed.
+function clearSchematic(){
+ wires.replaceChildren(); movingDots.replaceChildren(); symbols.replaceChildren(); texts.replaceChildren(); particles=[];
+}
+function nodeArrow(x,y,axis,color,scale=1){
+ const size=7*scale;
+ const pts=axis==='right'?`${x-size},${y-size*.72} ${x+size},${y} ${x-size},${y+size*.72}`:
+           axis==='left'?`${x+size},${y-size*.72} ${x-size},${y} ${x+size},${y+size*.72}`:
+           `${x-size*.72},${y-size} ${x},${y+size} ${x+size*.72},${y-size}`;
+ el('polygon',{points:pts,fill:color,class:'branchArrowStatic'},symbols);
+}
+// Il valore in ohm è DENTRO ogni resistenza; la caduta è sotto il simbolo.
+// Le correnti sono affiancate ai rispettivi rami, evitando sovrapposizioni.
+function resistorHorizontal(k,x,y,width,drop,compact){
+  const h=compact?60:64;
+  rect(x-width/2,y-h/2,width,h,COLORS[k]);
+  write(x,y-14,labels[k],'resName',{style:`font-size:${compact?19:21}px`});
+  write(x,y+20,rfmt(R[k]),'resOhms',{style:`font-size:${compact?16:18}px`});
+  write(x,y+(compact?50:53),`VR${labels[k].slice(1)} = ${vfmt(drop)}`,'resCaption',{style:`font-size:${compact?16:17}px`});
+}
+
+function resistorVertical(k,x,y,height,drop,compact){
+  const w=compact?39:43;
+  rect(x-w/2,y-height/2,w,height,COLORS[k]);
+  write(x,y+2,labels[k],'resName',{style:`font-size:${compact?19:21}px`});
+  if(compact){
+    write(x,y+height/2+106,rfmt(R[k]),'resOhms',{style:'font-size:15px'});
+    write(x,y+height/2+128,`VR${labels[k].slice(1)} = ${vfmt(drop)}`,'resCaption',{style:'font-size:14px'});
+  }else{
+    write(x+31,y+6,rfmt(R[k]),'resOhms',{style:'font-size:18px;text-anchor:start'});
+    write(x-24,y+height/2+31,`VR${labels[k].slice(1)} = ${vfmt(drop)}`,'resCaption',{style:'font-size:16px;text-anchor:end'});
+  }
+}
+
+function currentLabel(x,y,text,color,compact=false,align='middle'){
+  write(x,y,text,'branchCurrent',{style:`font-size:${compact?16:18}px;fill:${color};text-anchor:${align}`});
+}
+function totalLabel(x,y,total,compact=false){
+  write(x,y,`I tot = ${ifmt(total)}`,'totalCurrent',{style:`font-size:${compact?16:18}px`});
+}
+function generator(x,y,r){
+ el('circle',{cx:x,cy:y,r,class:'battery'},symbols);
+ write(x,y-8,'+','batteryMark',{style:'font-size:25px'});
+ write(x,y+18,'−','batteryMark',{style:'font-size:24px'});
+}
+function lane(d,color,amp,total){
+ const portion=total>0?amp/total:0;
+ el('path',{d,class:'currentLane',stroke:color,'stroke-width':(4.8+6.5*portion).toFixed(2)},wires);
+}
+function stream(d,amp,total,color,common=false){
+ if(amp<=0)return;
+ const path=el('path',{d,fill:'none',stroke:'none'},wires);
+ const length=path.getTotalLength();
+ const portion=Math.max(0,Math.min(1,amp/total));
+ // Deliberately much clearer difference between the busiest and quieter branch.
+ const count=Math.max(2,Math.min(28,Math.round((common?11:3+21*portion)*Math.min(2.1,length/480))));
+ const speed=common?88:58+80*portion;
+ for(let i=0;i<count;i++){
+  const dot=el('circle',{r:common?(mobile?3.2:4.1):(mobile?3.6:5.0),fill:color,class:'flowDot'},movingDots);
+  particles.push({path,len:length,dot,p:i/count,speed:speed/length});
+ }
+}
+function drawSeries(c){
+ if(mobile){
+  svg.setAttribute('viewBox','0 0 520 294');
+  const bx=49,top=78,bot=262,rx=467,cy=169;
+  drawWire(`M${bx} 141 V${top} H${rx} V${bot} H${bx} V197`);
+  generator(bx,cy,27);
+  resistorHorizontal(0,195,top,110,c.drop[0],true);
+  resistorHorizontal(1,365,top,110,c.drop[1],true);
+  totalLabel(106,183,c.total,true);
+  nodeArrow(282,top,'right','#d83f78',1.0);
+  nodeArrow(399,bot,'left','#d83f78',1.0);
+  stream(`M${bx} 141 V${top} H${rx} V${bot} H${bx} V197`,c.total,c.total,'#d83f78',true);
+ }else{
+  svg.setAttribute('viewBox','0 0 960 290');
+  const bx=92,top=79,bot=254,rx=872,cy=167;
+  drawWire(`M${bx} 138 V${top} H${rx} V${bot} H${bx} V196`);
+  generator(bx,cy,29);
+  resistorHorizontal(0,342,top,152,c.drop[0],false);
+  resistorHorizontal(1,647,top,152,c.drop[1],false);
+  totalLabel(170,184,c.total);
+  nodeArrow(499,top,'right','#d83f78',1.1);
+  nodeArrow(530,bot,'left','#d83f78',1.1);
+  stream(`M${bx} 138 V${top} H${rx} V${bot} H${bx} V196`,c.total,c.total,'#d83f78',true);
+ }
+}
+
+// Generatore orizzontale: il polo + alimenta la sbarra sinistra;
+// il polo - riceve la corrente di ritorno dalla sbarra destra.
+function generatorHorizontal(x,y,r,compact){
+  el('circle',{cx:x,cy:y,r,class:'battery'},symbols);
+  write(x-12,y+9,'+','batteryMark',{style:`font-size:${compact?23:26}px`});
+  write(x+13,y+9,'−','batteryMark',{style:`font-size:${compact?23:26}px`});
+  write(x,y+r+29,`${V} V`,'resCaption',{style:`font-size:${compact?18:20}px;fill:#117f8a;font-weight:900`});
+}
+
+// Parallelo: un rettangolo simmetrico con due traverse resistive.
+// Il generatore è nel ramo inferiore, evitando passaggi a gomito e cavi sospesi.
+function drawParallel(c){
+  const compact=mobile;
+  const left=compact?63:159, right=compact?456:826;
+  const top=compact?83:85, middle=compact?229:230, bottom=compact?368:366;
+  const cx=(left+right)/2;
+  const gR=compact?26:29;
+  const gX=cx;
+  svg.setAttribute('viewBox',compact?'0 0 520 446':'0 0 960 447');
+
+  // I terminali del generatore interrompono il filo inferiore: nessun corto circuito.
+  drawWire(`M${left} ${top} H${right} V${bottom} H${gX+gR}`);
+  drawWire(`M${gX-gR} ${bottom} H${left} V${top}`);
+  drawWire(`M${left} ${middle} H${right}`);
+
+  // Arancio e turchese distinguono le sole diramazioni parallele.
+  lane(`M${left} ${top} H${right}`,COLORS[0],c.amps[0],c.total);
+  lane(`M${left} ${middle} H${right}`,COLORS[1],c.amps[1],c.total);
+
+  resistorHorizontal(0,cx,top,compact?126:174,c.drop[0],compact);
+  resistorHorizontal(1,cx,middle,compact?126:174,c.drop[1],compact);
+  generatorHorizontal(gX,bottom,gR,compact);
+  junction(left,top);junction(right,top);
+  junction(left,middle);junction(right,middle);
+
+  // Ogni corrente sta sopra il proprio ramo; I tot accanto al filo comune.
+  currentLabel(cx,top-(compact?49:49),`I₁ = ${ifmt(c.amps[0])}`,COLORS[0],compact);
+  currentLabel(cx,middle-(compact?49:49),`I₂ = ${ifmt(c.amps[1])}`,COLORS[1],compact);
+  totalLabel(compact?75:185,bottom-(compact?23:25),c.total,compact);
+  nodeArrow(compact?167:352,top,'right',COLORS[0],compact?1:1.1);
+  nodeArrow(compact?167:352,middle,'right',COLORS[1],compact?1:1.1);
+  nodeArrow(compact?400:702,bottom,'left','#d83f78',compact?1:1.1);
+
+  // Tratti comuni: I totale. Dalla prima diramazione: I₁ ed I₂ separati.
+  stream(`M${gX-gR} ${bottom} H${left} V${middle}`,c.total,c.total,'#d83f78',true);
+  stream(`M${left} ${middle} V${top} H${right} V${middle}`,c.amps[0],c.total,COLORS[0]);
+  stream(`M${left} ${middle} H${right}`,c.amps[1],c.total,COLORS[1]);
+  stream(`M${right} ${middle} V${bottom} H${gX+gR}`,c.total,c.total,'#d83f78',true);
+}
+
+function drawMixed(c){
+ if(mobile){
+  svg.setAttribute('viewBox','0 0 520 357');
+  const bx=45,cy=157,top=49,bot=266,split=321,far=457,ycenter=159;
+  drawWire(`M${bx} 132 V${top} H${far}`);
+  drawWire(`M${far} ${top} V${bot} H${bx} V182`);
+  generator(bx,cy,25);
+  lane(`M${split} ${top} V${bot}`,COLORS[1],c.amps[1],c.total);
+  lane(`M${split} ${top} H${far} V${bot} H${split}`,COLORS[2],c.amps[2],c.total);
+  resistorHorizontal(0,173,top,104,c.drop[0],true);
+  resistorHorizontal(3,173,bot,104,c.drop[3],true);
+  resistorVertical(1,split,ycenter,85,c.drop[1],true);
+  resistorVertical(2,far,ycenter,85,c.drop[2],true);
+  junction(split,top);junction(split,bot);
+  totalLabel(71,121,c.total,true);
+  currentLabel(320,111,`I₂ = ${ifmt(c.amps[1])}`,COLORS[1],true);
+  currentLabel(448,111,`I₃ = ${ifmt(c.amps[2])}`,COLORS[2],true);
+  nodeArrow(240,bot,'left','#d83f78',1);
+  stream(`M${bx} 132 V${top} H${split}`,c.total,c.total,'#d83f78',true);
+  stream(`M${split} ${top} V${bot}`,c.amps[1],c.total,COLORS[1]);
+  stream(`M${split} ${top} H${far} V${bot} H${split}`,c.amps[2],c.total,COLORS[2]);
+  stream(`M${split} ${bot} H${bx} V182`,c.total,c.total,'#d83f78',true);
+ }else{
+  svg.setAttribute('viewBox','0 0 960 365');
+  const bx=87,cy=162,top=57,bot=275,split=616,far=826,ycenter=159;
+  drawWire(`M${bx} 133 V${top} H${far}`);
+  drawWire(`M${far} ${top} V${bot} H${bx} V191`);
+  generator(bx,cy,29);
+  lane(`M${split} ${top} V${bot}`,COLORS[1],c.amps[1],c.total);
+  lane(`M${split} ${top} H${far} V${bot} H${split}`,COLORS[2],c.amps[2],c.total);
+  resistorHorizontal(0,328,top,144,c.drop[0],false);
+  resistorHorizontal(3,328,bot,144,c.drop[3],false);
+  resistorVertical(1,split,ycenter,90,c.drop[1],false);
+  resistorVertical(2,far,ycenter,90,c.drop[2],false);
+  junction(split,top);junction(split,bot);
+  totalLabel(169,153,c.total);
+  currentLabel(546,109,`I₂ = ${ifmt(c.amps[1])}`,COLORS[1],false,'end');
+  currentLabel(765,109,`I₃ = ${ifmt(c.amps[2])}`,COLORS[2],false,'end');
+  nodeArrow(513,bot,'left','#d83f78',1.1);
+  stream(`M${bx} 133 V${top} H${split}`,c.total,c.total,'#d83f78',true);
+  stream(`M${split} ${top} V${bot}`,c.amps[1],c.total,COLORS[1]);
+  stream(`M${split} ${top} H${far} V${bot} H${split}`,c.amps[2],c.total,COLORS[2]);
+  stream(`M${split} ${bot} H${bx} V191`,c.total,c.total,'#d83f78',true);
+ }
+}
+
+function draw(c){
+ clearSchematic();
+ if(mode==='series')drawSeries(c);
+ else if(mode==='parallel')drawParallel(c);
+ else drawMixed(c);
+}
+function updateReadouts(c){
+ if(mode==='series'){
+  q('#eqFormula').innerHTML=`R₁ + R₂<br>${rfmt(R[0])} + ${rfmt(R[1])}`;
+ }else if(mode==='parallel'){
+  q('#eqFormula').innerHTML=`(R₁ × R₂) / (R₁ + R₂)<br>(${R[0]} × ${R[1]}) / (${R[0]} + ${R[1]}) Ω`;
+ }else{
+  q('#eqFormula').innerHTML=`R₁ + (R₂ ∥ R₃) + R₄<br>${rfmt(R[0])} + ${rfmt(c.rp)} + ${rfmt(R[3])}`;
+ }
+ q('#eqResult').textContent=rfmt(c.req);
+ q('#iFormula').innerHTML=`V / R<sub>eq</sub><br>${V} V / ${rfmt(c.req)}`;
+ q('#iResult').textContent=ifmt(c.total);
+ const stats=q('#stats');stats.replaceChildren();
+ const end=mode==='mixed'?4:2;
+ for(let k=0;k<end;k++){
+  const row=document.createElement('div');row.className='stat';
+  row.innerHTML=`<div class="statTitle" style="color:${COLORS[k]}">${labels[k]} · ${rfmt(R[k])}</div><div class="statLine">I = <b>${ifmt(c.amps[k])}</b></div><div class="statLine">V<sub>R${k+1}</sub> = <b>${vfmt(c.drop[k])}</b></div>`;
+  stats.appendChild(row);
+ }
+ const share=q('#share');share.hidden=mode==='series';
+ if(mode==='parallel'){
+  q('#seg1').style.background=COLORS[0];q('#seg2').style.background=COLORS[1];
+  const a=c.amps[0]/c.total*100,b=c.amps[1]/c.total*100;
+  q('#seg1').style.width=a+'%';q('#seg2').style.width=b+'%';
+  q('#shareTitle').textContent=`I totale ${ifmt(c.total)} = I₁ + I₂`;
+  q('#shareLabels').textContent=`I₁ ${ifmt(c.amps[0])} (${num(a,0)}%) · I₂ ${ifmt(c.amps[1])} (${num(b,0)}%)`;
+ }else if(mode==='mixed'){
+  q('#seg1').style.background=COLORS[1];q('#seg2').style.background=COLORS[2];
+  const a=c.amps[1]/c.total*100,b=c.amps[2]/c.total*100;
+  q('#seg1').style.width=a+'%';q('#seg2').style.width=b+'%';
+  q('#shareTitle').textContent=`I totale ${ifmt(c.total)} = I₂ + I₃`;
+  q('#shareLabels').textContent=`I₂ ${ifmt(c.amps[1])} (${num(a,0)}%) · I₃ ${ifmt(c.amps[2])} (${num(b,0)}%)`;
+ }
+ q('#note').textContent=mode==='series'?'Serie: la stessa corrente attraversa R₁ e R₂. Le tensioni VR₁ e VR₂ si sommano.':mode==='parallel'?'Parallelo: a tensione costante, se cambi R₁ cambia I₁ e la corrente totale, non I₂. Entrambe le resistenze hanno la stessa tensione del generatore.':'Misto: la corrente passa in R₁, si divide nei due rami colorati e si ricompone prima di R₄.';
+}
+function render(){
+ q('#controlStrip').classList.toggle('mixedControls',mode==='mixed');
+ qa('.tab').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+ qa('.resControl').forEach((b,k)=>{b.hidden=(k>1&&mode!=='mixed')});
+ qa('.volt').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.v)===V)));
+ q('#voltageSelect').value=String(V);
+ R.forEach((v,i)=>{q('#res'+(i+1)).value=v;q('#out'+(i+1)).textContent=rfmt(v)});
+ const c=calc();draw(c);updateReadouts(c);
+}
+function tick(time){
+ const delta=prev?Math.min(45,time-prev):16;prev=time;
+ if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches && !document.hidden){
+  for(const p of particles){p.p=(p.p+delta/1000*p.speed)%1;const v=p.path.getPointAtLength(p.p*p.len);p.dot.setAttribute('cx',v.x.toFixed(1));p.dot.setAttribute('cy',v.y.toFixed(1))}
+ }else{for(const p of particles){const v=p.path.getPointAtLength(p.p*p.len);p.dot.setAttribute('cx',v.x.toFixed(1));p.dot.setAttribute('cy',v.y.toFixed(1))}}
+ requestAnimationFrame(tick);
+}
+qa('.tab').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;render()}));
+qa('.volt').forEach(b=>b.addEventListener('click',()=>{V=Number(b.dataset.v);render()}));
+q('#voltageSelect').addEventListener('change',e=>{V=Number(e.target.value);render()});
+qa('.resControl input').forEach((inp,k)=>inp.addEventListener('input',()=>{R[k]=Number(inp.value);render()}));
+q('#reset').addEventListener('click',()=>{mode='series';V=5;R=DEFAULT.slice();render()});
+window.addEventListener('resize',()=>{const next=window.matchMedia('(max-width:680px)').matches;if(next!==mobile){mobile=next;render()}});
+render();requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

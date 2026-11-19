@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="OMG Virtual Lab: esplora la legge di Ohm con circuito, grafici, strozzatura simbolica, tre slider e triangolo delle formule.">
+<title>OMG Virtual Lab | Ohm Lab 3.0</title>
+<style>
+:root{
+  --ink:#27333b; --muted:#60717b; --outline:#dfe6e9; --bg:#f6f8f8;
+  --voltage:#ed5f59; --resistance:#279f8e; --current:#667c89;
+  --gold:#f8d859; --shadow:0 12px 34px rgba(31,53,61,.055);
+}
+*{box-sizing:border-box}
+html{background:#f5f7f7;scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:Arial,"Google Sans",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,.tri-zone:focus-visible{outline:3px solid #dabd45;outline-offset:4px}
+.shell{max-width:1140px;margin:auto;padding:clamp(14px,3vw,34px)}
+.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:23px}
+.tag{display:inline-flex;align-items:center;gap:8px;background:#232e37;color:white;border-radius:5px;padding:7px 11px;font-weight:900;font-size:11px;letter-spacing:1.25px;text-transform:uppercase}
+.tag b{color:var(--gold)}
+h1{font-size:clamp(29px,4vw,47px);letter-spacing:-1.7px;line-height:1.09;margin:14px 0 9px}
+h1 .mark{position:relative;z-index:0;white-space:nowrap}
+h1 .mark:after{content:"";position:absolute;height:9px;bottom:1px;left:0;right:0;background:var(--gold);z-index:-1;transform:skew(-8deg)}
+.hero p{margin:0;color:var(--muted);font-size:15px;line-height:1.52;max-width:750px}
+.hero-icon{flex:0 0 auto;display:grid;place-items:center;width:70px;height:70px;border:3px solid var(--ink);background:var(--gold);border-radius:18px;box-shadow:5px 5px 0 #29343e;transform:rotate(4deg);font-size:33px;font-weight:900}
+.top-grid{display:grid;grid-template-columns:minmax(0,1.33fr) minmax(310px,.87fr);align-items:stretch;gap:16px}
+.panel{background:#fff;border:1px solid var(--outline);border-radius:16px;box-shadow:var(--shadow);min-width:0;overflow:hidden}
+.panel-heading{padding:20px 22px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.eyebrow{color:var(--muted);font-weight:900;letter-spacing:1.15px;text-transform:uppercase;font-size:10px}
+h2{font-size:19px;line-height:1.2;letter-spacing:-.45px;margin:5px 0 0}
+.subtle-label{display:inline-block;border:1px solid #dfe6e9;background:#f8fafa;border-radius:7px;padding:7px 9px;font-size:10px;font-weight:800;color:#64737c;white-space:nowrap}
+.circuit-board{padding:0 11px 0;background:radial-gradient(circle at center,rgba(112,136,145,.10) 1px,transparent 1.3px) 0 0/19px 19px;margin:16px 20px 0;border-radius:13px;overflow:hidden;border:1px solid #ebf0f1}
+.circuit-board svg{width:100%;height:auto;display:block;overflow:visible}
+.wire{fill:none;stroke:#687b83;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.wire-gloss{fill:none;stroke:#b6c9cf;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.readout-caption{font-size:13px;font-weight:900;letter-spacing:1px}
+.readout-value{font-size:31px;font-weight:900;letter-spacing:-.3px}
+.electron{fill:#4bd6ea;stroke:#11677c;stroke-width:1.3;filter:drop-shadow(0 0 3px rgba(71,203,234,.7))}
+.legend{padding:12px 20px 18px;color:var(--muted);font-size:12px;line-height:1.48}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4bd6ea;border:1px solid #147e96;margin-right:4px}
+.caution{border-top:1px solid #edf0f2;padding:14px 20px;background:#fbfbf7;color:#55616a;font-size:12px;line-height:1.55}
+.caution strong{color:#35404a}
+.controls-panel .panel-heading{margin-bottom:8px}
+.controls{padding:5px 19px 15px}
+.control{--accent:#ccc;--accent-bg:#f5f5f5;padding:13px 14px 10px;border-radius:12px;border:1px solid #e8eced;margin-top:10px;background:linear-gradient(90deg,var(--accent-bg),#fff 58%);border-left:4px solid var(--accent)}
+.control.voltage{--accent:var(--voltage);--accent-bg:#fff3f2}
+.control.resistance{--accent:var(--resistance);--accent-bg:#eaf8f5}
+.control.current{--accent:var(--current);--accent-bg:#f0f4f6}
+.control-head{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.control-name{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.symbol{background:var(--accent);color:white;display:inline-grid;place-items:center;width:27px;height:27px;border-radius:7px;font-size:15px;font-weight:900}
+.control-output{font-size:clamp(17px,2.3vw,22px);font-weight:900;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.control-hint{color:#7a878e;font-size:11px;margin:0 0 6px 36px;line-height:1.4}
+input[type=range]{--filled:0%;display:block;width:100%;height:25px;background:transparent;accent-color:var(--accent);cursor:pointer;margin:6px 0 2px;appearance:none;-webkit-appearance:none}
+input[type=range]::-webkit-slider-runnable-track{height:7px;border-radius:10px;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--filled),#e1e7e9 var(--filled),#e1e7e9 100%)}
+input[type=range]::-moz-range-track{height:7px;border-radius:10px;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--filled),#e1e7e9 var(--filled),#e1e7e9 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border:4px solid var(--accent);background:white;border-radius:50%;margin-top:-6.5px;box-shadow:0 1px 4px #0002}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border:4px solid var(--accent);background:white;border-radius:50%;box-shadow:0 1px 4px #0002}
+.range-ends{display:flex;justify-content:space-between;color:#88949a;font-size:10px;font-weight:700}
+.info-panel{background:#f6f8f8;margin:0 19px 19px;padding:14px 15px;border-radius:10px;border:1px solid #e8eef0}
+.info-panel strong{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink)}
+.info-panel p{margin:7px 0 0;color:#56666e;font-size:12px;line-height:1.56}
+.module{margin-top:17px}
+.formula-body{display:grid;grid-template-columns:minmax(205px,.75fr) minmax(0,1.25fr);gap:24px;padding:6px 26px 22px;align-items:center}
+.triangle-wrap{max-width:290px;width:100%;justify-self:center}
+.triangle-wrap svg{width:100%;height:auto;display:block}
+.tri-zone{cursor:pointer;transition:opacity .15s}
+.tri-zone:not(.selected){opacity:.77}
+.tri-zone:hover,.tri-zone:focus-visible,.tri-zone.selected{opacity:1}
+.tri-zone .region{transition:fill .15s}
+.tri-zone:hover .region,.tri-zone.selected .region{stroke-width:4}
+.formula-title{font-size:15px;font-weight:800;margin:0 0 9px}
+.formula-options{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:17px}
+.formula-option{background:white;border:1px solid #dfe5e7;color:var(--ink);border-radius:8px;padding:9px 13px;font-size:12px;font-weight:800}
+.formula-option[aria-pressed=true]{background:#27343d;color:white;border-color:#27343d}
+.equation{font-size:clamp(24px,3.5vw,34px);font-weight:900;letter-spacing:-1px;line-height:1.15;min-height:46px}
+.equation-detail{color:#697982;font-size:15px;line-height:1.6;margin-top:10px;min-height:30px;word-break:break-word}
+.formula-note{font-size:12px;color:#849098;margin-top:14px;line-height:1.5}
+.graph-body{padding:8px 20px 22px}
+.chart-switcher{display:flex;gap:6px;background:#f1f4f5;border-radius:10px;padding:5px;width:fit-content;max-width:100%;margin-bottom:15px}
+.chart-btn{border:0;border-radius:7px;color:#64717a;background:transparent;font-weight:800;font-size:12px;padding:10px 15px}
+.chart-btn[aria-pressed=true]{background:#fff;color:#263540;box-shadow:0 1px 5px rgba(42,64,70,.12)}
+.chart-frame{border:1px solid #edf0f1;background:linear-gradient(180deg,#fff,#fcfdfd);border-radius:12px;overflow:hidden;padding:7px}
+.chart-frame svg{display:block;width:100%;height:auto}
+.graph-explainer{font-size:13px;line-height:1.6;color:#576770;margin:14px 3px 0}
+.footer{text-align:center;font-size:11px;color:#8b969c;padding:23px 0 4px}
+@media (max-width:850px){.top-grid{grid-template-columns:1fr}.circuit-board{max-width:none}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.control{margin:5px 0 0;min-width:0}.control-head{align-items:flex-start;flex-direction:column;gap:5px}.control-hint{margin:0;min-height:31px}.info-panel{margin-top:2px}}
+@media (max-width:650px){.hero-icon{height:52px;width:52px;font-size:23px;box-shadow:3px 3px 0 #29343e}.hero{align-items:center}.shell{padding:14px}.hero p{font-size:13px}h1{letter-spacing:-1.2px}.panel-heading{padding:17px 15px 0}.subtle-label{font-size:9px;padding:6px 7px}.circuit-board{margin:12px 11px 0;padding:0 2px}.legend{padding:10px 13px}.caution{padding:13px}.controls{display:block;padding:5px 12px 11px}.control{margin:9px 0 0}.control-head{align-items:center;flex-direction:row}.control-hint{min-height:0;margin:2px 0 0 35px}.info-panel{margin:0 12px 13px}.formula-body{grid-template-columns:1fr;gap:3px;padding:4px 18px 23px}.triangle-wrap{max-width:205px}.formula-side{padding:0 6px}.formula-options{gap:5px}.formula-option{padding:8px 11px}.graph-body{padding:9px 9px 17px}.chart-switcher{width:100%}.chart-btn{flex:1;padding:10px 4px}.graph-explainer{padding:0 7px}.equation-detail{font-size:13px}}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V2: stesso ingombro, veste più energica e grafico immediatamente sotto i controlli. */
+:root{--ink:#273640;--muted:#5c6b78;--shadow:0 9px 23px rgba(31,53,61,.045)}
+html{background:#f7f9f9}
+.tag{border-radius:7px;background:#25343e;box-shadow:3px 3px 0 #f8d859}
+.hero-icon{border-radius:13px;transform:rotate(3deg)}
+h1{letter-spacing:-1.2px}
+.panel{border:1.5px solid #dce5e9;box-shadow:var(--shadow)}
+.panel-heading .eyebrow{color:#667d87;display:flex;align-items:center;gap:7px}
+.panel-heading .eyebrow:before{content:'';width:11px;height:11px;border-radius:3px;display:inline-block;background:#f8d859;border:1px solid #d7bd48}
+.panel-heading h2{font-size:19px}
+.lab-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);grid-template-areas:'circuit controls' 'pinch graph';align-items:start;gap:15px}
+.lab-grid>[aria-labelledby='circuit-title']{grid-area:circuit}
+.lab-grid>.controls-panel{grid-area:controls}
+.lab-grid>.pinch-panel{grid-area:pinch}
+.lab-grid>[aria-labelledby='graph-module-title']{grid-area:graph}
+.lab-grid .module{margin-top:0}
+.formula-body{padding-top:10px}
+.graph-body{padding:11px 17px 17px}
+.chart-switcher{margin-bottom:10px}
+.graph-explainer{margin-top:9px;font-size:12px}
+.graph-body #graphSvg{max-height:none}
+.pinch-badge{background:#f1f8f7;color:#287f78;border-color:#d5ece7}
+.pinch-body{padding:13px 19px 16px}
+.pinch-visual{background:radial-gradient(circle at center,rgba(95,136,139,.11) 1px,transparent 1.3px) 0 0/17px 17px;border-radius:12px;border:1px solid #e5edee;overflow:hidden}
+.pinch-visual svg{display:block;width:100%;height:auto}
+.pinch-headline{font-size:11px;font-weight:900;letter-spacing:1.1px;fill:#3d6f7d}
+.pinch-particle{fill:#27b5c6;stroke:#116a82;stroke-width:1.5;filter:drop-shadow(0 0 3px rgba(55,180,190,.45))}
+.pinch-explanation{font-size:12px;line-height:1.5;color:#344e56;font-weight:750;margin:11px 0 8px}
+.pinch-disclaimer{background:#f6f9f8;border-left:3px solid #279f8e;border-radius:4px;padding:9px 11px;font-size:11px;color:#67777d;line-height:1.5;margin:0}
+.pinch-disclaimer strong{color:#344d55}
+.lab-grid .controls-panel .info-panel{margin-bottom:15px}
+.formula-body{grid-template-columns:minmax(165px,.56fr) minmax(0,1.44fr)}
+.triangle-wrap{max-width:222px}
+/* Più contrasto del tema OMG senza sacrificare la leggibilità del disegno fisico. */
+.control{box-shadow:0 2px 0 rgba(31,64,68,.03)}
+.circuit-board{background-color:#fbfdfd}
+.chart-frame{background:#fff}
+@media(max-width:920px){
+ .lab-grid{grid-template-columns:1fr;grid-template-areas:'circuit' 'controls' 'graph' 'pinch'}
+ .controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+ .control{margin:5px 0 0;min-width:0}
+ .control-head{align-items:flex-start;flex-direction:column;gap:5px}
+ .control-hint{margin:0;min-height:31px}
+ .info-panel{margin-top:2px}
+ .pinch-visual{max-width:700px;margin:auto}
+}
+@media(max-width:650px){
+ .lab-grid{gap:12px}
+ .controls{display:block;padding:5px 12px 11px}
+ .control{margin:9px 0 0}
+ .control-head{align-items:center;flex-direction:row}
+ .control-hint{min-height:0;margin:2px 0 0 35px}
+ .pinch-body{padding:12px 11px 14px}
+ .pinch-disclaimer{font-size:11px}
+ .graph-body{padding:10px 9px 14px}
+ .triangle-wrap{max-width:205px}
+ .formula-body{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="shell" id="omg-ohm-lab">
+  <header class="hero">
+    <div>
+      <span class="tag"><b>OMG</b> / Virtual Lab</span>
+      <h1>La <span class="mark">legge di Ohm</span></h1>
+      <p>Tre grandezze, una relazione. Muovi gli slider: circuito, grafico e strozzatura reagiscono insieme.</p>
+    </div>
+    <div class="hero-icon" aria-hidden="true">Ω</div>
+  </header>
+
+  <div class="lab-grid">
+    <section class="panel" aria-labelledby="circuit-title">
+      <div class="panel-heading">
+        <div><div class="eyebrow">01 · Esplora</div><h2 id="circuit-title">Il circuito</h2></div>
+        <span class="subtle-label">Generatore DC · Resistenza</span>
+      </div>
+      <div class="circuit-board">
+        <svg id="circuitSvg" viewBox="0 0 760 355" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Circuito elettrico con generatore a sinistra, resistenza in alto e indicatori animati del verso convenzionale della corrente.">
+          <!-- Percorso delle particelle animate nel verso della corrente convenzionale: dal polo + al polo -. -->
+          <path class="wire" d="M128 108 H629 Q650 108 650 129 V264 Q650 285 629 285 H128"/>
+          <path class="wire-gloss" d="M128 108 H629 Q650 108 650 129 V264 Q650 285 629 285 H128"/>
+          <path class="wire" d="M128 108 V150 M128 241 V285" />
+          <path class="wire-gloss" d="M128 108 V150 M128 241 V285"/>
+          <path id="electronTrack" d="M128 108 H629 Q650 108 650 129 V264 Q650 285 629 285 H128" fill="none" stroke="none"/>
+          <!-- Generatore e suoi terminali. -->
+          <rect x="100" y="150" width="56" height="91" rx="11" fill="#f2f5f5" stroke="#566a75" stroke-width="3"/>
+          <rect x="110" y="179" width="36" height="33" rx="5" fill="#fff" stroke="#d6e0e3"/>
+          <text x="128" y="201" font-size="16" font-weight="900" text-anchor="middle" fill="#6d7c87">DC</text>
+          <rect x="118" y="140" width="20" height="10" rx="2" fill="#e96560"/>
+          <rect x="118" y="241" width="20" height="10" rx="2" fill="#667c89"/>
+          <path d="M116 164 h24 M128 152 v24" stroke="#e96560" stroke-width="4" stroke-linecap="round"/>
+          <path d="M117 226 h22" stroke="#667c89" stroke-width="4" stroke-linecap="round"/>
+          <rect x="58" y="37" width="143" height="54" rx="10" fill="#fff0ee" stroke="#ed5f59" stroke-width="2"/>
+          <text x="130" y="54" font-size="11" font-weight="900" letter-spacing="1" text-anchor="middle" fill="#b84f4a">TENSIONE</text>
+          <text id="svgVoltage" x="130" y="78" class="readout-value" text-anchor="middle" fill="#ed5f59">5 V</text>
+          <!-- Resistenza a quattro bande; le bande seguono il valore dello slider. -->
+          <rect x="305" y="91" width="184" height="34" rx="12" fill="#e5d3ac" stroke="#8f7c57" stroke-width="2.6"/>
+          <rect x="327" y="94" width="13" height="28" rx="2" fill="#91602e" id="band1"/>
+          <rect x="355" y="94" width="13" height="28" rx="2" fill="#272727" id="band2"/>
+          <rect x="383" y="94" width="13" height="28" rx="2" fill="#c92c2c" id="band3"/>
+          <rect x="452" y="94" width="12" height="28" rx="2" fill="#cfac32"/>
+          <text id="svgResistance" x="398" y="76" font-size="21" text-anchor="middle" font-weight="900" fill="#267e70">1.000 Ω</text>
+          <path d="M500 157 h70 m0 0 l-10 -7 m10 7 l-10 7" stroke="#35a2b9" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          <text x="535" y="180" font-size="12" text-anchor="middle" font-weight="800" fill="#3a8799">I →</text>
+          <rect x="316" y="159" width="164" height="65" rx="12" fill="#eff3f5" stroke="#ccd8dd" stroke-width="1.4"/>
+          <text x="398" y="178" class="readout-caption" text-anchor="middle" fill="#667c89">CORRENTE</text>
+          <text id="svgCurrent" x="398" y="207" class="readout-value" text-anchor="middle" fill="#526a78">5 mA</text>
+          <g id="electronLayer" aria-hidden="true"></g>
+          <text x="629" y="330" font-size="12" font-weight="700" fill="#87959c" text-anchor="end">schema semplificato</text>
+        </svg>
+      </div>
+      <div class="legend"><span class="dot"></span> I punti azzurri visualizzano la <strong>corrente convenzionale</strong>: dal polo positivo al negativo nel circuito esterno. Il moto reale degli elettroni nei metalli ha verso opposto.</div>
+      <div class="caution"><strong>Attenzione:</strong> l'animazione rende intuitiva <strong>l’intensità della corrente</strong>, ma non riproduce il flusso microscopico reale, la velocità di deriva degli elettroni o la propagazione dell’energia.</div>
+    </section>
+
+    <section class="panel controls-panel" aria-labelledby="controls-title">
+      <div class="panel-heading">
+        <div><div class="eyebrow">02 · Sperimenta</div><h2 id="controls-title">Le tre grandezze</h2></div>
+        <span class="subtle-label">V · I · R</span>
+      </div>
+      <div class="controls">
+        <div class="control voltage">
+          <div class="control-head"><label class="control-name" for="voltageRange"><span class="symbol">V</span> Tensione</label><output id="voltageOutput" for="voltageRange" class="control-output">5 V</output></div>
+          <p class="control-hint">Modifichi il generatore, R resta costante.</p>
+          <input id="voltageRange" type="range" min="0" max="24" step="0.1" value="5" aria-label="Tensione in volt">
+          <div class="range-ends"><span>0 V</span><span>24 V</span></div>
+        </div>
+        <div class="control resistance">
+          <div class="control-head"><label class="control-name" for="resistanceRange"><span class="symbol">R</span> Resistenza</label><output id="resistanceOutput" for="resistanceRange" class="control-output">1.000 Ω</output></div>
+          <p class="control-hint">Modifichi la resistenza, V resta costante.</p>
+          <input id="resistanceRange" type="range" min="100" max="5000" step="100" value="1000" aria-label="Resistenza in ohm">
+          <div class="range-ends"><span>100 Ω</span><span>5.000 Ω</span></div>
+        </div>
+        <div class="control current">
+          <div class="control-head"><label class="control-name" for="currentRange"><span class="symbol">I</span> Corrente</label><output id="currentOutput" for="currentRange" class="control-output">5 mA</output></div>
+          <p class="control-hint">Resta fissa R, si regola V. Scala di I non lineare.</p>
+          <input id="currentRange" type="range" min="0" max="1000" step="1" value="444" aria-label="Corrente in milliampere">
+          <div class="range-ends"><span>0 mA</span><span id="currentMaximum">Max con questa R: 24 mA</span></div>
+        </div>
+      </div>
+      <div class="info-panel" aria-live="polite" aria-atomic="true">
+        <strong>Che cosa sta succedendo?</strong>
+        <p id="observation">Sposta uno slider: il circuito e il grafico si aggiornano insieme.</p>
+      </div>
+    </section>
+  <section class="panel module" aria-labelledby="graph-module-title">
+    <div class="panel-heading"><div><div class="eyebrow">03 · Osserva i rapporti</div><h2 id="graph-module-title">La legge di Ohm diventa un grafico</h2></div><span class="subtle-label">Aggiornamento in tempo reale</span></div>
+    <div class="graph-body">
+      <div class="chart-switcher" aria-label="Scegli il grafico">
+        <button class="chart-btn" type="button" data-graph="R" aria-pressed="true">I in funzione di R</button>
+        <button class="chart-btn" type="button" data-graph="V" aria-pressed="false">I in funzione di V</button>
+      </div>
+      <div class="chart-frame">
+        <svg id="graphSvg" viewBox="0 0 760 275" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grafico aggiornato in tempo reale della corrente in funzione della resistenza o della tensione">
+          <defs><linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60c9bb" stop-opacity=".32"/><stop offset="1" stop-color="#60c9bb" stop-opacity=".03"/></linearGradient></defs>
+          <g id="graphGrid"></g>
+          <path id="graphArea" fill="url(#areaGradient)" stroke="none"></path>
+          <path id="graphLine" fill="none" stroke="#279f8e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <g id="graphMarker"><line id="graphVGuide" stroke="#667c89" stroke-width="1.5" stroke-dasharray="5,5"/><line id="graphHGuide" stroke="#667c89" stroke-width="1.5" stroke-dasharray="5,5"/><circle id="graphHalo" r="14" fill="#ed5f59" fill-opacity=".2"/><circle id="graphPoint" r="6.5" fill="#ed5f59" stroke="#fff" stroke-width="2"/></g>
+          <text id="graphXAxis" x="395" y="267" fill="#667c89" font-size="13" font-weight="800" text-anchor="middle">Resistenza (Ω)</text>
+          <text x="18" y="21" fill="#667c89" font-size="13" font-weight="800">I (mA)</text>
+          <g id="graphPointLabel"></g>
+        </svg>
+      </div>
+      <p class="graph-explainer" id="graphExplanation">A tensione costante, la corrente diminuisce all'aumentare della resistenza. Il punto rosso indica lo stato attuale del circuito.</p>
+    </div>
+  </section>
+  <section class="panel pinch-panel" aria-labelledby="pinch-title">
+    <div class="panel-heading">
+      <div><div class="eyebrow">04 · Visualizza</div><h2 id="pinch-title">La corrente incontra la resistenza</h2></div>
+      <span class="subtle-label pinch-badge">Modello simbolico</span>
+    </div>
+    <div class="pinch-body">
+      <div class="pinch-visual">
+        <svg id="pinchSvg" viewBox="0 0 420 211" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Metafora visiva della resistenza come strozzatura, aggiornata dagli stessi slider del circuito">
+          <defs>
+            <clipPath id="pinchClip"><path id="pinchClipShape" d=""/></clipPath>
+            <linearGradient id="pinchFluid" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#d6f6f2"/><stop offset=".52" stop-color="#97dfd5"/><stop offset="1" stop-color="#e3f5f7"/>
+            </linearGradient>
+          </defs>
+          <text x="22" y="24" class="pinch-headline">CORRENTE CONVENZIONALE</text>
+          <text id="pinchResistance" x="210" y="52" font-size="16" font-weight="900" text-anchor="middle" fill="#279f8e">1.000 Ω</text>
+          <path d="M330 20 h67 m0 0 l-8 -5 m8 5 l-8 5" stroke="#1e95a8" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <g>
+            <path id="pinchPipe" d="" fill="url(#pinchFluid)" stroke="#587582" stroke-width="3" stroke-linejoin="round" />
+            <g id="pinchParticleLayer" clip-path="url(#pinchClip)" aria-hidden="true"></g>
+          </g>
+          <rect x="116" y="165" width="188" height="32" rx="8" fill="#edf7f6" stroke="#cae9e3"/>
+          <text id="pinchReadout" x="210" y="187" font-size="17" font-weight="900" text-anchor="middle" fill="#526a78">5 mA</text>
+          <text x="23" y="159" font-size="11" font-weight="800" fill="#667c89">INGRESSO</text>
+          <text x="395" y="159" font-size="11" font-weight="800" fill="#667c89" text-anchor="end">USCITA</text>
+        </svg>
+      </div>
+      <p class="pinch-explanation" id="pinchExplanation">Aumentando la resistenza, la strozzatura si restringe e il flusso illustrato diminuisce.</p>
+      <p class="pinch-disclaimer"><strong>Un modello simbolico:</strong> la resistenza non è un tubo ristretto. Particelle e strozzatura visualizzano intuitivamente l’intensità di corrente, non il moto reale degli elettroni. Il movimento segue il verso convenzionale.</p>
+    </div>
+  </section>
+  </div>
+
+  <section class="panel module" aria-labelledby="formula-module-title">
+    <div class="panel-heading"><div><div class="eyebrow">05 · Le formule</div><h2 id="formula-module-title">Il triangolo della legge di Ohm</h2></div><span class="subtle-label">Tocca V, I oppure R</span></div>
+    <div class="formula-body">
+      <div class="triangle-wrap">
+        <svg viewBox="0 0 320 290" role="group" aria-label="Triangolo interattivo della legge di Ohm: scegli la grandezza da calcolare.">
+          <g class="tri-zone" data-solve="V" tabindex="0" role="button" aria-label="Mostra la formula della tensione" aria-pressed="false">
+            <path class="region" d="M160 20 L233 151 H87 Z" fill="#fff0ee" stroke="#ed5f59" stroke-width="2.5"/>
+            <text x="160" y="111" font-size="51" font-weight="900" text-anchor="middle" fill="#ed5f59" style="pointer-events:none">V</text>
+          </g>
+          <g class="tri-zone" data-solve="R" tabindex="0" role="button" aria-label="Mostra la formula della resistenza" aria-pressed="false">
+            <path class="region" d="M87 151 H160 V270 H20 Z" fill="#eaf8f5" stroke="#279f8e" stroke-width="2.5"/>
+            <text x="106" y="233" font-size="51" font-weight="900" text-anchor="middle" fill="#279f8e" style="pointer-events:none">R</text>
+          </g>
+          <g class="tri-zone selected" data-solve="I" tabindex="0" role="button" aria-label="Mostra la formula della corrente" aria-pressed="true">
+            <path class="region" d="M160 151 H233 L300 270 H160 Z" fill="#f0f4f6" stroke="#667c89" stroke-width="2.5"/>
+            <text x="214" y="233" font-size="51" font-weight="900" text-anchor="middle" fill="#667c89" style="pointer-events:none">I</text>
+          </g>
+        </svg>
+      </div>
+      <div class="formula-side">
+        <p class="formula-title">Quale grandezza vuoi ricavare?</p>
+        <div class="formula-options" aria-label="Scelta della grandezza da calcolare">
+          <button class="formula-option" type="button" data-solve="V" aria-pressed="false">V · Tensione</button>
+          <button class="formula-option" type="button" data-solve="I" aria-pressed="true">I · Corrente</button>
+          <button class="formula-option" type="button" data-solve="R" aria-pressed="false">R · Resistenza</button>
+        </div>
+        <div class="equation" id="formulaEquation" aria-live="polite">I = V / R</div>
+        <div class="equation-detail" id="formulaDetail">5 V / 1.000 Ω = 5 mA</div>
+        <div class="formula-note">Il triangolo serve a ricordare le formule inverse. I calcoli usano i valori del circuito e del grafico.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">OMG · Elettroni e dintorni · Virtual Lab · Circuito ideale in corrente continua · Il multimetro avrà un laboratorio dedicato</footer>
+</main>
+<script>
+(()=>{'use strict';
+  const $ = id => document.getElementById(id);
+  const ns='http://www.w3.org/2000/svg';
+  const state={V:5,R:1000,formula:'I',graph:'R'};
+  const voltageSlider=$('voltageRange'), resistanceSlider=$('resistanceRange'), currentSlider=$('currentRange');
+  const current=()=>1000*state.V/state.R; // mA
+  const CURRENT_FULL_SCALE=240, CURRENT_SOFTNESS=.25;
+  // Scala logaritmica fissa, 0...240mA: precisione nei valori di laboratorio.
+  const toCurrentSlider=mA=>1000*Math.log1p(Math.max(0,mA)/CURRENT_SOFTNESS)/Math.log1p(CURRENT_FULL_SCALE/CURRENT_SOFTNESS);
+  const fromCurrentSlider=position=>CURRENT_SOFTNESS*Math.expm1(Math.max(0,Math.min(1000,position))/1000*Math.log1p(CURRENT_FULL_SCALE/CURRENT_SOFTNESS));
+  const it=(v,d=1)=>{const parts=Number(v).toFixed(d).split('.');const integer=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');const decimals=(parts[1]||'').replace(/0+$/,'');return integer+(decimals?','+decimals:'')};
+  const volts=v=>`${it(v,2)} V`;
+  const ohms=v=>`${it(v,0)} Ω`;
+  const milliamps=v=>`${it(v,2)} mA`;
+  const addSvg=(parent,tag,attrs,text)=>{const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs||{}))el.setAttribute(k,v);if(text!==undefined)el.textContent=text;parent.append(el);return el;};
+  function applyRangeFill(el){const lo=Number(el.min),hi=Number(el.max);el.style.setProperty('--filled',((Number(el.value)-lo)/(hi-lo)*100)+'%');}
+  function resistorBands(R){
+    const colors=['#212121','#94602e','#ca3030','#e4822f','#e8cb3a','#378d52','#2476ac','#9658a1','#898989','#ffffff'];
+    const exp=Math.floor(Math.log10(R))-1;
+    const two=Math.round(R/Math.pow(10,exp));
+    $('band1').setAttribute('fill',colors[Math.floor(two/10)]);
+    $('band2').setAttribute('fill',colors[two%10]);
+    $('band3').setAttribute('fill',colors[exp]);
+  }
+  function renderFormula(){
+    const c=current(),amps=c/1000,R=state.R,V=state.V;
+    let eq='',detail='';
+    if(state.formula==='V'){
+      eq='V = R × I';
+      detail=`${ohms(R)} × ${it(amps,5)} A = ${volts(V)}`;
+    }else if(state.formula==='I'){
+      eq='I = V / R';
+      detail=`${volts(V)} / ${ohms(R)} = ${milliamps(c)}`;
+    }else{
+      eq='R = V / I';
+      detail=c===0?'Con V = 0 e I = 0, la resistenza non è ricavabile da questa formula.':`${volts(V)} / ${it(amps,5)} A = ${ohms(R)}`;
+    }
+    $('formulaEquation').textContent=eq;
+    $('formulaDetail').textContent=detail;
+    document.querySelectorAll('[data-solve]').forEach(el=>{const yes=el.dataset.solve===state.formula;el.setAttribute('aria-pressed',String(yes));el.classList.toggle('selected',yes)});
+  }
+  function renderGraph(){
+    const xIsR=state.graph==='R',xMin=xIsR?100:0,xMax=xIsR?5000:24;
+    const xCurrent=xIsR?state.R:state.V;
+    const f=x=>xIsR?1000*state.V/x:1000*x/state.R;
+    const idealMax=f(xIsR?100:24);
+    const yMax=Math.max(1,idealMax*1.1);
+    const narrow=$('graphSvg').getBoundingClientRect().width<610;
+    const left=narrow?56:70,right=narrow?415:724,top=28,bottom=narrow?218:226;
+    $('graphSvg').setAttribute('viewBox',narrow?'0 0 450 275':'0 0 760 275');
+    $('graphXAxis').setAttribute('x',narrow?232:395);
+    const X=x=>left+(x-xMin)/(xMax-xMin)*(right-left);
+    const Y=y=>bottom-y/yMax*(bottom-top);
+    const grid=$('graphGrid');grid.replaceChildren();
+    addSvg(grid,'line',{x1:left,y1:top,x2:left,y2:bottom,stroke:'#9aabb1','stroke-width':1.6});
+    addSvg(grid,'line',{x1:left,y1:bottom,x2:right,y2:bottom,stroke:'#9aabb1','stroke-width':1.6});
+    for(let i=0;i<=4;i++){
+      const y=(yMax/4)*i,py=Y(y);
+      addSvg(grid,'line',{x1:left,y1:py,x2:right,y2:py,stroke:'#e5ebed','stroke-width':1});
+      addSvg(grid,'text',{x:left-10,y:py+4,'text-anchor':'end','font-size':11,fill:'#76858c'},it(y,yMax<10?2:1));
+    }
+    for(let i=0;i<=4;i++){
+      const x=xMin+(xMax-xMin)*i/4,px=X(x);
+      addSvg(grid,'line',{x1:px,y1:bottom,x2:px,y2:bottom+5,stroke:'#9aabb1','stroke-width':1});
+      addSvg(grid,'text',{x:px,y:bottom+19,'text-anchor':'middle','font-size':11,fill:'#76858c'},it(x,0));
+    }
+    const points=[];
+    for(let i=0;i<=150;i++){const x=xMin+(xMax-xMin)*i/150;points.push([X(x),Y(f(x))]);}
+    const d=points.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' ');
+    $('graphLine').setAttribute('d',d);
+    $('graphArea').setAttribute('d',d+` L ${right} ${bottom} L ${left} ${bottom} Z`);
+    const px=X(xCurrent),py=Y(current());
+    $('graphVGuide').setAttribute('x1',px);$('graphVGuide').setAttribute('x2',px);$('graphVGuide').setAttribute('y1',py);$('graphVGuide').setAttribute('y2',bottom);
+    $('graphHGuide').setAttribute('x1',left);$('graphHGuide').setAttribute('x2',px);$('graphHGuide').setAttribute('y1',py);$('graphHGuide').setAttribute('y2',py);
+    $('graphHalo').setAttribute('cx',px);$('graphHalo').setAttribute('cy',py);
+    $('graphPoint').setAttribute('cx',px);$('graphPoint').setAttribute('cy',py);
+    $('graphXAxis').textContent=xIsR?'Resistenza (Ω)':'Tensione (V)';
+    const bubble=$('graphPointLabel');bubble.replaceChildren();
+    const label=`${milliamps(current())}`;
+    const lx=Math.min(right-79,Math.max(left+2,px+13)),ly=Math.max(16,Math.min(bottom-18,py-21));
+    addSvg(bubble,'rect',{x:lx,y:ly-15,width:77,height:22,rx:5,fill:'#fff0ee',stroke:'#ed5f59'});
+    addSvg(bubble,'text',{x:lx+38.5,y:ly,'text-anchor':'middle','font-weight':'900','font-size':'11',fill:'#c4514b'},label);
+    $('graphExplanation').textContent=xIsR?
+      `Tensione fissata a ${volts(state.V)}: se la resistenza aumenta, la corrente diminuisce secondo una curva. Il punto rosso corrisponde a ${ohms(state.R)} e ${milliamps(current())}.`:
+      `Resistenza fissata a ${ohms(state.R)}: se la tensione aumenta, la corrente cresce in modo proporzionale. Il punto rosso corrisponde a ${volts(state.V)} e ${milliamps(current())}.`;
+    document.querySelectorAll('[data-graph]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.graph===state.graph)));
+  }
+  function render(){
+    const I=current();
+    const Imax=24000/state.R;
+    voltageSlider.value=state.V;
+    resistanceSlider.value=state.R;
+    // Scala assoluta fissa e non lineare: aumentando R con V costante,
+    // la posizione del cursore I cambia DAVVERO (non viene rinormalizzata sul massimo).
+    currentSlider.value=String(Math.round(toCurrentSlider(I)));
+    $('voltageOutput').textContent=volts(state.V);
+    $('resistanceOutput').textContent=ohms(state.R);
+    $('currentOutput').textContent=milliamps(I);
+    $('currentMaximum').textContent=`Max con questa R: ${milliamps(Imax)}`;
+    currentSlider.setAttribute('aria-valuetext',milliamps(I));
+    $('svgVoltage').textContent=volts(state.V);
+    $('svgResistance').textContent=ohms(state.R);
+    $('svgCurrent').textContent=milliamps(I);
+    [voltageSlider,resistanceSlider,currentSlider].forEach(applyRangeFill);
+    resistorBands(state.R);
+    updateElectrons(I);
+    updatePinch(I);
+    renderFormula();renderGraph();
+  }
+  voltageSlider.addEventListener('input',()=>{
+    const old=state.V;state.V=Number(voltageSlider.value);
+    $('observation').textContent=state.V>old?'Hai aumentato la tensione: a resistenza costante, la corrente aumenta.':'Hai diminuito la tensione: a resistenza costante, la corrente diminuisce.';
+    render();
+  });
+  resistanceSlider.addEventListener('input',()=>{
+    const old=state.R;state.R=Number(resistanceSlider.value);
+    $('observation').textContent=state.R>old?'Hai aumentato la resistenza: a tensione costante, la corrente diminuisce.':'Hai diminuito la resistenza: a tensione costante, la corrente aumenta.';
+    render();
+  });
+  currentSlider.addEventListener('input',()=>{
+    const old=current();const requested=fromCurrentSlider(Number(currentSlider.value));
+    const I=Math.min(requested,24000/state.R);
+    state.V=Math.max(0,Math.min(24,Math.round(I*state.R/1000*10000)/10000));
+    $('observation').textContent=requested>24000/state.R+1e-8
+      ?'Il generatore arriva al massimo di 24 V: per aumentare ancora la corrente occorre diminuire la resistenza.'
+      :I>old?'Hai aumentato la corrente: mantenendo costante R, cresce la tensione.':'Hai diminuito la corrente: mantenendo costante R, diminuisce la tensione.';
+    render();
+  });
+  document.querySelectorAll('[data-solve]').forEach(el=>{
+    const select=()=>{state.formula=el.dataset.solve;renderFormula()};
+    el.addEventListener('click',select);
+    if(el.tagName.toLowerCase()!=='button')el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select()}});
+  });
+  document.querySelectorAll('[data-graph]').forEach(el=>el.addEventListener('click',()=>{state.graph=el.dataset.graph;renderGraph()}));
+  // Le particelle mostrano la corrente CONVENZIONALE (da + a -); NON sono elettroni reali.
+  // L'animazione è uno strumento visivo, NON una scala della velocità reale di deriva.
+  const layer=$('electronLayer'), track=$('electronTrack'),trackLength=track.getTotalLength();
+  const reducedMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let dots=[],elapsed=0,lastFrame=0,dotSpeed=0;
+  function updateElectrons(I){
+    const wanted=I<=.0001?0:Math.min(27,Math.max(2,Math.round(2+3*Math.sqrt(I))));
+    dotSpeed=I<=0?0:Math.min(220,15+12*Math.sqrt(I));
+    while(dots.length<wanted){const circle=addSvg(layer,'circle',{r:5,class:'electron'});dots.push(circle)}
+    while(dots.length>wanted){dots.pop().remove()}
+    positionElectrons();
+  }
+  function positionElectrons(){
+    dots.forEach((dot,i)=>{
+      const pct=(i/dots.length+elapsed/trackLength)%1;
+      const pt=track.getPointAtLength(pct*trackLength);
+      dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
+      dot.setAttribute('r',String(4+Math.min(1,Math.sqrt(current())/12)));
+    });
+  }
+  const pinchLayer=$('pinchParticleLayer');
+  let pinchDots=[],pinchTime=0,pinchSpeed=0;
+  function pinchWidth(){return 35-26*(state.R-100)/4900}
+  function pinchShape(throat){
+    const upper=100-throat, lower=100+throat;
+    return `M22 61 H112 C145 61 143 ${upper} 172 ${upper} H225 C255 ${upper} 250 61 282 61 H398 V139 H282 C250 139 255 ${lower} 225 ${lower} H172 C143 ${lower} 145 139 112 139 H22 Z`;
+  }
+  function updatePinch(I){
+    const throat=pinchWidth(),path=pinchShape(throat);
+    $('pinchPipe').setAttribute('d',path);
+    $('pinchClipShape').setAttribute('d',path);
+    $('pinchReadout').textContent=milliamps(I);
+    $('pinchResistance').textContent=ohms(state.R);
+    $('pinchExplanation').textContent=I===0?
+      'Con tensione nulla non c’è corrente nel circuito ideale: il flusso si ferma.':
+      `Con ${ohms(state.R)} e ${volts(state.V)}, la corrente vale ${milliamps(I)}. Più resistenza significa una strozzatura simbolica più stretta.`;
+    const wanted=I<.0001?0:Math.min(23,Math.max(3,Math.round(3+2.6*Math.sqrt(I))));
+    pinchSpeed=I<=0?0:Math.min(245,16+18*Math.sqrt(I));
+    while(pinchDots.length<wanted){pinchDots.push(addSvg(pinchLayer,'circle',{r:4.5,class:'pinch-particle'}))}
+    while(pinchDots.length>wanted){pinchDots.pop().remove()}
+    positionPinch();
+  }
+  function positionPinch(){
+    pinchDots.forEach((dot,i)=>{
+      const x=22+((i*376/pinchDots.length+pinchTime)%376);
+      // Il clip mantiene le particelle dentro la sagoma: NON e' un modello microscopico.
+      const throat=pinchWidth(),blend=Math.max(0,1-Math.abs(x-198)/90);
+      const width=35+(throat-35)*blend;
+      const y=100+Math.sin(i*2.399+0.8)*Math.max(2,width*.7);
+      dot.setAttribute('cx',x);dot.setAttribute('cy',y);
+    });
+  }
+  function animate(timestamp){
+    if(lastFrame){const dt=Math.min(0.05,(timestamp-lastFrame)/1000);elapsed+=dotSpeed*dt; if(elapsed>trackLength)elapsed%=trackLength}
+    if(lastFrame){const dt=Math.min(0.05,(timestamp-lastFrame)/1000);pinchTime=(pinchTime+pinchSpeed*dt)%376;}
+    lastFrame=timestamp;positionElectrons();positionPinch();requestAnimationFrame(animate);
+  }
+  render();
+  window.addEventListener('resize',renderGraph);
+  if(!reducedMotion)requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>
