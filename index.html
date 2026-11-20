@@ -1,170 +1,241 @@
 <!doctype html>
-
 <html lang="it">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="#00b9c8" name="theme-color"/>
-<meta content="OMG Virtual Lab: esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti." name="description"/>
-<title>OMG Virtual Lab — Il tuo laboratorio virtuale</title>
-<link href="assets/omg.css" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f5ef">
+<meta name="description" content="OMG Virtual Lab: il tuo laboratorio virtuale di elettronica, strumenti e Arduino. Esplora, modifica e osserva.">
+<title>Il tuo laboratorio virtuale · OMG Virtual Lab</title>
 <style>
-    .omg-home-hero.omg-home-hero--split{
-      background: linear-gradient(135deg,#d9edf7 0%, #ebf6fb 55%, #f5fbfd 100%);
-      display:grid;
-      grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr);
-      gap:20px;
-      align-items:stretch;
-    }
-    .omg-home-hero--split p{max-width:62ch}
-    .omg-hero-copy{display:flex;flex-direction:column;justify-content:center}
-    .omg-hero-copy h1{margin-top:10px}
+/* OMG Visual Language — derivato da Partitore e Oscilloscopio, 20/11/2026 */
+:root{
+  --omg-yellow:#ffdc59;
+  --omg-coral:#ef615b;
+  --omg-teal:#169587;
+  --omg-aqua:#64cbbf;
+  --omg-ink:#20262f;
+  --omg-muted:#617078;
+  --omg-line:#dfe6e6;
+  --omg-white:#fff;
+  --omg-warm:#fcf9f3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:light}
+body{margin:0;color:var(--omg-ink);font:15px/1.53 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 2% 0%,#fff0c8 0,transparent 31%),
+  radial-gradient(ellipse at 97% 4%,#d7f4ed 0,transparent 33%),
+  linear-gradient(119deg,#fcf9f4 0%,#fff 48%,#f2fbf8 100%);background-attachment:fixed}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--omg-teal);outline-offset:4px}
+.omg-wrap{max-width:1230px;margin:0 auto;padding:22px clamp(18px,3.5vw,40px) 54px}
+/* Identità condivisa */
+.omg-header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:26px}
+.omg-brand{display:flex;align-items:center;gap:13px;text-decoration:none;min-width:0}
+.omg-mark{width:58px;height:58px;display:grid;place-items:center;position:relative;isolation:isolate;flex:none;font-weight:950;font-size:18px;letter-spacing:-.085em;color:var(--omg-ink)}
+.omg-mark::before,.omg-mark::after{content:"";position:absolute;inset:9px;border:3px solid var(--omg-ink);border-radius:5px;z-index:-1}
+.omg-mark::before{background:var(--omg-yellow);transform:translate(-5px,-5px) rotate(-8deg)}
+.omg-mark::after{background:var(--omg-aqua);transform:translate(7px,7px) rotate(7deg);z-index:-2}
+.omg-mark-text{transform:rotate(-6deg);text-shadow:1px 1px #fff;font-weight:950}
+.omg-brand-kicker{font-size:10px;font-weight:850;letter-spacing:.15em;text-transform:uppercase;color:#68757d;line-height:1.35}
+.omg-brand-name{font-size:20px;letter-spacing:-.045em;font-weight:850;line-height:1.25}
+.omg-site{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:#fff;border:1.8px solid var(--omg-ink);border-radius:999px;padding:10px 17px;text-decoration:none;
+  box-shadow:3px 3px 0 var(--omg-yellow);font-weight:800;font-size:13px;white-space:nowrap;transition:transform .17s,box-shadow .17s}
+.omg-site .accent,.omg-hero-url .accent{color:var(--omg-teal)}
+.omg-site:hover{transform:translateY(-2px);box-shadow:3px 5px 0 var(--omg-yellow)}
+.omg-site-arrow{font-size:16px;line-height:1}
+/* Intro */
+.omg-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);align-items:center;gap:clamp(18px,3vw,44px);padding:24px 0 25px;margin-bottom:12px}
+.omg-hero-copy{min-width:0}
+.omg-eyebrow{display:inline-block;transform:rotate(-2deg);background:var(--omg-yellow);border:2px solid var(--omg-ink);padding:6px 11px;border-radius:5px;
+  font-size:11px;font-weight:900;letter-spacing:.075em;text-transform:uppercase;line-height:1.2;margin:0 0 19px}
+.omg-hero h1{font-size:clamp(43px,5.5vw,76px);font-weight:900;letter-spacing:-.066em;line-height:1.01;margin:0;max-width:720px;text-wrap:balance}
+.omg-hero h1 .accent{color:var(--omg-teal)}
+.omg-hero h1 .point{color:var(--omg-coral)}
+.omg-lead{font-size:clamp(15px,1.42vw,18px);color:#53646b;max-width:575px;line-height:1.63;margin:20px 0 0}
+/* Pannello pop con identità OMG in grande, senza vecchio blocco blu */
+.omg-hero-panel{position:relative;min-height:270px;border:1.7px solid var(--omg-ink);border-radius:20px;background:#fff;
+  box-shadow:5px 5px 0 rgba(32,38,47,.08);overflow:hidden;display:flex;align-items:center;justify-content:center;isolation:isolate;padding:26px 20px}
+.omg-hero-panel:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#bfded9 1px,transparent 1px);background-size:20px 20px;opacity:.68;z-index:-2}
+.omg-hero-panel:after{content:"";position:absolute;right:-67px;bottom:-88px;width:244px;height:244px;border:28px solid #cdeee7;border-radius:50%;z-index:-1;opacity:.8}
+.omg-panel-inner{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;max-width:300px}
+.omg-logo-line{display:flex;align-items:center;gap:17px}
+.omg-logo-big{font-size:33px;font-weight:940;letter-spacing:-.08em;color:var(--omg-ink);background:var(--omg-yellow);border:3px solid var(--omg-ink);
+  border-radius:6px;padding:10px 13px;transform:rotate(-7deg);box-shadow:9px 8px 0 var(--omg-aqua)}
+.omg-logo-caption{font-size:23px;line-height:1.04;font-weight:950;letter-spacing:.025em;color:var(--omg-ink);text-align:left}
+.omg-hero-url{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;font-weight:850;font-size:16px;letter-spacing:-.025em;
+  background:#fff;border:1px solid #d3dcdd;border-radius:99px;padding:8px 13px}
+.omg-hero-url:hover{border-color:var(--omg-teal)}
+/* Sezioni */
+.omg-section{margin-top:32px}
+.omg-section + .omg-section{margin-top:47px}
+.omg-section-heading{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.omg-section-icon{width:9px;min-height:48px;border-radius:8px;background:var(--section-color);flex:none;margin-top:3px;transform:rotate(-4deg)}
+.omg-section h2{font-size:clamp(23px,2.5vw,32px);font-weight:850;letter-spacing:-.045em;line-height:1.12;margin:0 0 7px}
+.omg-section-description{margin:0;color:var(--omg-muted);font-size:14px;line-height:1.55;max-width:720px}
+.omg-section[data-theme="yellow"]{--section-color:var(--omg-yellow);--section-tint:#fff6d8}
+.omg-section[data-theme="teal"]{--section-color:var(--omg-aqua);--section-tint:#e2f7f3}
+.omg-section[data-theme="coral"]{--section-color:var(--omg-coral);--section-tint:#ffeeeb}
+.omg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.omg-grid-lab{grid-template-columns:repeat(4,minmax(0,1fr))}
+.omg-card{display:flex;flex-direction:column;min-width:0;background:#fff;border:1.4px solid #34414a;border-radius:17px;padding:20px 20px 18px;
+  box-shadow:0 5px 0 rgba(35,48,53,.055);transition:transform .16s,box-shadow .16s}
+.omg-card:hover{transform:translateY(-3px);box-shadow:0 9px 0 rgba(35,48,53,.075)}
+.omg-card-head{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:14px}
+.omg-card-spark{display:block;width:24px;height:24px;position:relative}
+.omg-card-spark:before{content:"";position:absolute;left:4px;top:4px;width:14px;height:14px;border-radius:5px;transform:rotate(-10deg);background:var(--section-color);border:1.6px solid var(--omg-ink)}
+.omg-card-spark:after{content:"";position:absolute;right:1px;bottom:2px;width:5px;height:5px;border-radius:100%;background:var(--omg-coral)}
+.omg-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:750;color:#78878b}
+.omg-card h3{margin:0 0 9px;font-size:clamp(17px,1.45vw,20px);font-weight:830;letter-spacing:-.037em;line-height:1.22}
+.omg-card p{margin:0;color:#627078;font-size:13px;line-height:1.62;flex:1}
+.omg-card-action{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;margin-top:19px;text-decoration:none;border:1.4px solid var(--omg-ink);border-radius:999px;
+  padding:8px 11px 8px 14px;background:var(--omg-yellow);font-weight:800;font-size:12px;color:var(--omg-ink);transition:background .16s}
+.omg-card-action:hover{background:#ffe78f}
+.omg-card-action span{font-size:17px;line-height:1;position:relative;top:-1px}
+.omg-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid #e2e7e6;margin-top:44px;padding:21px 0 0;
+  font-size:12px;color:#68767b;flex-wrap:wrap}
+.omg-footer a{font-weight:800;color:#147e75;text-decoration:none}
+.omg-footer a:hover{text-decoration:underline}
+/* Compact embed */
+.omg-compact .omg-wrap{max-width:1150px;padding-top:12px;padding-bottom:24px}
+.omg-compact .omg-header{margin-bottom:8px}
+.omg-compact .omg-hero{padding:12px 0 9px;margin:0;grid-template-columns:1fr}
+.omg-compact .omg-hero-panel{display:none}
+.omg-compact .omg-hero h1{font-size:clamp(27px,4vw,38px)}
+.omg-compact .omg-lead{margin:9px 0 0;font-size:13px}
+.omg-compact .omg-eyebrow{margin-bottom:10px;font-size:9px;padding:5px 8px}
+.omg-compact .omg-section{margin-top:24px}
+.omg-compact .omg-section + .omg-section{margin-top:29px}
+.omg-compact .omg-section h2{font-size:22px}
+.omg-compact .omg-section-heading{margin-bottom:11px}
+.omg-compact .omg-section-icon{min-height:41px;width:7px}
+.omg-compact .omg-grid{gap:11px}
+.omg-compact .omg-card{padding:14px 15px 13px;border-radius:13px}
+.omg-compact .omg-card-head{margin-bottom:9px}
+.omg-compact .omg-card h3{font-size:17px;margin-bottom:6px}
+.omg-compact .omg-card-action{margin-top:12px}
+.omg-compact .omg-footer{margin-top:26px}
+@media(max-width:1060px){.omg-grid-lab{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:880px){.omg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.omg-hero{grid-template-columns:minmax(0,1fr) minmax(240px,.85fr)}.omg-hero h1{font-size:clamp(40px,6.2vw,58px)}}
+@media(max-width:650px){
+  .omg-wrap{padding:15px 15px 36px}
+  .omg-header{margin-bottom:17px}
+  .omg-mark{width:48px;height:48px;font-size:15px}.omg-mark::before,.omg-mark::after{inset:8px}
+  .omg-brand-name{font-size:16px}.omg-brand-kicker{font-size:8px}
+  .omg-site{font-size:11px;padding:8px 11px;gap:4px}
+  .omg-hero{grid-template-columns:1fr;gap:22px;padding-top:11px}
+  .omg-hero h1{font-size:clamp(38px,9.3vw,55px)}
+  .omg-lead{margin-top:13px}
+  .omg-hero-panel{min-height:176px}
+  .omg-logo-big{font-size:25px;padding:9px 10px}.omg-logo-caption{font-size:18px}
+  .omg-panel-inner{gap:14px}
+  .omg-section{margin-top:28px}.omg-section + .omg-section{margin-top:34px}
+  .omg-grid,.omg-grid-lab{grid-template-columns:1fr;gap:11px}
+  .omg-card{padding:18px}
+  .omg-card h3{font-size:18px}
+  .omg-section-heading{gap:11px}
+  .omg-section h2{font-size:24px}
+  .omg-section-description{font-size:13px}
+  .omg-footer{margin-top:30px}
+  .omg-compact .omg-hero{padding-top:9px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.omg-site,.omg-card,.omg-card-action{transition:none}}
 
-    .omg-hero-mark {
-      display:flex;align-items:stretch;justify-content:stretch;
-      min-height:190px;border:2px solid var(--omg-ink);border-radius:16px;
-      background:#10263f;box-shadow:4px 4px 0 var(--omg-ink);
-      padding:0;overflow:hidden;
-    }
-    .omg-logo-banner{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      width:100%;gap:18px;padding:28px 16px 19px;
-      background:linear-gradient(to bottom,#10263f calc(100% - 7px),#00aebd calc(100% - 7px));
-    }
-    .omg-logo-lockup{display:flex;align-items:center;justify-content:center;gap:17px;min-width:0}
-    .omg-logo-stamp{
-      display:block;position:relative;flex:none;background:#fff;
-      padding:6px;transform:rotate(-2deg);
-      box-shadow:7px 7px 0 #ed5f59;
-    }
-    .omg-logo-stamp span{
-      display:block;background:#ffdc57;color:#10263f;
-      font-size:clamp(30px,3.5vw,48px);font-weight:1000;
-      line-height:1.1;letter-spacing:-.075em;padding:9px 14px;
-    }
-    .omg-logo-words{
-      color:#fff;font-size:clamp(15px,1.8vw,24px);
-      line-height:1.2;font-weight:1000;letter-spacing:.095em;
-    }
-    .omg-logo-words span{display:block}
-    .omg-logo-site{
-      color:#ffffff;text-decoration:none;font-size:15px;
-      font-weight:900;letter-spacing:.015em;
-    }
-    .omg-logo-site .omg-url-accent{color:#35d5df}
-    .omg-logo-site:hover{text-decoration:underline}
-    .omg-category-head{display:block;margin:0 0 12px}
-    .omg-category-head h2{margin-bottom:6px}
-    .omg-category-head p{max-width:62ch}
-    .omg-category-num{display:none}
-    @media (max-width: 780px){
-      .omg-home-hero.omg-home-hero--split{grid-template-columns:1fr}
-      .omg-hero-mark{min-height:unset}
-      .omg-logo-lockup{gap:16px}
-    }
-  </style>
+</style>
 </head>
 <body>
-<main class="omg-page">
-<div class="omg-brandline"><span class="omg-wordmark">OMG <b>Virtual Lab</b></span><span class="omg-kicker">Elettroni e dintorni</span></div>
-<section class="omg-home-hero omg-home-hero--split">
-<div class="omg-hero-copy">
-<span class="omg-eyebrow">ESPERIENZE INTERATTIVE</span>
-<h1>Il tuo laboratorio virtuale.</h1>
-<p>Esplora, modifica e osserva. Esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.</p>
-</div>
-<div class="omg-hero-mark">
-<div class="omg-logo-banner">
-<div aria-label="OMG! Virtual Lab" class="omg-logo-lockup">
-<div class="omg-logo-stamp"><span>OMG!</span></div>
-<div class="omg-logo-words"><span>VIRTUAL</span><span>LAB</span></div>
-</div>
-<a aria-label="ohmmygod.it" class="omg-logo-site" href="https://ohmmygod.it/" rel="noopener noreferrer" target="_blank">ohm<span class="omg-url-accent">mygod</span>.it</a>
-</div>
-</div>
+<div class="omg-wrap">
+<header class="omg-header">
+  <a class="omg-brand" href="./" aria-label="OMG Virtual Lab — pagina principale"><span class="omg-mark" aria-hidden="true"><span class="omg-mark-text">OMG!</span></span><span><span class="omg-brand-kicker">ELETTRONI E DINTORNI</span><span class="omg-brand-name" style="display:block">OMG Virtual Lab</span></span></a>
+  <a class="omg-site" href="https://ohmmygod.it/" target="_blank" rel="noopener noreferrer">ohm<span class="accent">mygod</span>.it <span class="omg-site-arrow" aria-hidden="true">↗</span></a>
+</header>
+<section class="omg-hero" aria-labelledby="omg-title">
+  <div class="omg-hero-copy">
+    <div class="omg-eyebrow">ELETTRONICA · LABORATORIO INTERATTIVO</div>
+    <h1 id="omg-title">Il tuo laboratorio <span class="accent">virtuale</span><span class="point">.</span></h1>
+    <p class="omg-lead">Esplora, modifica e osserva. Esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.</p>
+  </div>
+  <div class="omg-hero-panel" aria-label="OMG Virtual Lab">
+    <div class="omg-panel-inner">
+      <div class="omg-logo-line"><span class="omg-logo-big">OMG!</span><span class="omg-logo-caption">VIRTUAL<br>LAB</span></div>
+      <a class="omg-hero-url" href="https://ohmmygod.it/" target="_blank" rel="noopener noreferrer">ohm<span class="accent">mygod</span>.it <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
 </section>
-<section aria-labelledby="cat01" class="omg-category">
-<div class="omg-category-head">
-<div>
-<h2 id="cat01">Elettronica e componenti</h2>
-<p>Esperimenti interattivi su circuiti, grandezze elettriche e componenti.</p>
-</div>
-</div>
-<div class="omg-grid">
-<article class="omg-tile">
-<h3>La legge di Ohm</h3>
-<p>Modifica tensione e resistenza, osserva corrente, circuito e grafici.</p>
-<a class="omg-link" href="Ele-Legge-Ohm/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile">
-<h3>Resistenze: serie, parallelo e misto</h3>
-<p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p>
-<a class="omg-link" href="Ele-resistenze-serie-parallelo/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile">
-<h3>Resistenza e corrente</h3>
-<p>Scopri come una resistenza modifica il flusso di corrente nel circuito.</p>
-<a class="omg-link" href="Lab-resistenza-corrente/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile"><h3>Partitori di tensione e corrente</h3><p>Esplora la ripartizione di tensione e corrente, cambia le resistenze e confronta le misure.</p><a aria-label="Apri Partitori di tensione e corrente in una nuova scheda" class="omg-link" href="Ele-Partitoretensionecorrente/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a></article><article class="omg-tile">
-<h3>Codice colori delle resistenze</h3>
-<p>Esplora le bande dei resistori e mettiti alla prova con la modalità sfida.</p>
-<a class="omg-link" href="Lab-Codice-colori-Resistenze/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile">
-<h3>Il potenziometro</h3>
-<p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p>
-<a class="omg-link" href="Ele-Potenziometro/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-</div>
+<main id="simulatori">
+<section class="omg-section" data-theme="yellow" aria-labelledby="elettronica">
+  <div class="omg-section-heading"><span class="omg-section-icon" aria-hidden="true"></span><div><h2 id="elettronica">Elettronica e componenti</h2><p class="omg-section-description">Esperimenti interattivi su circuiti, grandezze elettriche e componenti.</p></div></div>
+  <div class="omg-grid"><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>La legge di Ohm</h3><p>Modifica tensione e resistenza, osserva corrente, circuito e grafici.</p>
+  <a class="omg-card-action" href="Ele-Legge-Ohm/" target="_blank" rel="noopener noreferrer" aria-label="Apri La legge di Ohm in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Resistenze: serie, parallelo e misto</h3><p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p>
+  <a class="omg-card-action" href="Ele-resistenze-serie-parallelo/" target="_blank" rel="noopener noreferrer" aria-label="Apri Resistenze: serie, parallelo e misto in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Resistenza e corrente</h3><p>Scopri come una resistenza modifica il flusso di corrente nel circuito.</p>
+  <a class="omg-card-action" href="Lab-resistenza-corrente/" target="_blank" rel="noopener noreferrer" aria-label="Apri Resistenza e corrente in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Partitori di tensione e corrente</h3><p>Esplora la ripartizione di tensione e corrente, cambia le resistenze e confronta le misure.</p>
+  <a class="omg-card-action" href="Ele-Partitoretensionecorrente/" target="_blank" rel="noopener noreferrer" aria-label="Apri Partitori di tensione e corrente in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Codice colori delle resistenze</h3><p>Esplora le bande dei resistori e mettiti alla prova con la modalità sfida.</p>
+  <a class="omg-card-action" href="Lab-Codice-colori-Resistenze/" target="_blank" rel="noopener noreferrer" aria-label="Apri Codice colori delle resistenze in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Il potenziometro</h3><p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p>
+  <a class="omg-card-action" href="Ele-Potenziometro/" target="_blank" rel="noopener noreferrer" aria-label="Apri Il potenziometro in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article></div>
 </section>
-<section aria-labelledby="cat02" class="omg-category">
-<div class="omg-category-head">
-<div>
-<h2 id="cat02">Laboratorio elettrico ed elettronico</h2>
-<p>Strumenti, misure e prototipazione per esplorare le attività del laboratorio.</p>
-</div>
-</div>
-<div class="omg-grid">
-<article class="omg-tile">
-<h3>Dentro la breadboard</h3>
-<p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p>
-<a class="omg-link" href="Lab-Breadboard/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile">
-<h3>Multimetro virtuale</h3>
-<p>Esercitati con selettore, puntali e misure elettriche in un ambiente guidato.</p>
-<a class="omg-link" href="Lab-multimetro/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile"><h3>Generatore di funzioni</h3><p>Sperimenta forme d’onda, ampiezza, periodo e frequenza con un generatore virtuale.</p><a aria-label="Apri Generatore di funzioni in una nuova scheda" class="omg-link" href="Lab-generatorefunzioni/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a></article><article class="omg-tile"><h3>Oscilloscopio</h3><p>Osserva le forme d’onda, imposta la base dei tempi e misura con i cursori.</p><a aria-label="Apri Oscilloscopio in una nuova scheda" class="omg-link" href="Lab-oscilloscopio/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a></article></div>
+<section class="omg-section" data-theme="teal" aria-labelledby="laboratorio">
+  <div class="omg-section-heading"><span class="omg-section-icon" aria-hidden="true"></span><div><h2 id="laboratorio">Laboratorio elettrico ed elettronico</h2><p class="omg-section-description">Strumenti, misure e prototipazione per esplorare le attività del laboratorio.</p></div></div>
+  <div class="omg-grid omg-grid-lab"><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Dentro la breadboard</h3><p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p>
+  <a class="omg-card-action" href="Lab-Breadboard/" target="_blank" rel="noopener noreferrer" aria-label="Apri Dentro la breadboard in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Multimetro virtuale</h3><p>Esercitati con selettore, puntali e misure elettriche in un ambiente guidato.</p>
+  <a class="omg-card-action" href="Lab-multimetro/" target="_blank" rel="noopener noreferrer" aria-label="Apri Multimetro virtuale in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Generatore di funzioni</h3><p>Sperimenta forme d’onda, ampiezza, periodo e frequenza con un generatore virtuale.</p>
+  <a class="omg-card-action" href="Lab-generatorefunzioni/" target="_blank" rel="noopener noreferrer" aria-label="Apri Generatore di funzioni in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Oscilloscopio</h3><p>Osserva le forme d’onda, imposta la base dei tempi e misura con i cursori.</p>
+  <a class="omg-card-action" href="Lab-oscilloscopio/" target="_blank" rel="noopener noreferrer" aria-label="Apri Oscilloscopio in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article></div>
 </section>
-<section aria-labelledby="cat03" class="omg-category">
-<div class="omg-category-head">
-<div>
-<h2 id="cat03">Arduino e microcontrollori</h2>
-<p>Ingressi digitali e analogici, PWM e sensori: prova e osserva il comportamento di Arduino.</p>
-</div>
-</div>
-<div class="omg-grid">
-<article class="omg-tile"><h3>Pull-up e pull-down</h3><p>Confronta i due collegamenti e osserva come determinano gli stati logici degli ingressi.</p><a aria-label="Apri Pull-up e pull-down in una nuova scheda" class="omg-link" href="Ard-PullupPulldown/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a></article><article class="omg-tile">
-<h3>ADC — Ingresso analogico</h3>
-<p>Capisci come Arduino legge un valore analogico e lo trasforma in numeri interpretabili.</p>
-<a class="omg-link" href="Ard-ADC/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile">
-<h3>PWM e LED</h3>
-<p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p>
-<a class="omg-link" href="Ard-PWM%20e%20LED/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-<article class="omg-tile"><h3>PWM e LED RGB</h3><p>Regola i tre canali PWM e scopri come si mescolano i colori di un LED RGB.</p><a aria-label="Apri PWM e LED RGB in una nuova scheda" class="omg-link" href="Ard-LedRGB/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a></article><article class="omg-tile">
-<h3>Sensore a ultrasuoni</h3>
-<p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p>
-<a class="omg-link" href="Ard-HCSR204/" rel="noopener noreferrer" target="_blank">Apri simulatore <span aria-hidden="true">↗</span></a>
-</article>
-</div>
+<section class="omg-section" data-theme="coral" aria-labelledby="arduino">
+  <div class="omg-section-heading"><span class="omg-section-icon" aria-hidden="true"></span><div><h2 id="arduino">Arduino e microcontrollori</h2><p class="omg-section-description">Ingressi digitali e analogici, PWM e sensori: prova e osserva il comportamento di Arduino.</p></div></div>
+  <div class="omg-grid"><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Pull-up e pull-down</h3><p>Confronta i due collegamenti e osserva come determinano gli stati logici degli ingressi.</p>
+  <a class="omg-card-action" href="Ard-PullupPulldown/" target="_blank" rel="noopener noreferrer" aria-label="Apri Pull-up e pull-down in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>ADC — Ingresso analogico</h3><p>Capisci come Arduino legge un valore analogico e lo trasforma in numeri interpretabili.</p>
+  <a class="omg-card-action" href="Ard-ADC/" target="_blank" rel="noopener noreferrer" aria-label="Apri ADC — Ingresso analogico in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>PWM e LED</h3><p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p>
+  <a class="omg-card-action" href="Ard-PWM%20e%20LED/" target="_blank" rel="noopener noreferrer" aria-label="Apri PWM e LED in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>PWM e LED RGB</h3><p>Regola i tre canali PWM e scopri come si mescolano i colori di un LED RGB.</p>
+  <a class="omg-card-action" href="Ard-LedRGB/" target="_blank" rel="noopener noreferrer" aria-label="Apri PWM e LED RGB in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article><article class="omg-card">
+  <div class="omg-card-head"><span class="omg-card-spark" aria-hidden="true"></span><span class="omg-card-label">ESPERIENZA INTERATTIVA</span></div>
+  <h3>Sensore a ultrasuoni</h3><p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p>
+  <a class="omg-card-action" href="Ard-HCSR204/" target="_blank" rel="noopener noreferrer" aria-label="Apri Sensore a ultrasuoni in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
+</article></div>
 </section>
-<p class="omg-small">OMG Virtual Lab · I simulatori sono strumenti didattici: confronta sempre i risultati con le misure reali in laboratorio. <a href="catalogo/">Catalogo compatto per Google Sites</a>.</p>
 </main>
+<footer class="omg-footer"><span>OMG Virtual Lab · Simulazioni didattiche da confrontare con misure reali in laboratorio.</span><a href="catalogo/">Catalogo compatto per Google Sites ↗</a></footer>
+</div>
 </body>
 </html>
-
