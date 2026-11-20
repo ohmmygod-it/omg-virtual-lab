@@ -9,13 +9,24 @@
   <link rel="stylesheet" href="../assets/omg.css">
   <style>
     .omg-compact-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .omg-compact-mark{display:flex;align-items:center;gap:10px;padding:8px 12px;border:2px solid var(--omg-ink);border-radius:14px;background:#eef7fb;box-shadow:3px 3px 0 var(--omg-ink)}
-    .omg-compact-url{font-size:16px;font-weight:900;letter-spacing:-.03em;color:var(--omg-ink)}
-    .omg-compact-url span{color:#009fac}
-    .omg-double-square{position:relative;width:36px;height:36px;flex:none}
-    .omg-double-square::before,.omg-double-square::after{content:"";position:absolute;width:23px;height:23px;border:2px solid var(--omg-ink);border-radius:6px}
-    .omg-double-square::before{left:1px;top:9px;background:#ffe45d}
-    .omg-double-square::after{right:0;top:0;background:#00b9c8}
+
+    .omg-compact-mark{
+      display:flex;align-items:center;gap:11px;padding:8px 13px 9px;
+      border:2px solid var(--omg-ink);border-bottom:5px solid #00aebd;
+      border-radius:10px;background:#10263f;
+      text-decoration:none;box-shadow:3px 3px 0 var(--omg-ink);
+    }
+    .omg-mini-stamp{
+      background:#fff;padding:3px;transform:rotate(-2deg);
+      box-shadow:4px 4px 0 #ed5f59;
+    }
+    .omg-mini-stamp span{
+      display:block;background:#ffdc57;color:#10263f;
+      font-size:18px;line-height:1;font-weight:1000;
+      letter-spacing:-.06em;padding:5px 7px;
+    }
+    .omg-mini-caption{font-size:12px;line-height:1.2;font-weight:950;letter-spacing:.09em;color:#fff}
+    .omg-mini-caption span{display:block}
     .omg-category-head{display:block;margin:0 0 12px}
     .omg-category-num{display:none}
   </style>
@@ -24,7 +35,7 @@
 <main class="omg-page">
   <div class="omg-compact-head">
     <div><strong>OMG Virtual Lab</strong><span> Esplora i simulatori · Si aprono in una nuova scheda</span></div>
-    <div class="omg-compact-mark"><div class="omg-double-square" aria-hidden="true"></div><div class="omg-compact-url">omg<span>mygod</span>.it</div></div>
+    <a class="omg-compact-mark" href="https://ohmmygod.it/" target="_blank" rel="noopener noreferrer" aria-label="ohmmygod.it"><span class="omg-mini-stamp"><span>OMG!</span></span><span class="omg-mini-caption"><span>VIRTUAL</span><span>LAB</span></span></a>
   </div>
 
   <section class="omg-category" aria-labelledby="cat01">
@@ -39,7 +50,7 @@
       <article class="omg-tile"><h3>Resistenze: serie, parallelo e misto</h3><p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p><a class="omg-link" href="../Ele-resistenze-serie-parallelo/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
       <article class="omg-tile"><h3>Resistenza e corrente</h3><p>Scopri come una resistenza modifica il flusso di corrente nel circuito.</p><a class="omg-link" href="../Lab-resistenza-corrente/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
       <article class="omg-tile"><h3>Codice colori delle resistenze</h3><p>Esplora le bande dei resistori e mettiti alla prova con la modalità sfida.</p><a class="omg-link" href="../Lab-Codice-colori-Resistenze/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
-      <article class="omg-tile"><h3>Il potenziometro</h3><p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p><a class="omg-link" href="../Ele-potenziometro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
+      <article class="omg-tile"><h3>Il potenziometro</h3><p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p><a class="omg-link" href="../Ele-Potenziometro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
     </div>
   </section>
 
@@ -52,7 +63,7 @@
     </div>
     <div class="omg-grid">
       <article class="omg-tile"><h3>Multimetro virtuale</h3><p>Esercitati con selettore, puntali e misure elettriche in un ambiente guidato.</p><a class="omg-link" href="../Lab-multimetro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
-      <article class="omg-tile"><h3>Dentro la breadboard</h3><p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p><a class="omg-link" href="../Lab-breadboard/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
+      <article class="omg-tile"><h3>Dentro la breadboard</h3><p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p><a class="omg-link" href="../Lab-Breadboard/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
     </div>
   </section>
 
@@ -65,8 +76,8 @@
     </div>
     <div class="omg-grid">
       <article class="omg-tile"><h3>ADC — Ingresso analogico</h3><p>Capisci come Arduino legge un valore analogico e lo trasforma in numeri interpretabili.</p><a class="omg-link" href="../Ard-ADC/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
-      <article class="omg-tile"><h3>PWM e LED</h3><p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p><a class="omg-link" href="../Ard-PWM/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
-      <article class="omg-tile"><h3>Sensore a ultrasuoni</h3><p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p><a class="omg-link" href="../Ard-sensore-ultrasuoni/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
+      <article class="omg-tile"><h3>PWM e LED</h3><p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p><a class="omg-link" href="../Ard-PWM%20e%20LED/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
+      <article class="omg-tile"><h3>Sensore a ultrasuoni</h3><p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p><a class="omg-link" href="../Ard-HCSR204/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a></article>
     </div>
   </section>
 </main>
