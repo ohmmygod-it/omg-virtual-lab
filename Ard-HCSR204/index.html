@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#132c4d">
+<title>OMG Virtual Lab · Sensore a ultrasuoni HC-SR04</title>
+<style>
+:root{--navy:#132c4d;--navy2:#0c2038;--blue:#1686b9;--cyan:#06a8c9;--cyanbg:#e4f7fb;--red:#ef645b;--redbg:#fff0ed;--yellow:#f8d859;--ink:#1f3149;--muted:#64758b;--line:#dce6ef;--panel:#fff;--bg:#f4f7fb;--green:#3c9a78;--shadow:0 12px 33px rgba(19,44,77,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Avenir Next",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}button:disabled{opacity:.45;cursor:not-allowed}
+.hero{background:linear-gradient(115deg,#102944,#17436a);color:#fff;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:400px;height:400px;border:100px solid rgba(255,255,255,.028);border-radius:50%;right:-120px;top:-280px;pointer-events:none}.hero-inner{max-width:1330px;margin:auto;padding:21px 34px 30px;position:relative}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.14em;font-weight:850;text-transform:uppercase}.brand-logo{display:inline-flex;align-items:center;justify-content:center;color:var(--navy2);background:var(--yellow);width:47px;height:33px;font-size:19px;font-weight:1000;letter-spacing:-.055em;border-radius:9px;transform:rotate(-3deg);box-shadow:3px 3px 0 #041527}.tag{border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:5px 13px;color:#d0e0ee;font-size:12px;font-weight:650}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-top:17px}.heading h1{font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-.038em;margin:0 0 9px;font-weight:880}.heading h1 em{font-style:normal;color:var(--yellow)}.heading p{margin:0;color:#d7e4f1;font-size:15px;max-width:710px}.submark{font-size:12px;font-weight:760;color:#dbecf6;white-space:nowrap;border-bottom:3px solid var(--yellow);padding-bottom:8px}
+.shell{max-width:1330px;margin:23px auto 45px;padding:0 27px}.main-grid{display:grid;grid-template-columns:minmax(0,1.95fr) minmax(280px,1fr);gap:18px;align-items:stretch}.panel{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}.panel-head{padding:20px 22px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h2{font-size:18px;font-weight:830;letter-spacing:-.025em;margin:0}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.11em;font-weight:850;color:var(--blue);margin:0 0 3px}.small-note{color:var(--muted);font-size:12px}.simulation{min-width:0}.sim-stage{margin:10px 16px 0;border:1px solid #e4edf5;border-radius:13px;background:linear-gradient(#fbfdff,#f3f9fd);position:relative;overflow:hidden}.sim-stage svg{display:block;width:100%;height:auto;min-height:260px}.stage-banner{position:absolute;top:12px;right:13px;padding:5px 10px;border:1px solid #e2e9ef;border-radius:9px;background:rgba(255,255,255,.92);font-size:12px;font-weight:800;white-space:nowrap;z-index:2}.stage-banner b{color:var(--blue)}.stage-banner[data-phase="back"] b{color:var(--red)}.stage-banner[data-phase="done"] b{color:var(--green)}.stage-banner[data-phase="waiting"] b{color:var(--muted)}
+.controls{padding:13px 22px 19px}.control-caption{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;gap:10px}.control-caption label{font-weight:800;font-size:15px}.distance-inline{font-size:23px;font-weight:900;color:var(--navy);letter-spacing:-.035em;white-space:nowrap}.distance-inline small{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:0}.range{-webkit-appearance:none;appearance:none;width:100%;height:10px;background:linear-gradient(to right,var(--cyan) 0%,var(--cyan) var(--range-progress,35%),#dfebf3 var(--range-progress,35%),#dfebf3 100%);border-radius:12px;display:block;margin:11px 0 7px;cursor:pointer}.range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:27px;height:27px;border-radius:50%;background:var(--navy);border:5px solid #fff;box-shadow:0 0 0 2px var(--cyan),0 2px 8px #7895aa}.range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--navy);border:4px solid #fff;box-shadow:0 0 0 2px var(--cyan)}.range-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:680}.btnbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:17px}.btn{display:inline-flex;justify-content:center;align-items:center;gap:7px;background:#fff;color:var(--navy);border:1px solid #d5e1eb;padding:10px 15px;border-radius:10px;font-size:13px;font-weight:800;transition:background .15s,transform .15s}.btn:hover{background:#eff7fb}.btn:active{transform:translateY(1px)}.btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);padding:11px 17px}.btn-primary:hover{background:#214b73}.btn-action{border:0;background:var(--yellow);color:#162943}.btn-action:hover{background:#f3ce45}.speed-switch{margin-left:auto;display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;font-weight:700}.speed-switch select{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--navy);padding:8px;font-size:12px;font-weight:800}.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.preset{padding:5px 10px;font-size:11px;border-radius:7px;background:#f3f7fb;color:#59718a;border:1px solid #e1eaf2;font-weight:750}.preset:hover{background:#e4f2fb}.mini-tip{font-size:12px;color:var(--muted);margin:12px 0 0}.mini-tip strong{color:var(--navy)}
+.stats{display:flex;flex-direction:column;min-width:0}.stat-body{padding:17px 19px 19px;display:flex;flex-direction:column;gap:12px;height:100%}.hero-stat{border-radius:14px;background:#112e4d;color:white;padding:19px 19px 16px;position:relative;overflow:hidden}.hero-stat:after{content:"cm";position:absolute;font-weight:900;font-size:85px;opacity:.045;right:7px;bottom:-42px}.hero-stat .stat-label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#b7d0e6;font-weight:850}.hero-stat .big{font-size:clamp(52px,6vw,84px);font-weight:900;line-height:1.05;letter-spacing:-.07em;white-space:nowrap;margin:9px 0 0}.hero-stat .big .unit{font-size:25px;font-weight:700;letter-spacing:0;color:var(--yellow)}.hero-stat .caption{color:#bed1e2;font-size:12px;margin:8px 0 0}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#f5f8fb;border:1px solid #e4ecf3;border-radius:12px;padding:12px 12px 14px;min-width:0}.metric .stat-label{font-size:11px;font-weight:830;color:var(--muted);letter-spacing:.01em}.metric .value{font-size:clamp(19px,2.3vw,28px);font-weight:880;letter-spacing:-.04em;white-space:nowrap;margin:4px 0 0;line-height:1.15}.metric .value small{font-size:13px;font-weight:700;color:#718096}.metric .meta{font-size:10px;color:#718096;margin-top:7px}.metric-cyan .value{color:#007e9d}.metric-red .value{color:#d84e49}.pin-explain{margin-top:auto;border-top:1px dashed var(--line);padding:13px 1px 1px}.pin-explain h3{font-size:13px;margin:0 0 9px}.pin-row{display:grid;grid-template-columns:55px 1fr;gap:8px;font-size:12px;margin:7px 0;color:#4b5e74}.pin-pill{border-radius:5px;text-align:center;padding:2px 4px;font-size:10px;font-weight:900;height:max-content}.pin-trig{background:#fff1c4;color:#785200}.pin-echo{background:#dceff9;color:#0e7491}.pin-vcc{background:#ffe0df;color:#ab3d36}.pin-gnd{background:#e8edf1;color:#4e5e70}
+.lower{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:18px;margin-top:18px}.scope{padding-bottom:17px}.scope-area{padding:9px 17px 0}.scope svg{display:block;width:100%;height:auto;min-height:190px}.scope-foot{display:flex;gap:9px;flex-wrap:wrap;padding:0 21px;color:var(--muted);font-size:11px}.legend-dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:middle}.formula{padding-bottom:18px}.formula-stack{padding:16px 21px 0}.formula-main{border:1px solid #dceaf2;background:#f4f9fc;border-radius:12px;padding:13px 14px 14px}.formula-line{text-align:center;font-weight:870;font-size:clamp(20px,2.5vw,29px);letter-spacing:-.04em;line-height:1.5;color:var(--navy)}.formula-sub{text-align:center;color:var(--muted);font-size:12px;margin-top:5px}.formula-working{font-weight:770;letter-spacing:-.03em;text-align:center;color:var(--navy);font-size:19px;line-height:1.5;padding:15px 0 5px}.formula-working .roundtrip{color:#007e9d}.formula-working .halves{color:#dc5149}.why{display:flex;gap:11px;padding:13px;border:1px solid #f0d1cb;background:#fff5f2;border-radius:11px;margin-top:9px}.why strong{font-size:14px;color:#a93b36}.why p{margin:2px 0 0;font-size:12px;color:#674c4b}.divide{display:inline-flex;align-items:center;justify-content:center;background:#fbdcda;color:#b33b34;width:45px;height:40px;border-radius:9px;font-size:20px;font-weight:900;flex-shrink:0}.foot{display:flex;gap:13px;align-items:flex-start;justify-content:space-between;margin-top:17px;color:var(--muted);font-size:11px;line-height:1.5}.foot p{margin:0;max-width:870px}.foot a{color:#246895}.foot .foot-brand{white-space:nowrap;font-size:11px;font-weight:800;color:#48677d}.visual-pin{font-size:18px;font-weight:850;fill:#f8ffff}.svg-label{font-weight:850;font-size:15px;fill:#345572}.stage-hint{font-size:13px;fill:#5b7189;font-weight:700}.track-label{font-size:14px;font-weight:850;letter-spacing:.035em}.range-ticks{font-size:13px;fill:#6a8093;font-weight:700}
+@media(max-width:990px){.main-grid{grid-template-columns:minmax(0,1.45fr) minmax(260px,1fr)}.shell{padding:0 17px}.hero-inner{padding-left:22px;padding-right:22px}.metric-grid{grid-template-columns:1fr 1fr}.heading h1{font-size:39px}.stage-banner{font-size:11px}.btn{padding:9px 11px}.speed-switch{margin-left:0}.sim-stage svg{min-height:215px}}
+@media(max-width:720px){.main-grid,.lower{grid-template-columns:1fr}.shell{padding:0 11px}.hero-inner{padding:18px 18px 26px}.heading{margin-top:15px}.heading h1{font-size:34px}.submark{display:none}.main-grid{gap:14px}.lower{gap:14px;margin-top:14px}.sim-stage{margin:12px 9px 0}.sim-stage svg{min-height:175px}.panel-head{padding:16px 16px 0}.controls{padding:13px 16px 17px}.stat-body{display:grid;grid-template-columns:1fr;gap:11px;padding:13px}.metric-grid{grid-template-columns:1fr 1fr}.hero-stat .big{font-size:65px}.pin-explain{margin-top:0}.foot{padding:0 4px;display:block}.foot-brand{display:block;margin-top:8px}.btnbar{gap:7px}}
+@media(max-width:440px){.heading h1{font-size:30px}.topline .tag{display:none}.metric .value{font-size:22px}.hero-stat .big{font-size:61px}.panel-head h2{font-size:16px}.btn{font-size:12px;padding:9px 10px}.stage-banner{font-size:10px;top:7px;right:6px;padding:4px 7px}.sim-stage svg{min-height:160px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+  <div class="topline"><div class="brand"><span class="brand-logo">OMG</span><span>Virtual Lab</span></div><div class="tag">Sensori e misure · Esperienza interattiva</div></div>
+  <div class="heading"><div><h1>Il sensore <em>a ultrasuoni.</em></h1><p>Avvicina l'ostacolo, osserva il viaggio dell'onda sonora e scopri come il tempo diventa distanza.</p></div><span class="submark">HC-SR04 · 40 kHz</span></div>
+</div></header>
+<main class="shell">
+ <div class="main-grid">
+ <section class="panel simulation" aria-label="Simulazione ultrasuoni">
+  <div class="panel-head"><div><p class="kicker">01 · Esplora</p><h2>Un impulso. Due viaggi.</h2></div><div class="small-note">Vista schematica · non in scala temporale</div></div>
+  <div class="sim-stage">
+   <div class="stage-banner" id="phaseBadge" data-phase="waiting" aria-live="polite">● <b>Pronto alla misura</b></div>
+   <svg viewBox="0 0 1000 405" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Il sensore emette un'onda verso un ostacolo, che riflette l'onda al sensore. L'ostacolo si sposta con lo slider.">
+    <defs>
+     <linearGradient id="pcbGrad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#198ac6"/><stop offset="1" stop-color="#075a90"/></linearGradient>
+     <linearGradient id="wallGrad"><stop stop-color="#c4d0db"/><stop offset=".47" stop-color="#e8edf1"/><stop offset="1" stop-color="#afbfcd"/></linearGradient>
+     <radialGradient id="metalGrad"><stop stop-color="#cad9e5"/><stop offset=".72" stop-color="#f3f6fa"/><stop offset=".87" stop-color="#71869a"/><stop offset="1" stop-color="#364c5e"/></radialGradient>
+     <pattern id="stageGrid" width="29" height="29" patternUnits="userSpaceOnUse"><path d="M29 0H0V29" stroke="#d8e6ef" stroke-width=".8" fill="none" opacity=".55"/></pattern>
+     <marker id="forwardArrow" markerWidth="8" markerHeight="8" refX="6.6" refY="3" orient="auto"><path d="M0 0L7 3L0 6Z" fill="#00a7c8"/></marker>
+     <marker id="backArrow" markerWidth="8" markerHeight="8" refX="6.6" refY="3" orient="auto"><path d="M0 0L7 3L0 6Z" fill="#ef645b"/></marker>
+     <filter id="packetGlow"><feGaussianBlur stdDeviation="7" /></filter>
+    </defs>
+    <rect x="0" y="0" width="1000" height="405" fill="url(#stageGrid)"/>
+    <text x="36" y="34" font-size="13" font-weight="850" fill="#788fa2" letter-spacing="1.4">SENSORE HC-SR04</text>
+    <g transform="translate(35,66)">
+      <rect width="223" height="250" rx="13" fill="#0e4164" opacity=".14" transform="translate(5,7)"/>
+      <rect width="223" height="250" rx="13" fill="url(#pcbGrad)" stroke="#073f67" stroke-width="4"/>
+      <circle cx="18" cy="18" r="7" fill="#0c4672" stroke="#88d0f5" stroke-width="2"/><circle cx="205" cy="18" r="7" fill="#0c4672" stroke="#88d0f5" stroke-width="2"/>
+      <circle cx="18" cy="231" r="7" fill="#0c4672" stroke="#88d0f5" stroke-width="2"/><circle cx="205" cy="231" r="7" fill="#0c4672" stroke="#88d0f5" stroke-width="2"/>
+      <circle cx="65" cy="83" r="47" fill="url(#metalGrad)" stroke="#203c53" stroke-width="3"/>
+      <circle cx="65" cy="83" r="30" fill="#6e8495" stroke="#c6d2dc" stroke-width="3"/><circle cx="65" cy="83" r="25" fill="#485e71" opacity=".6"/>
+      <circle cx="161" cy="83" r="47" fill="url(#metalGrad)" stroke="#203c53" stroke-width="3"/>
+      <circle cx="161" cy="83" r="30" fill="#6e8495" stroke="#c6d2dc" stroke-width="3"/><circle cx="161" cy="83" r="25" fill="#485e71" opacity=".6"/>
+      <text x="65" y="144" text-anchor="middle" fill="#d9f5ff" font-size="13" font-weight="900">T</text><text x="161" y="144" text-anchor="middle" fill="#d9f5ff" font-size="13" font-weight="900">R</text>
+      <rect x="72" y="156" width="84" height="28" fill="#113247" rx="4"/><text x="114" y="174" text-anchor="middle" font-size="13" font-weight="900" fill="#e9f6ff">HC-SR04</text>
+      <path d="M21 185h29m22 14h31m22-6h28m18 12h27" stroke="#80daf5" stroke-width="2" opacity=".65"/>
+      <g transform="translate(17,198)">
+        <rect x="0" y="0" width="189" height="17" rx="4" fill="#0f283b"/>
+        <g fill="#d5dfe7" stroke="#55788c" stroke-width="1"><rect x="12" y="-1" width="8" height="14" rx="1"/><rect x="60" y="-1" width="8" height="14" rx="1"/><rect x="108" y="-1" width="8" height="14" rx="1"/><rect x="156" y="-1" width="8" height="14" rx="1"/></g>
+      </g>
+      <g font-size="13" font-weight="950" text-anchor="middle"><text x="33" y="235" fill="#fff0b2">VCC</text><text x="81" y="235" fill="#ffe17b">TRIG</text><text x="129" y="235" fill="#b9edfa">ECHO</text><text x="177" y="235" fill="#f0f5f9">GND</text></g>
+    </g>
+    <!-- Tracks are placed on parallel lines solely to aid visibility; the sound follows the same physical path. -->
+    <g id="tracks">
+      <path id="outPath" d="M267 146H680" stroke="#78d0de" stroke-width="4" stroke-dasharray="7 10" fill="none" opacity=".75"/>
+      <path id="outArrowPath" d="M267 146H680" stroke="#00a7c8" stroke-width="2" fill="none" marker-end="url(#forwardArrow)" opacity=".95"/>
+      <path id="backPath" d="M680 228H267" stroke="#f2b6b0" stroke-width="4" stroke-dasharray="7 10" fill="none" opacity=".75"/>
+      <path id="backArrowPath" d="M680 228H267" stroke="#ef645b" stroke-width="2" fill="none" marker-end="url(#backArrow)" opacity=".95"/>
+      <text x="282" y="120" fill="#028ba7" class="track-label">ANDATA →</text>
+      <text x="282" y="258" fill="#df5751" class="track-label">← RITORNO</text>
+    </g>
+    <!-- Wave packet: an ultrasound burst is represented schematically as one bright moving wave -->
+    <g id="outWave" opacity="0" transform="translate(267 146)"><circle r="22" fill="#00a7c8" opacity=".24" filter="url(#packetGlow)"/><circle r="10" fill="#00a7c8"/><path d="M-15 -18 Q4 0 -15 18M-25 -28 Q8 0 -25 28" stroke="#00a7c8" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    <g id="backWave" opacity="0" transform="translate(680 228)"><circle r="22" fill="#ef645b" opacity=".23" filter="url(#packetGlow)"/><circle r="10" fill="#ef645b"/><path d="M15 -18 Q-4 0 15 18M25 -28 Q-8 0 25 28" stroke="#ef645b" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    <g id="wall" transform="translate(720 0)"><rect x="0" y="71" width="54" height="248" rx="7" fill="url(#wallGrad)" stroke="#8da4b7" stroke-width="2"/><path d="M12 76v237M25 76v237M38 76v237" stroke="#849caf" stroke-width="2" opacity=".3"/><g fill="#7c91a5"><circle cx="26" cy="91" r="3"/><circle cx="26" cy="296" r="3"/></g><rect x="-8" y="135" width="9" height="98" rx="3" fill="#93aaba" opacity=".6"/><text x="27" y="59" font-size="14" font-weight="900" text-anchor="middle" fill="#455a6d">OSTACOLO</text></g>
+    <g id="distanceGraphic">
+      <path id="distanceLine" d="M267 345H720" stroke="#416a88" stroke-width="2.5" fill="none"/>
+      <path d="M267 336v18" stroke="#416a88" stroke-width="2.5"/>
+      <path id="distanceEndCap" d="M720 336v18" stroke="#416a88" stroke-width="2.5"/>
+      <rect id="distancePlate" x="405" y="330" width="160" height="31" rx="11" fill="#e6f0f6" stroke="#c5dbe7"/>
+      <text id="distanceOnStage" x="485" y="351" text-anchor="middle" font-size="18" font-weight="900" fill="#214e71">100 cm</text>
+      <text x="267" y="379" class="stage-hint">distanza misurata (solo andata)</text>
+    </g>
+   </svg>
+  </div>
+  <div class="controls">
+   <div class="control-caption"><label for="distanceSlider">Sposta l'ostacolo</label><div class="distance-inline"><span id="sliderDistance">100</span> <small>cm</small></div></div>
+   <input class="range" type="range" id="distanceSlider" min="5" max="250" value="100" step="1" aria-describedby="sliderHint">
+   <div class="range-ends"><span>5 cm · vicino</span><span>250 cm · lontano</span></div>
+   <div class="presets" aria-label="Distanze predefinite"><button class="preset" data-dist="20">20 cm</button><button class="preset" data-dist="50">50 cm</button><button class="preset" data-dist="100">100 cm</button><button class="preset" data-dist="200">200 cm</button></div>
+   <div class="btnbar">
+    <button class="btn btn-primary" id="measureBtn" aria-label="Avvia una misurazione"><span id="measureIcon">▶</span> <span id="measureLabel">Invia TRIG e misura</span></button>
+    <button class="btn btn-action" id="repeatBtn" aria-pressed="false">↻ Misura continua: OFF</button>
+    <button class="btn" id="stepBtn" title="Mostra uno step dell'animazione">Passo per passo</button>
+    <div class="speed-switch"><label for="speedSelect">Velocità animazione</label><select id="speedSelect"><option value="0.65">Lenta</option><option selected value="1">Normale</option><option value="1.7">Veloce</option></select></div>
+   </div>
+   <p id="sliderHint" class="mini-tip">💡 <strong>Prova:</strong> avvicina l'ostacolo. Il tempo di ECHO diminuisce perché l'ultrasuono percorre meno strada.</p>
+  </div>
+ </section>
+ <section class="panel stats" aria-label="Valori della misura">
+  <div class="panel-head"><div><p class="kicker">02 · Osserva</p><h2>La misura in numeri</h2></div></div>
+  <div class="stat-body">
+   <div class="hero-stat"><div class="stat-label">Distanza dall'ostacolo</div><div class="big"><span id="distanceBig">100</span> <span class="unit">cm</span></div><p class="caption">Il valore che Arduino può calcolare</p></div>
+   <div class="metric-grid">
+    <div class="metric metric-cyan"><div class="stat-label">Tempo ANDATA</div><div class="value"><span id="outTime">2.915</span> <small>µs</small></div><div class="meta">dal sensore all'ostacolo</div></div>
+    <div class="metric metric-red"><div class="stat-label">Tempo RITORNO</div><div class="value"><span id="backTime">2.915</span> <small>µs</small></div><div class="meta">dall'ostacolo al sensore</div></div>
+   </div>
+   <div class="metric-grid">
+    <div class="metric"><div class="stat-label">Durata ECHO (A + R)</div><div class="value"><span id="echoTime">5.831</span> <small>µs</small></div><div class="meta">tempo misurato da Arduino</div></div>
+    <div class="metric"><div class="stat-label">TRIG HIGH</div><div class="value">10 <small>µs</small></div><div class="meta">impulso per avviare la misura</div></div>
+   </div>
+   <div class="pin-explain"><h3>Che cosa fanno i quattro piedini?</h3>
+    <div class="pin-row"><span class="pin-pill pin-vcc">VCC</span><span>Alimentazione a 5 V</span></div>
+    <div class="pin-row"><span class="pin-pill pin-trig">TRIG</span><span><b>Ingresso:</b> Arduino invia HIGH per almeno 10 µs</span></div>
+    <div class="pin-row"><span class="pin-pill pin-echo">ECHO</span><span><b>Uscita:</b> rimane HIGH per un tempo proporzionale all'andata + ritorno</span></div>
+    <div class="pin-row"><span class="pin-pill pin-gnd">GND</span><span>Massa comune con Arduino</span></div>
+    <p class="mini-tip" style="margin-top:11px"><strong>Attenzione:</strong> TRIG non è l’ultrasuono. Dopo il comando, il sensore emette 8 cicli acustici a 40 kHz.</p>
+   </div>
+  </div>
+ </section>
+ </div>
+ <div class="lower">
+  <section class="panel scope" aria-label="Segnali TRIG ed ECHO"><div class="panel-head"><div><p class="kicker">03 · Confronta i segnali</p><h2>TRIG è il comando, ECHO è il tempo</h2></div><span class="small-note">Oscillogramma didattico</span></div>
+   <div class="scope-area"><svg id="scopeSvg" viewBox="0 0 750 236" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Il segnale TRIG è un breve impulso di 10 microsecondi. La durata del segnale ECHO cambia con la distanza.">
+    <rect x="82" y="18" width="638" height="171" rx="9" fill="#f8fbfd" stroke="#e4eef4"/>
+    <g stroke="#dce7ef" stroke-width="1"><path d="M82 45H720M82 90H720M82 135H720M82 180H720"/><path d="M145 18V189M289 18V189M433 18V189M576 18V189M719 18V189"/></g>
+    <text x="5" y="67" font-size="16" font-weight="900" fill="#b27b0a">TRIG</text><text x="5" y="153" font-size="16" font-weight="900" fill="#047b9a">ECHO</text>
+    <path d="M83 90H139V44H145V90H718" fill="none" stroke="#d5a12b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M137 27V43" stroke="#bd8d1b" stroke-width="1.5"/><text x="158" y="37" font-size="13" font-weight="800" fill="#ad7b15">10 µs</text>
+    <path id="echoShape" d="M83 180H145V135H365V180H718" fill="none" stroke="#009fbe" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect id="echoPulseFill" x="145" y="136" width="220" height="44" fill="#20b4d0" opacity=".14"/>
+    <path id="echoMeasureArrow" d="M145 124H365" stroke="#0b8fad" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <text id="echoPlotLabel" x="254" y="115" font-size="14" font-weight="850" fill="#087f9c" text-anchor="middle">5.831 µs</text>
+    <circle id="scopeCursor" cx="145" cy="136" r="6" fill="#f46c58" stroke="white" stroke-width="2" opacity="0"/>
+    <text x="145" y="211" font-size="12" fill="#6d8195" font-weight="700">0</text><text x="283" y="211" font-size="12" fill="#6d8195" font-weight="700">4 ms</text><text x="426" y="211" font-size="12" fill="#6d8195" font-weight="700">8 ms</text><text x="564" y="211" font-size="12" fill="#6d8195" font-weight="700">12 ms</text><text x="679" y="211" font-size="12" fill="#6d8195" font-weight="700">16 ms</text>
+    <text x="720" y="230" font-size="11" fill="#8b99a8" text-anchor="end">tempo →</text>
+   </svg></div>
+   <div class="scope-foot"><span><i class="legend-dot" style="background:#d5a12b"></i> TRIG: impulso di 10 µs (ingrandito per visibilità)</span><span><i class="legend-dot" style="background:#00a2c0"></i> ECHO: larghezza proporzionale alla distanza; t = 0 al suo inizio</span></div>
+  </section>
+  <section class="panel formula" aria-label="Formula della distanza"><div class="panel-head"><div><p class="kicker">04 · Calcola</p><h2>Perché dividiamo per due?</h2></div></div>
+   <div class="formula-stack">
+    <div class="formula-main"><div class="formula-line">d = <span style="color:#007f9d">t</span> × 0,0343 <span style="color:#df5550">÷ 2</span></div><div class="formula-sub">d in cm · t in µs · velocità del suono ≈ 0,0343 cm/µs (a 20 °C)</div></div>
+    <div class="formula-working" aria-live="polite">d = <span class="roundtrip" id="formulaTime">5.831</span> × 0,0343 <span class="halves">÷ 2</span><div>= <span id="formulaResult">100,0</span> cm</div></div>
+    <div class="why"><span class="divide">÷ 2</span><div><strong>Il tempo di ECHO comprende due tragitti.</strong><p>L'onda percorre <b>sensore → ostacolo → sensore</b>, cioè il doppio della distanza che vogliamo misurare.</p></div></div>
+   </div>
+  </section>
+ </div>
+ <footer class="foot"><p><b>Nota di laboratorio.</b> L'animazione rallenta volutamente un fenomeno che dura solo pochi millisecondi. Le due corsie colorate rappresentano schematicamente andata e ritorno: nella realtà il suono attraversa lo stesso spazio. Intervallo esplorabile qui: 5–250 cm; il modulo HC-SR04 è comunemente specificato per circa 2–400 cm. I valori sono teorici, senza rumore, temperatura variabile o errori di riflessione. Datasheet: <a href="https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf" target="_blank" rel="noopener noreferrer">HC-SR04</a>.</p><span class="foot-brand">OMG · Virtual Lab</span></footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const slider=$('distanceSlider'), phases=['waiting','trig','out','back','done'];
+const nf0=new Intl.NumberFormat('it-IT',{maximumFractionDigits:0});
+const nf1=new Intl.NumberFormat('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1});
+let dist=Number(slider.value), speed=1, isRunning=false, continuous=false, mode='normal', step=0;
+let raf=0, started=0, cooldownUntil=0, measureDist=dist, phase='waiting';
+const SPEED_CM_US=0.0343;
+const OUT_X=267;
+const svgSet=(id,attr,v)=>$(id).setAttribute(attr,v);
+const roundTripUs=d=>2*d/SPEED_CM_US;
+const wallX=d=>372+(d-5)/245*527;
+function formatMicro(x){return nf0.format(x)}
+function labelPhase(ph){
+ phase=ph;const badge=$('phaseBadge');badge.dataset.phase=ph;
+ const labels={waiting:'Pronto alla misura',trig:'TRIG: impulso di 10 µs',out:'ANDATA: onda emessa',back:'RITORNO: onda riflessa',done:'ECHO terminato · misura fatta'};
+ badge.querySelector('b').textContent=labels[ph];
+}
+function updateUI(){
+ const d=dist,x=wallX(d),travel=roundTripUs(d),one=travel/2;
+ slider.style.setProperty('--range-progress',((d-5)/245*100).toFixed(1)+'%');
+ $('sliderDistance').textContent=d;$('distanceBig').textContent=d;
+ $('outTime').textContent=formatMicro(one);$('backTime').textContent=formatMicro(one);$('echoTime').textContent=formatMicro(travel);
+ $('formulaTime').textContent=formatMicro(travel);$('formulaResult').textContent=nf1.format(d);
+ svgSet('wall','transform',`translate(${x.toFixed(1)} 0)`);
+ const pEnd=x-17;
+ svgSet('outPath','d',`M267 146H${pEnd}`);svgSet('outArrowPath','d',`M267 146H${pEnd}`);
+ svgSet('backPath','d',`M${pEnd} 228H267`);svgSet('backArrowPath','d',`M${pEnd} 228H267`);
+ svgSet('distanceLine','d',`M267 345H${x}`);svgSet('distanceEndCap','d',`M${x} 336v18`);
+ const center=(OUT_X+x)/2;svgSet('distancePlate','x',(center-79).toFixed(1));svgSet('distanceOnStage','x',center.toFixed(1));$('distanceOnStage').textContent=d+' cm';
+ const echoStart=145,chartWidth=575,echoWidth=(travel/16000)*chartWidth,end=echoStart+echoWidth;
+ svgSet('echoShape','d',`M83 180H${echoStart}V135H${end.toFixed(1)}V180H718`);
+ svgSet('echoPulseFill','width',echoWidth.toFixed(1));svgSet('echoMeasureArrow','d',`M145 124H${end.toFixed(1)}`);
+ // Keep the label within the graph even at very short distances.
+ svgSet('echoPlotLabel','x',Math.max(193,Math.min(645,(echoStart+end)/2)).toFixed(1));
+ $('echoPlotLabel').textContent=formatMicro(travel)+' µs';
+ if(!isRunning){$('outWave').setAttribute('opacity','0');$('backWave').setAttribute('opacity','0');$('scopeCursor').setAttribute('opacity','0');}
+}
+function setDist(d){dist=Math.min(250,Math.max(5,Math.round(d)));slider.value=dist;
+ stopAnim();updateUI();labelPhase('waiting');
+ if(continuous)launch();
+}
+function stopAnim(){if(raf)cancelAnimationFrame(raf);raf=0;isRunning=false;step=0;svgSet('outWave','opacity',0);svgSet('backWave','opacity',0);svgSet('scopeCursor','opacity',0);$('measureLabel').textContent='Invia TRIG e misura';$('measureIcon').textContent='▶';}
+function renderProgress(percentage,showWave=true){
+ const x=wallX(measureDist)-18,start=OUT_X;
+ let p=Math.max(0,Math.min(1,percentage));
+ const echoWidth=(roundTripUs(measureDist)/16000)*575;
+ if(p<.025){labelPhase('trig');svgSet('outWave','opacity',0);svgSet('backWave','opacity',0);}
+ else if(p<.51){labelPhase('out');let k=(p-.025)/.485;svgSet('outWave','transform',`translate(${start+(x-start)*k} 146)`);svgSet('outWave','opacity',showWave?1:0);svgSet('backWave','opacity',0);}
+ else if(p<1){labelPhase('back');let k=(p-.51)/.49;svgSet('backWave','transform',`translate(${x-(x-start)*k} 228)`);svgSet('backWave','opacity',showWave?1:0);svgSet('outWave','opacity',0);}
+ else {labelPhase('done');svgSet('outWave','opacity',0);svgSet('backWave','opacity',0);}
+ // The moving dot represents the progress of the ECHO high period (not a separate acoustic signal).
+ if(p>.025&&p<1){svgSet('scopeCursor','opacity',1);svgSet('scopeCursor','cx',(145+echoWidth*Math.max(0,(p-.025)/.975)).toFixed(2));} else svgSet('scopeCursor','opacity',0);
+}
+function launch(){
+ if(raf)cancelAnimationFrame(raf);raf=0;mode='normal';step=0;isRunning=true;measureDist=dist;started=performance.now();
+ $('measureLabel').textContent='Misurazione in corso';$('measureIcon').textContent='◉';
+ const duration=(750+measureDist*10)/speed; // deliberately slowed down for teaching
+ const tick=(now)=>{
+   if(!isRunning||mode!=='normal')return;
+   const p=(now-started)/duration;
+   if(p>=1){renderProgress(1);raf=0;isRunning=false;$('measureLabel').textContent='Invia TRIG e misura';$('measureIcon').textContent='▶';
+    if(continuous){cooldownUntil=now+Math.max(190,350/speed);raf=requestAnimationFrame(waitToRepeat);}return;}
+   renderProgress(p);raf=requestAnimationFrame(tick);
+ };
+ renderProgress(0);raf=requestAnimationFrame(tick);
+}
+function waitToRepeat(now){if(!continuous){raf=0;return;}if(now>=cooldownUntil){raf=0;launch();return;}raf=requestAnimationFrame(waitToRepeat);}
+function stepOnce(){
+ if(raf)cancelAnimationFrame(raf);raf=0;isRunning=false;mode='step';
+ if(continuous){continuous=false;updateRepeat();}
+ if(step===0)measureDist=dist;
+ const positions=[0.012,0.26,0.515,0.75,1];
+ renderProgress(positions[step]);
+ const labels=['TRIG inviato','Onda in andata','Onda sull’ostacolo','Onda di ritorno','ECHO terminato'];
+ $('measureLabel').textContent=labels[step];$('measureIcon').textContent='●';
+ step=(step+1)%positions.length;
+}
+function updateRepeat(){const b=$('repeatBtn');b.setAttribute('aria-pressed',String(continuous));b.textContent=continuous?'↻ Misura continua: ON':'↻ Misura continua: OFF';b.style.background=continuous?'#def7e9':'';b.style.color=continuous?'#167550':'';}
+slider.addEventListener('input',e=>setDist(Number(e.target.value)));
+for(const b of document.querySelectorAll('.preset'))b.addEventListener('click',()=>setDist(Number(b.dataset.dist)));
+$('measureBtn').addEventListener('click',()=>{stopAnim();launch();});
+$('repeatBtn').addEventListener('click',()=>{continuous=!continuous;updateRepeat();if(continuous){stopAnim();launch();} else if(!isRunning){if(raf)cancelAnimationFrame(raf);raf=0;}});
+$('stepBtn').addEventListener('click',stepOnce);
+$('speedSelect').addEventListener('change',e=>{speed=Number(e.target.value);if(isRunning)launch();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&continuous){continuous=false;updateRepeat();stopAnim();labelPhase('waiting');}});
+updateUI();labelPhase('waiting');
+})();
+</script>
+</body>
+</html>
