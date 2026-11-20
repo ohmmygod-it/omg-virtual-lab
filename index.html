@@ -2,156 +2,307 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#00b9c8">
-  <meta name="description" content="OMG Virtual Lab: esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.">
-  <title>OMG Virtual Lab — Il tuo laboratorio virtuale</title>
-  <link rel="stylesheet" href="assets/omg.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13558a">
+  <title>PWM Arduino · OMG Virtual Lab</title>
   <style>
-    .omg-home-hero.omg-home-hero--split{
-      background: linear-gradient(135deg,#d9edf7 0%, #ebf6fb 55%, #f5fbfd 100%);
-      display:grid;
-      grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr);
-      gap:20px;
-      align-items:stretch;
+    :root{--ink:#17314d;--muted:#627589;--blue:#155a91;--blue2:#0b416e;--cyan:#21abc4;--line:#dce6ef;--paper:#fff;--bg:#f3f7fb;--yellow:#ffc94b;--red:#ea4151;--shadow:0 10px 35px rgba(17,53,83,.07)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
+    button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #38b5e2;outline-offset:3px}
+    .wrap{max-width:1160px;padding:28px 22px 48px;margin:auto}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px;letter-spacing:.03em;font-size:12px;font-weight:850;color:var(--blue2)}
+    .brandmark{width:51px;height:44px;display:grid;place-items:center;background:var(--blue);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--yellow);color:#fff;font-size:17px;font-weight:950;border-radius:10px;transform:rotate(-3deg);letter-spacing:-.05em}
+    .brand small{display:block;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+    .pill{background:#e7f3f9;border:1px solid #cbe2f1;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;color:#185a7f}
+    .intro{margin-bottom:23px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:850;color:var(--blue);margin:0 0 6px}.intro h1{font-size:clamp(31px,4.6vw,47px);line-height:1.08;letter-spacing:-.055em;margin:0 0 10px;font-weight:890}.intro h1 span{color:var(--blue)}.intro p{margin:0;color:var(--muted);max-width:750px;font-size:15px}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:19px 23px;border-bottom:1px solid var(--line)}
+    h2{font-size:19px;letter-spacing:-.025em;margin:0;font-weight:800}h3{font-size:16px;margin:0 0 8px;letter-spacing:-.02em}
+    .hint{color:var(--muted);font-size:12px;font-weight:650}.pin-picker{display:flex;align-items:center;gap:7px}.pin-picker span{font-size:12px;font-weight:750;color:var(--muted);margin-right:3px}
+    .pin-btn{border:1px solid #c4d7e6;background:#fff;border-radius:10px;padding:6px 13px;font-weight:850;color:var(--blue2);min-width:54px;transition:background .15s, transform .15s}.pin-btn[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:white}.pin-btn:active{transform:scale(.97)}
+    .stage{position:relative;background:linear-gradient(180deg,#f7fcff 0,#f0f7fb 100%);overflow-x:auto;overflow-y:hidden;scrollbar-color:#b0cfdf transparent}
+    .stage svg{display:block;width:100%;min-width:660px;height:auto;max-height:480px}
+    .stage-note{position:absolute;left:24px;bottom:17px;border:1px solid #dae6ed;border-radius:8px;color:#60768a;background:#ffffffde;padding:5px 9px;font-size:11px;font-weight:700;pointer-events:none}
+    .svg-text{font-family:Inter,system-ui,sans-serif}.pcb-label{font-weight:800;fill:#e1fbfa}.pin-label{font-size:18px;font-weight:800;fill:#d9fff4}.pin-generic{font-size:16px;font-weight:750;fill:#c6f5e8}
+    .wire{stroke:#1f8ab2;stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}.wire-gnd{stroke:#456c85;stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .pin-highlight{fill:#ffe7a3;stroke:#f9b728;stroke-width:3;opacity:0}.active-socket{fill:#f1c351!important;stroke:#ffe49e!important}
+    .wire-pulse{fill:none;stroke:#99e8f3;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:4 16;animation:pulseTravel 1.2s linear infinite}
+    @keyframes pulseTravel{to{stroke-dashoffset:-80}}
+    .led-glow{transition:opacity .13s ease;transform-origin:730px 288px}.led-dome{transition:fill .12s ease}.lead-shine{stroke:#ffe9e9;opacity:.8}
+    .control-wrap{padding:24px 25px 26px}.control-intro{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+    .control-title{font-size:14px;font-weight:840}.readout-big{font-size:31px;font-weight:850;letter-spacing:-.06em;line-height:1;color:var(--blue)}.readout-big small{font-size:15px;letter-spacing:0;color:var(--muted);font-weight:650}.readout-big{display:inline-flex;align-items:center;gap:10px}.mini-led{display:inline-block;flex:none;width:28px;height:28px;border:2px solid #ad3440;border-radius:50%;background:radial-gradient(circle at 35% 28%,#ffbab6,#ef4053 44%,#8b172c 85%);box-shadow:0 0 12px 3px rgba(255,66,86,.5);transition:box-shadow .13s ease,filter .13s ease}
+    .slider-row{display:flex;align-items:center;gap:20px;margin-top:16px}.slider-box{flex:1;min-width:0}.slider{display:block;width:100%;appearance:none;-webkit-appearance:none;background:linear-gradient(to right,var(--blue) 50%,#dce8ef 50%);height:12px;border-radius:999px;outline-offset:6px;cursor:pointer}
+    .slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:28px;width:28px;background:white;border-radius:50%;border:7px solid var(--blue);box-shadow:0 2px 9px #143a5c3a}.slider::-moz-range-thumb{height:15px;width:15px;background:white;border-radius:50%;border:7px solid var(--blue);box-shadow:0 2px 9px #143a5c3a}
+    .end-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:750;margin-top:9px}
+    .quick{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.quick button{border:1px solid #d7e3ed;border-radius:9px;background:#f5f9fc;font-size:12px;color:#315673;padding:7px 9px;font-weight:800}.quick button[aria-pressed="true"]{background:#e6f0fa;border-color:var(--blue);color:var(--blue)}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.metric{border:1px solid #e0e9f0;border-radius:14px;background:#f8fbfd;padding:13px 15px}.metric span{display:block;color:var(--muted);font-size:11px;font-weight:750;margin-bottom:4px}.metric strong{display:block;font-size:22px;letter-spacing:-.04em;line-height:1.1}.metric small{font-size:12px;color:#71859a;font-weight:700}
+    .below{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:18px;margin-top:18px;align-items:start}
+    .graph-content{padding:15px 18px 19px}.wave-svg{display:block;width:100%;height:auto}.osc-bg{fill:#f7fafc}.osc-grid{stroke:#dce7ef;stroke-width:1}.osc-label{fill:#6c8499;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif}
+    .wave-line{stroke:#147aa4;stroke-width:4;stroke-linejoin:round;stroke-linecap:square;fill:none}.avg-line{stroke:#dc8290;stroke-width:2;stroke-dasharray:7 6;fill:none}.graph-caption{color:var(--muted);font-size:12px;margin:2px 7px 0}.graph-caption strong{color:var(--ink)}
+    .aside-stack{display:grid;gap:18px}.explain{padding:21px 23px}.explain p{margin:0 0 12px;color:#52677b;font-size:14px}.explain p:last-child{margin-bottom:0}.explain strong{color:var(--ink)}
+    .formula{display:block;padding:12px 14px;background:#ecf5fa;border:1px solid #cfe3ee;border-radius:11px;font-size:13px;text-align:center;margin:14px 0;color:var(--blue2);font-weight:850}
+    .note{margin-top:12px;padding:10px 12px;border-left:3px solid #e8b84f;background:#fffaed;font-size:12px;color:#6b5933;border-radius:0 9px 9px 0}
+    .code-panel{margin-top:18px}.code{padding:18px 23px 20px;background:#132c45;color:#dceef7;overflow:auto;font-size:13px;line-height:1.72;white-space:pre;tab-size:2;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.code .key{color:#89d9ff}.code .num{color:#ffe38b}.code .comment{color:#9cbbce}.code .fn{color:#86e4d1}
+    .copy{border:1px solid #cddfed;background:#f5fafc;border-radius:9px;padding:7px 11px;color:var(--blue);font-size:12px;font-weight:800}
+    footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:#798da0;font-size:12px;padding-top:24px}.foot-dot{display:inline-block;height:8px;width:8px;border-radius:50%;background:var(--cyan);margin-right:4px}
+    @media(max-width:850px){.below{grid-template-columns:1fr}.aside-stack{grid-template-columns:1fr 1fr}.code-panel{margin-top:18px}}
+    @media(max-width:650px){.wrap{padding:18px 12px 32px}.intro h1{font-size:32px}.topbar{margin-bottom:20px}.panel{border-radius:16px}.panel-head{padding:15px 17px}.control-wrap{padding:20px 17px 23px}.stage svg{min-width:660px}.stage-note{left:10px;bottom:10px;font-size:10px}.slider-row{align-items:stretch;flex-direction:column;gap:13px}.quick{gap:7px}.quick button{flex:1}.metrics{gap:7px}.metric{padding:10px}.metric strong{font-size:19px}.metric span{font-size:10px}.aside-stack{grid-template-columns:1fr}.explain{padding:18px 19px}.hint{font-size:11px}}
+
+    /* OMG PWM · disposizione compatta: circuito, LED e segnale sempre affiancati */
+    .experiment-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#f7fbfe}
+    .experiment-cell{min-width:0;padding:15px 17px 17px}
+    .experiment-cell + .experiment-cell{border-left:1px solid var(--line);background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%)}
+    .visual-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap;margin:0 2px 8px}
+    .visual-heading strong{font-size:13px;color:#28536e;font-weight:850}
+    .visual-heading small{font-size:11px;color:#7890a2;font-weight:700}
+    .compact-circuit{display:block;width:100%;height:auto;max-height:335px}
+    .experiment-cell .graph-content{padding:2px 1px 0}
+    .experiment-cell .wave-svg{width:100%;height:auto;max-height:187px}
+    .signal-summary{margin:3px 3px 5px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .signal-summary strong{font-size:21px;letter-spacing:-.05em;color:var(--blue)}
+    .signal-summary span{font-size:11px;font-weight:750;color:#6c8093}
+    .duty-track{height:16px;border-radius:99px;display:flex;overflow:hidden;background:#dfe8f1;margin:6px 3px 8px;border:1px solid #d6e4ee}
+    .duty-track .duty-on{width:50%;background:linear-gradient(90deg,#146da4,#28b4cc);transition:width .08s linear}
+    .duty-track .duty-off{flex:1;background:#e3eaf1}
+    .signal-legend{display:flex;justify-content:space-between;gap:8px;padding:0 3px;margin-bottom:10px;font-size:11px;font-weight:850;color:#587087}
+    .signal-legend b{color:#0c6995}.signal-legend em{font-style:normal;color:#8292a1}
+    .experiment-cell .graph-caption{font-size:12px;line-height:1.45;color:#4e677e;margin:4px 3px 0;min-height:36px}
+    .one-explanation{margin-top:18px}
+    .one-explanation .explain{padding:19px 24px}
+    .explain-layout{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+    .explain-layout .note{margin:0}
+    .explain-layout .formula{margin:9px 0}
+    .compact-circuit .led-glow{transform-origin:463px 249px}
+    @media(max-width:720px){
+       .experiment-grid{grid-template-columns:1fr}
+       .experiment-cell + .experiment-cell{border-left:0;border-top:1px solid var(--line)}
+       .experiment-cell{padding:12px 15px 16px}
+       .compact-circuit{max-height:300px}
+       .experiment-cell .wave-svg{max-height:205px}
+       .explain-layout{grid-template-columns:1fr;gap:7px}
+       .one-explanation .explain{padding:18px 19px}
     }
-    .omg-home-hero--split p{max-width:62ch}
-    .omg-hero-copy{display:flex;flex-direction:column;justify-content:center}
-    .omg-hero-copy h1{margin-top:10px}
-    .omg-hero-mark{
-      display:flex;align-items:center;justify-content:center;
-      min-height:190px;border:2px solid var(--omg-ink);border-radius:18px;
-      background:rgba(255,255,255,.72);box-shadow:4px 4px 0 var(--omg-ink);
-      padding:18px;
-    }
-    .omg-mark-card{width:min(100%,290px)}
-    .omg-mark-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .omg-mark-title{font-size:30px;line-height:.95;font-weight:950;letter-spacing:-.07em;color:var(--omg-ink)}
-    .omg-mark-title b{display:block;color:#009fac}
-    .omg-mark-sub{margin-top:10px;font-size:16px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#3f6170}
-    .omg-mark-url{margin-top:12px;font-size:20px;font-weight:900;letter-spacing:-.04em;color:var(--omg-ink)}
-    .omg-mark-url span{color:#009fac}
-    .omg-double-square{position:relative;width:64px;height:64px;flex:none}
-    .omg-double-square::before,.omg-double-square::after{content:"";position:absolute;width:42px;height:42px;border:3px solid var(--omg-ink);border-radius:8px}
-    .omg-double-square::before{left:4px;top:16px;background:#ffe45d}
-    .omg-double-square::after{right:2px;top:4px;background:#00b9c8}
-    .omg-category-head{display:block;margin:0 0 12px}
-    .omg-category-head h2{margin-bottom:6px}
-    .omg-category-head p{max-width:62ch}
-    .omg-category-num{display:none}
-    @media (max-width: 780px){
-      .omg-home-hero.omg-home-hero--split{grid-template-columns:1fr}
-      .omg-hero-mark{min-height:unset}
-      .omg-mark-card{width:100%}
-    }
+    @media(min-width:721px) and (max-width:930px){.experiment-cell{padding:10px}.visual-heading{min-height:36px}.experiment-cell .graph-caption{min-height:48px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
-<main class="omg-page">
-  <div class="omg-brandline"><span class="omg-wordmark">OMG <b>Virtual Lab</b></span><span class="omg-kicker">Elettroni e dintorni</span></div>
+<main class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="brandmark" aria-hidden="true">OMG</div><div>OMG <small>Virtual Lab</small></div></div>
+    <div class="pill">ARDUINO · USCITE PWM</div>
+  </header>
+  <div class="intro">
+    <p class="eyebrow">Elettronica · Esperienza interattiva</p>
+    <h1>PWM: <span>regola la luce</span></h1>
+    <p>Un LED rosso, due pin con la tilde e uno slider: scopri come Arduino controlla la luminosità accendendo e spegnendo il LED molto velocemente.</p>
+  </div>
 
-  <section class="omg-home-hero omg-home-hero--split">
-    <div class="omg-hero-copy">
-      <span class="omg-eyebrow">ESPERIENZE INTERATTIVE</span>
-      <h1>Il tuo laboratorio virtuale.</h1>
-      <p>Esplora, modifica e osserva. Esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.</p>
+  <section class="panel" aria-labelledby="circuit-title">
+    <div class="panel-head">
+      <div><h2 id="circuit-title">01 · Guarda cosa succede</h2><div class="hint">Arduino, LED e onda PWM nello stesso colpo d’occhio</div></div>
+      <div class="pin-picker" role="group" aria-label="Scegli il pin PWM"><span>Pin:</span><button class="pin-btn" id="choose9" type="button" aria-pressed="true">~9</button><button class="pin-btn" id="choose10" type="button" aria-pressed="false">~10</button></div>
     </div>
-    <div class="omg-hero-mark" aria-label="OMG mygod punto it">
-      <div class="omg-mark-card">
-        <div class="omg-mark-top">
-          <div class="omg-mark-title">OMG<b>Virtual Lab</b></div>
-          <div class="omg-double-square" aria-hidden="true"></div>
+    <div class="experiment-grid">
+      <div class="experiment-cell">
+        <div class="visual-heading"><strong>Arduino Uno · pin e LED</strong><small>Schema illustrativo</small></div>
+        <svg id="circuit" class="compact-circuit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 375" role="img" aria-label="Zoom semplificato su Arduino Uno: selezione tra i pin PWM 9 e 10, resistenza da 220 ohm, LED rosso e collegamento a GND">
+  <defs>
+    <linearGradient id="board" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#168f91"/><stop offset="1" stop-color="#056f85"/></linearGradient>
+    <linearGradient id="ledglass" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ff9c9a"/><stop offset=".45" stop-color="#d4233e"/><stop offset="1" stop-color="#6c1026"/></linearGradient>
+    <radialGradient id="ledshine" cx="43%" cy="30%" r="72%"><stop stop-color="#fff2e8"/><stop offset=".2" stop-color="#ffaaa3"/><stop offset=".55" stop-color="#fd323e"/><stop offset="1" stop-color="#ac1432"/></radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%"><stop stop-color="#ff4b5e" stop-opacity=".9"/><stop offset=".43" stop-color="#ff4b5e" stop-opacity=".34"/><stop offset="1" stop-color="#ff4b5e" stop-opacity="0"/></radialGradient>
+    <filter id="softGlow" x="-120%" y="-120%" width="340%" height="340%"><feGaussianBlur stdDeviation="14"/></filter>
+  </defs>
+  <rect x="26" y="79" width="277" height="260" rx="19" fill="#a6cbd0" opacity=".4" transform="translate(3 5)"/>
+  <rect x="26" y="79" width="277" height="260" rx="19" fill="url(#board)" stroke="#006d81" stroke-width="3"/>
+  <circle cx="49" cy="100" r="8.5" fill="#d6f1ed" stroke="#277c85" stroke-width="3.5"/>
+  <circle cx="282" cy="317" r="8.5" fill="#d6f1ed" stroke="#277c85" stroke-width="3.5"/>
+  <rect x="47" y="90" width="232" height="38" rx="7" fill="#183b49" stroke="#83cfc9" stroke-width="2"/>
+  <g fill="#142a36" stroke="#6cbebd" stroke-width="2">
+    <rect x="61" y="98" width="25" height="24" rx="4"/>
+    <rect id="socket9" x="108" y="98" width="25" height="24" rx="4"/>
+    <rect id="socket10" x="155" y="98" width="25" height="24" rx="4"/>
+    <rect x="202" y="98" width="25" height="24" rx="4"/>
+    <rect x="249" y="98" width="25" height="24" rx="4"/>
+  </g>
+  <g fill="#557f85"><circle cx="73.5" cy="110" r="5"/><circle cx="120.5" cy="110" r="5"/><circle cx="167.5" cy="110" r="5"/><circle cx="214.5" cy="110" r="5"/><circle cx="261.5" cy="110" r="5"/></g>
+  <g text-anchor="middle" class="svg-text" font-weight="800"><text x="73.5" y="152" class="pin-generic">8</text><text x="120.5" y="152" class="pin-label">~9</text><text x="167.5" y="152" class="pin-label">~10</text><text x="214.5" y="152" class="pin-generic">~11</text><text x="261.5" y="152" class="pin-generic">12</text></g>
+  <text x="56" y="178" fill="#b7e6e4" font-size="11" font-weight="850" letter-spacing="1.6">DIGITAL · PWM ~</text>
+  <text x="55" y="231" class="svg-text pcb-label" font-size="36" letter-spacing="-2">ARDUINO</text>
+  <text x="57" y="255" class="svg-text" font-weight="900" font-size="18" fill="#acf0e5" letter-spacing="4">UNO</text>
+  <rect x="211" y="213" width="63" height="67" rx="7" fill="#17444e" stroke="#6bc3bd" stroke-width="2"/><path d="M220 228h45m-45 9h45m-45 9h45m-45 9h45m-45 9h45" stroke="#5aa49f" stroke-width="3"/>
+  <rect x="74" y="272" width="76" height="48" rx="7" fill="#183a49" stroke="#7ed5ce" stroke-width="2"/>
+  <text x="112" y="286" class="svg-text" font-size="13" font-weight="900" fill="#e5fbf9" text-anchor="middle">GND</text>
+  <rect x="99" y="292" width="26" height="20" rx="4" fill="#102d38" stroke="#79c9c8" stroke-width="2"/><circle cx="112" cy="302" r="5" fill="#6d9293"/>
+  <path id="wireOut" class="wire" d="M120.5 110 V51 H379 V141"/>
+  <path id="pulseOut" class="wire-pulse" d="M120.5 110 V51 H379 V141"/>
+  <circle id="pinMarker" cx="120.5" cy="110" r="13" fill="none" stroke="#ffe28b" stroke-width="3"/>
+  <rect x="364" y="141" width="30" height="58" rx="11" fill="#e9d5ac" stroke="#966f4e" stroke-width="2.5"/>
+  <rect x="366" y="151" width="26" height="6" fill="#b34b40"/><rect x="366" y="162" width="26" height="6" fill="#b34b40"/><rect x="366" y="173" width="26" height="6" fill="#624c41"/><rect x="366" y="186" width="26" height="5" fill="#d7b449"/>
+  <path d="M379 199 V206 H463 V217" class="wire"/>
+  <text x="412" y="167" class="svg-text" font-size="15" font-weight="850" fill="#416580">220 Ω</text>
+  <text x="412" y="184" class="svg-text" font-size="11" font-weight="650" fill="#7c93a5">resistenza</text>
+  <circle id="ledGlow" class="led-glow" cx="463" cy="249" r="89" fill="url(#glow)" opacity=".5"/>
+  <circle id="ledBlur" class="led-glow" cx="463" cy="249" r="42" fill="#ff4557" filter="url(#softGlow)" opacity=".5"/>
+  <path d="M452 211V221M474 279V300" stroke="#9eacb8" stroke-width="6"/>
+  <g id="ledDome">
+    <path d="M431 262V246a32 32 0 0 1 64 0v16Z" fill="url(#ledglass)" stroke="#801d31" stroke-width="3"/>
+    <path id="ledCore" d="M434 261V247a29 29 0 0 1 58 0v14Z" fill="url(#ledshine)" opacity=".75"/>
+    <path d="M442 242Q448 222 460 224" stroke="#fff3e6" stroke-width="5" opacity=".7" stroke-linecap="round" fill="none"/>
+    <rect x="427" y="260" width="72" height="14" rx="4" fill="#a82d40" stroke="#7b2032" stroke-width="2"/>
+  </g>
+  <path d="M463 274 V350 H112 V302" class="wire-gnd"/>
+  <text x="506" y="244" class="svg-text" fill="#46617a" font-size="17" font-weight="850">LED</text>
+  <text x="506" y="264" class="svg-text" fill="#71889b" font-size="13" font-weight="750">rosso</text>
+  <rect x="393" y="307" width="176" height="29" rx="14.5" fill="#ffffff" stroke="#d8e4ed"/>
+  <circle cx="407" cy="321.5" r="5" fill="#e14d5b"/><text id="ledState" x="420" y="326" font-family="system-ui,sans-serif" font-size="12" font-weight="850" fill="#395672">Luminosità: 50%</text>
+</svg>
+      </div>
+      <div class="experiment-cell">
+        <div class="visual-heading"><strong>Segnale PWM in tempo reale</strong><small>5 V ↔ 0 V</small></div>
+        <div class="graph-content">
+                  <svg class="wave-svg" id="waveSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 256" role="img" aria-label="Quattro periodi del segnale PWM, con durata HIGH in funzione dello slider">
+          <rect x="47" y="17" width="818" height="204" rx="10" class="osc-bg"/>
+          <g class="osc-grid"><path d="M86 38H846M86 80H846M86 122H846M86 164H846M86 206H846M86 38V207M181 38V207M276 38V207M371 38V207M466 38V207M561 38V207M656 38V207M751 38V207M846 38V207"/></g>
+          <g class="osc-label"><text x="52" y="57" text-anchor="end">5 V</text><text x="52" y="180" text-anchor="end">0 V</text><text x="86" y="240" text-anchor="middle">0</text><text x="276" y="240" text-anchor="middle">T</text><text x="466" y="240" text-anchor="middle">2T</text><text x="656" y="240" text-anchor="middle">3T</text><text x="846" y="240" text-anchor="middle">4T</text></g>
+          <path id="avgLine" class="avg-line" d="M86 114 H846"/>
+          <path id="waveLine" class="wave-line" d=""/>
+          <text id="averageLabel" x="838" y="113" text-anchor="end" font-size="12" fill="#c25a70" font-weight="800" font-family="system-ui,sans-serif">Vmedia 2,5 V</text>
+        </svg>
+          <div class="signal-summary"><strong id="dutyInline">50,2% ON</strong><span>Periodo T ≈ 2,04 ms</span></div>
+          <div class="duty-track" aria-hidden="true"><span class="duty-on" id="dutyOnBar"></span><span class="duty-off"></span></div>
+          <div class="signal-legend"><span><b id="highLabel">HIGH · 50,2%</b></span><span><em id="lowLabel">LOW · 49,8%</em></span></div>
+          <p id="waveDescription" class="graph-caption" aria-live="polite">Il pin alterna 5 V e 0 V, con durata HIGH regolabile.</p>
         </div>
-        <div class="omg-mark-sub">Elettroni e dintorni</div>
-        <div class="omg-mark-url">omg<span>mygod</span>.it</div>
+      </div>
+    </div>
+    <div class="control-wrap">
+      <div class="control-intro"><label class="control-title" for="pwmSlider">02 · Sposta lo slider: valore di <code>analogWrite()</code></label><output id="sliderOutput" class="readout-big" for="pwmSlider" aria-live="polite"><span id="ledMini" class="mini-led" aria-hidden="true"></span><span id="sliderNumber">128</span> <small>/ 255</small></output></div>
+      <div class="slider-row"><div class="slider-box"><input id="pwmSlider" class="slider" type="range" min="0" max="255" value="128" step="1" aria-label="Valore PWM Arduino da zero a 255"><div class="end-labels"><span>0 · spento</span><span>255 · sempre acceso</span></div></div><div class="quick" role="group" aria-label="Valori PWM preimpostati"><button type="button" data-duty="0">0%</button><button type="button" data-duty="25">25%</button><button type="button" data-duty="50">50%</button><button type="button" data-duty="75">75%</button><button type="button" data-duty="100">100%</button></div></div>
+      <div class="metrics">
+        <div class="metric"><span>Duty cycle</span><strong id="dutyValue">50,2%</strong><small>tempo a livello HIGH</small></div>
+        <div class="metric"><span>Tensione media ideale</span><strong id="avgValue">2,51 V</strong><small>non è una vera uscita analogica</small></div>
+        <div class="metric"><span>Tempo ON per periodo</span><strong id="onTime">1,02 ms</strong><small>frequenza ≈ 490 Hz</small></div>
       </div>
     </div>
   </section>
 
-  <section class="omg-category" aria-labelledby="cat01">
-    <div class="omg-category-head">
-      <div>
-        <h2 id="cat01">Elettronica e componenti</h2>
-        <p>Esperimenti interattivi sulle basi dell'elettronica e sul comportamento dei principali componenti.</p>
+  <section class="panel one-explanation" aria-labelledby="duty-title">
+    <div class="explain explain-layout">
+      <div><h3 id="duty-title">03 · Che cos'è il duty cycle?</h3>
+        <p>Arduino non abbassa gradualmente la tensione: alterna velocemente <strong>5 V (HIGH)</strong> e <strong>0 V (LOW)</strong>. Cambia la durata dell'accensione, non l'altezza dell'impulso.</p>
+        <div class="formula">Duty cycle = tempo ON / periodo × 100</div>
+        <p>Al <strong>25%</strong> il LED riceve impulsi per un quarto del tempo; al <strong>75%</strong> per tre quarti. L'occhio percepisce una luminosità diversa.</p>
       </div>
-    </div>
-    <div class="omg-grid">
-      <article class="omg-tile">
-        <h3>La legge di Ohm</h3>
-        <p>Modifica tensione e resistenza, osserva corrente, circuito e grafici.</p>
-        <a class="omg-link" href="Ele-Legge-Ohm/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Resistenze: serie, parallelo e misto</h3>
-        <p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p>
-        <a class="omg-link" href="Ele-resistenze-serie-parallelo/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Resistenza e corrente</h3>
-        <p>Scopri come una resistenza modifica il flusso di corrente nel circuito.</p>
-        <a class="omg-link" href="Lab-resistenza-corrente/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Codice colori delle resistenze</h3>
-        <p>Esplora le bande dei resistori e mettiti alla prova con la modalità sfida.</p>
-        <a class="omg-link" href="Lab-Codice-colori-Resistenze/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Il potenziometro</h3>
-        <p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p>
-        <a class="omg-link" href="Ele-potenziometro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
+      <div><div class="note"><strong>Da ricordare:</strong> il periodo di Arduino Uno sui pin ~9 e ~10 è circa <strong>2,04 ms</strong> (490 Hz). Lo slider cambia il duty cycle, <strong>non la frequenza</strong>.<br><br>La tensione media mostrata è un valore matematico: l'uscita PWM resta una successione di impulsi da 0 V e 5 V.</div></div>
     </div>
   </section>
 
-  <section class="omg-category" aria-labelledby="cat02">
-    <div class="omg-category-head">
-      <div>
-        <h2 id="cat02">Laboratorio elettrico ed elettronico</h2>
-        <p>Strumenti, misure e prototipazione per capire meglio il lavoro al banco e le connessioni reali.</p>
-      </div>
-    </div>
-    <div class="omg-grid">
-      <article class="omg-tile">
-        <h3>Multimetro virtuale</h3>
-        <p>Esercitati con selettore, puntali e misure elettriche in un ambiente guidato.</p>
-        <a class="omg-link" href="Lab-multimetro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Dentro la breadboard</h3>
-        <p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p>
-        <a class="omg-link" href="Lab-breadboard/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-    </div>
-  </section>
+  <section class="panel code-panel" aria-labelledby="code-title">
+    <div class="panel-head"><div><h2 id="code-title">04 · Il codice Arduino</h2><div class="hint">Lo sketch si aggiorna quando cambi pin o valore PWM</div></div><button class="copy" type="button" id="copyCode">Copia sketch</button></div>
+    <div id="codeView" class="code" role="region" aria-label="Codice Arduino aggiornato">const int led = 9;
 
-  <section class="omg-category" aria-labelledby="cat03">
-    <div class="omg-category-head">
-      <div>
-        <h2 id="cat03">Arduino e microcontrollori</h2>
-        <p>Prime esperienze interattive con letture analogiche, PWM e sensori.</p>
-      </div>
-    </div>
-    <div class="omg-grid">
-      <article class="omg-tile">
-        <h3>ADC — Ingresso analogico</h3>
-        <p>Capisci come Arduino legge un valore analogico e lo trasforma in numeri interpretabili.</p>
-        <a class="omg-link" href="Ard-ADC/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>PWM e LED</h3>
-        <p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p>
-        <a class="omg-link" href="Ard-PWM/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-      <article class="omg-tile">
-        <h3>Sensore a ultrasuoni</h3>
-        <p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p>
-        <a class="omg-link" href="Ard-sensore-ultrasuoni/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
-      </article>
-    </div>
-  </section>
+void setup() {
+  pinMode(led, OUTPUT);
+}
 
-  <p class="omg-small">OMG Virtual Lab · I simulatori sono strumenti didattici: confronta sempre i risultati con le misure reali in laboratorio. <a href="catalogo/">Catalogo compatto per Google Sites</a>.</p>
+void loop() {
+  analogWrite(led, 128);
+}</div>
+  </section>
+  <footer><span><span class="foot-dot"></span> OMG · Virtual Lab · PWM e Arduino Uno</span><span>Pin PWM di Uno: ~3, ~5, ~6, ~9, ~10, ~11 · Resistenza LED: 220 Ω</span></footer>
 </main>
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const slider = $('pwmSlider');
+  const state = { pin: 9, value: Number(slider.value) };
+  const dutyButtonEls = Array.from(document.querySelectorAll('[data-duty]'));
+  const fmt = (v, decimals=1) => v.toLocaleString('it-IT', {minimumFractionDigits:decimals,maximumFractionDigits:decimals});
+  const getCode = () => `const int led = ${state.pin};\n\nvoid setup() {\n  pinMode(led, OUTPUT);\n}\n\nvoid loop() {\n  analogWrite(led, ${state.value});\n}`;
+  const esc = s => s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  function updateSignal(duty){
+    const xStart = 86, period = 190, top = 55, bottom = 175, waveEnd = xStart + period*4;
+    const level = (duty === 0) ? bottom : top;
+    let d = `M ${xStart} ${level}`;
+    if(duty === 0 || duty === 1){d += ` H ${waveEnd}`;}
+    else {
+      for(let i=0;i<4;i++){
+        const a=xStart+i*period;
+        const b=a+period*duty;
+        const c=a+period;
+        if(i>0) d += ` V ${top}`;
+        d += ` H ${b.toFixed(3)} V ${bottom} H ${c.toFixed(3)}`;
+      }
+    }
+    $('waveLine').setAttribute('d',d);
+    const yAvg=bottom-(bottom-top)*duty;
+    $('avgLine').setAttribute('d',`M ${xStart} ${yAvg.toFixed(2)} H ${waveEnd}`);
+    const labelY = Math.max(32, Math.min(209,yAvg-10));
+    $('averageLabel').setAttribute('y',labelY.toFixed(1));
+    $('averageLabel').textContent = `media ${fmt(5*duty,2)} V`;
+  }
+  function update(){
+    const duty = state.value/255;
+    const percent=duty*100;
+    $('sliderNumber').textContent=String(state.value);
+    $('dutyValue').textContent=fmt(percent,1)+'%';
+    $('avgValue').textContent=fmt(duty*5,2)+' V';
+    $('onTime').textContent=fmt(duty*(1000/490),2)+' ms';
+    $('ledState').textContent=`Luminosità: ${Math.round(percent)}%`;
+    $('dutyInline').textContent=fmt(percent,1)+'% ON';
+    $('dutyOnBar').style.width=percent+'%';
+    $('highLabel').textContent='HIGH · '+fmt(percent,1)+'%';
+    $('lowLabel').textContent='LOW · '+fmt(100-percent,1)+'%';
+    // Illuminazione indicativa: la percezione umana non è perfettamente lineare.
+    const visual=Math.pow(duty,0.68);
+    $('ledGlow').setAttribute('opacity',(visual*.94).toFixed(3));
+    $('ledBlur').setAttribute('opacity',(visual*.84).toFixed(3));
+    $('ledCore').setAttribute('opacity',(visual*.94).toFixed(3));
+    $('ledDome').style.filter=`brightness(${(0.29+visual*1.02).toFixed(2)})`; 
+    $('ledMini').style.boxShadow=`0 0 ${Math.round(visual*23)}px ${Math.round(visual*8)}px rgba(255,66,86,${(visual*.8).toFixed(3)})`;
+    $('ledMini').style.filter=`brightness(${(0.42+visual*.82).toFixed(2)})`;
+    $('ledState').previousElementSibling.setAttribute('fill',duty===0?'#8494a4':'#e14d5b');
+    slider.style.background=`linear-gradient(to right,var(--blue) ${percent}%,#dce8ef ${percent}%)`;
+    updateSignal(duty);
+    dutyButtonEls.forEach(b=>b.setAttribute('aria-pressed', Math.abs(Number(b.dataset.duty)-percent)<.3?'true':'false'));
+    const label = (state.value === 0)? 'Il pin rimane sempre a 0 V: il LED è spento.' :
+      (state.value === 255)? 'Il pin rimane sempre a 5 V: il LED è acceso al massimo.' :
+      `Per il ${fmt(percent,1)}% del periodo il pin è a 5 V; per il restante ${fmt(100-percent,1)}% è a 0 V. La frequenza resta circa 490 Hz.`;
+    $('waveDescription').textContent=label;
+    $('codeView').innerHTML = `<span class="key">const int</span> led = <span class="num">${state.pin}</span>;\n\n<span class="key">void</span> <span class="fn">setup</span>() {\n  <span class="fn">pinMode</span>(led, OUTPUT);\n}\n\n<span class="key">void</span> <span class="fn">loop</span>() {\n  <span class="fn">analogWrite</span>(led, <span class="num">${state.value}</span>);\n}`;
+  }
+  function setPin(pin){
+    state.pin=pin;
+    const x=pin===9?120.5:167.5;
+    const path=`M${x} 110 V51 H379 V141`;
+    $('wireOut').setAttribute('d',path);
+    $('pulseOut').setAttribute('d',path);
+    $('pinMarker').setAttribute('cx',x);
+    $('socket9').classList.toggle('active-socket',pin===9);
+    $('socket10').classList.toggle('active-socket',pin===10);
+    $('choose9').setAttribute('aria-pressed',pin===9?'true':'false');
+    $('choose10').setAttribute('aria-pressed',pin===10?'true':'false');
+    update();
+  }
+  slider.addEventListener('input',function(){state.value=Number(this.value);update();});
+  dutyButtonEls.forEach(b=>b.addEventListener('click',()=>{state.value=Math.round(Number(b.dataset.duty)*255/100);slider.value=String(state.value);update();}));
+  $('choose9').addEventListener('click',()=>setPin(9));
+  $('choose10').addEventListener('click',()=>setPin(10));
+  // Copy works both on HTTPS (Clipboard API) and in many local-file browsers (fallback).
+  $('copyCode').addEventListener('click',async function(){
+    const code=getCode();let done=false;
+    if(navigator.clipboard && window.isSecureContext){try{await navigator.clipboard.writeText(code);done=true;}catch(e){}}
+    if(!done){const ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();try{done=document.execCommand('copy');}catch(e){}ta.remove();}
+    const b=this; b.textContent=done?'Copiato!':'Seleziona il codice';
+    if(!done){const selection=window.getSelection();const range=document.createRange();range.selectNodeContents($('codeView'));selection.removeAllRanges();selection.addRange(range);}
+    setTimeout(()=>{b.textContent='Copia sketch';},1900);
+  });
+  setPin(9);
+})();
+</script>
 </body>
 </html>
