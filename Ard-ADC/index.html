@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10243d">
+<meta name="theme-color" content="#fff3d9">
 <title>OMG Virtual Lab · analogRead() e ADC Arduino</title>
 <style>
 :root{--ink:#14283f;--ink2:#36506b;--sub:#687b90;--navy:#10243d;--teal:#00a9b4;--teal2:#087a92;--blue:#1678b9;--red:#ed5f59;--yellow:#f8d859;--green:#418d55;--bg:#f3f7fa;--line:#dce5ee;--white:#fff;--shadow:0 12px 38px rgba(16,36,61,.065);--radius:18px}
@@ -45,13 +45,209 @@ main{max-width:1240px;margin:auto;padding:30px 20px 55px}.hero{display:flex;just
 .code-warning code{background:#e8f2f7;padding:2px 4px;border-radius:4px;color:#155d77}
 @media(max-width:750px){.connection-legend{margin:0 8px 2px;justify-content:flex-start;gap:9px 12px;font-size:10px}.code-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.code-content{padding:15px 13px}.code-content pre{padding:15px;font-size:11px}.worked-example>strong{font-size:14px}}
 @media(max-width:380px){.connection-legend span{white-space:normal}.code-steps{gap:7px}.code-step{padding:11px 8px}.code-step>code{font-size:11px}}
+
+/* ═════════════════════════════════════════════════════════════════
+   OMG VIRTUAL LAB · RESTYLING GRAFICO (novembre 2026)
+   Identità visiva unificata: nessuna modifica alla simulazione o a JS.
+   ═════════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#20242c;--ink2:#566d7c;--sub:#70838e;--navy:#20242c;
+  --teal:#119c9c;--teal2:#138f88;--yellow:#f8d859;
+  --bg:#fffdfa;--line:#d8e0e2;--white:#fff;
+  --shadow:4px 5px 0 rgba(248,216,89,.60);--radius:20px;
+}
+body{
+  color:var(--ink);
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 2%,rgba(255,230,173,.65),transparent 95%),
+    radial-gradient(ellipse 66% 48% at 100% 17%,rgba(199,244,234,.63),transparent 91%),
+    linear-gradient(104deg,#fff8eb 0%,#fefdf9 49%,#ecf9f5 100%);
+  background-attachment:fixed;
+  line-height:1.48;
+}
+a{color:var(--teal2)}
+.topbar{
+  background:none;border:0;max-width:1380px;margin:0 auto;
+  min-height:118px;padding:24px 30px 14px;
+  align-items:center;gap:20px;
+}
+.brand{gap:20px;color:var(--ink);min-width:0}
+.brand-mark{display:block;width:75px;height:74px;position:relative;flex:0 0 75px}
+.brand-mark-back,.brand-mark-front{position:absolute;display:grid;place-items:center;border:4px solid var(--ink);border-radius:7px;box-shadow:none}
+.brand-mark-back{width:64px;height:63px;left:10px;top:9px;background:#64d5d7;transform:rotate(7deg)}
+.brand-mark-front{
+  left:3px;top:2px;width:63px;height:63px;background:var(--yellow);
+  color:var(--ink);transform:rotate(-9deg);font-size:21px;font-weight:1000;
+  letter-spacing:-1.8px;text-shadow:1.8px 2px 0 #fff;
+  padding:0 1px;
+}
+.brand-txt{display:flex;flex-direction:column;gap:1px;font-size:initial;letter-spacing:0;line-height:1.1}
+.brand-kicker{font-size:clamp(11px,1.12vw,16px);font-weight:950;letter-spacing:.14em;color:#677c88;white-space:nowrap}
+.brand-txt strong{font-size:clamp(20px,1.75vw,29px);font-weight:1000;letter-spacing:-.055em;color:var(--ink);white-space:nowrap}
+.site-link{
+  border:3px solid var(--ink);border-radius:999px;padding:11px 23px;
+  background:#fff;box-shadow:5px 6px 0 var(--yellow);color:var(--ink);
+  font-size:clamp(15px,1.35vw,20px);font-weight:950;text-decoration:none;white-space:nowrap;
+  transition:transform .15s,box-shadow .15s;
+}
+.site-link:hover{transform:translateY(-2px);box-shadow:5px 8px 0 var(--yellow)}
+.site-link:active{transform:translate(2px,2px);box-shadow:2px 3px 0 var(--yellow)}
+main{max-width:1380px;padding:19px 30px 68px}
+.hero{align-items:flex-end;gap:25px;margin:13px 0 27px}
+.hero-copy{min-width:0}
+.eyebrow{
+  display:inline-block;background:var(--yellow);color:var(--ink);
+  border:3px solid var(--ink);border-radius:9px;
+  padding:8px 13px;margin:0 0 22px;
+  font-size:clamp(10px,1vw,14px);font-weight:1000;letter-spacing:.065em;
+  line-height:1.15;transform:rotate(-1.6deg);box-shadow:1px 2px 0 rgba(32,36,44,.13);
+}
+.hero h1{
+  font-size:clamp(43px,5.2vw,78px);font-weight:1000;
+  letter-spacing:-.068em;line-height:1.04;margin:0 0 17px;
+}
+.hero h1 span{color:#138f88}
+.hero-dot{font-style:normal;color:#ed5f59}
+.hero p{font-size:clamp(15px,1.3vw,19px);line-height:1.48;color:#597180;max-width:860px}
+.hero-stamp{
+  min-width:195px;background:white;transform:rotate(1deg);padding:16px 18px;
+  border:2.5px solid var(--ink);border-radius:15px;
+  box-shadow:5px 6px 0 var(--yellow);margin-bottom:3px;
+}
+.hero-stamp strong{font-size:31px;color:var(--ink);font-weight:1000;letter-spacing:-.06em}
+.hero-stamp small{font-size:10px;letter-spacing:.065em;color:#697b88;margin-top:4px;display:block}
+.mode-switch-row{display:flex;align-items:center;flex-wrap:wrap;gap:16px 22px;margin:0 0 22px}
+.mode-heading{font-size:14px;letter-spacing:.11em;font-weight:950;color:#70818d;white-space:nowrap}
+.mode-tabs{
+  display:inline-flex;align-items:center;gap:5px;padding:6px;margin:0;
+  background:#fff;border:3px solid var(--ink);border-radius:19px;
+  box-shadow:5px 5px 0 var(--yellow);
+}
+.mode-tabs button{
+  padding:12px 20px;border:0;border-radius:12px;background:transparent;
+  color:#54616b;font-size:15px;font-weight:950;white-space:nowrap;
+  transition:background .15s,color .15s;
+}
+.mode-tabs button:hover:not([aria-selected="true"]){background:#f0f5f3;color:var(--ink)}
+.mode-tabs button[aria-selected="true"]{background:var(--ink);color:white;box-shadow:none}
+.mode-note{font-size:14px;color:#687d88;margin-left:auto;font-weight:650}
+.grid-top,.grid-charts,.bottom-grid{gap:18px}
+.grid-charts,.bottom-grid{margin-top:18px}
+.panel{
+  background:#fff;border:1.5px solid #d9e0df;border-radius:20px;
+  box-shadow:0 3px 1px rgba(248,216,89,.55),0 14px 32px rgba(42,54,59,.065);
+}
+.panel-pad{padding:20px 23px 16px}
+.panel-title{font-weight:950;color:var(--ink);font-size:17px;letter-spacing:-.024em}
+.panel-subtitle{font-size:12px;color:#70818d;line-height:1.5}
+.num{background:var(--yellow);color:var(--ink);border:1.5px solid var(--ink);border-radius:8px;width:30px;height:30px}
+.circuit-box{background:linear-gradient(125deg,#f9fcfd,#eff7f8);border:1.5px solid #d8e7e9}
+.readout-inline{border:1.5px solid #cddfe2;color:#167d82;box-shadow:2px 3px 0 rgba(248,216,89,.55);border-radius:9px}
+.controls{padding:17px 22px 19px}
+.control-header{font-size:13px;color:var(--ink);font-weight:850}
+.ctrl-value{color:#0c8887}
+.slider{
+  height:11px;background:linear-gradient(90deg,var(--teal) 50%,#e4ecec 50%);
+  border:1px solid #d7e2e0;
+}
+.slider::-webkit-slider-thumb{width:24px;height:24px;border:4px solid white;background:var(--ink);box-shadow:0 0 0 2px var(--ink),2px 3px 0 var(--yellow)}
+.slider::-moz-range-thumb{width:17px;height:17px;border:4px solid white;background:var(--ink);box-shadow:0 0 0 2px var(--ink),2px 3px 0 var(--yellow)}
+.pill-btn,.solid-btn,.ghost-btn{
+  border:2px solid var(--ink);border-radius:12px;background:white;color:#424c53;
+  font-size:12px;font-weight:900;transition:transform .15s,box-shadow .15s,background .15s;
+  box-shadow:2px 3px 0 var(--yellow);
+}
+.pill-btn{padding:8px 13px;border-radius:999px}
+.pill-btn.active,.solid-btn{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill-btn:hover,.ghost-btn:hover{background:#f1f7f5;border-color:var(--ink)}
+.pill-btn.active:hover,.solid-btn:hover{background:#353b42;color:white}
+.solid-btn,.ghost-btn{padding:9px 15px}
+.pill-btn:active,.solid-btn:active,.ghost-btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--yellow)}
+.quantity{border:1.5px solid #bfe8e3;background:#effaf8;border-radius:14px}
+.quantity.out{background:#fff8ef;border-color:#eedcc7}
+.quant-icon span:first-child{background:var(--ink);border-radius:8px}
+.quant-icon span:last-child{color:var(--teal2)}
+.bit-card{background:var(--ink);border-radius:14px}
+.key-stat{background:#f4f7f6;border:1px solid #edf0ee;border-radius:11px}
+.read-line{background:#fbfcfa;border-color:#c9d7d3}
+.chart-head{padding:20px 22px 0}
+.chip-note{background:#effaf9;color:#356c6c;border:1px solid #d9eeeb}
+.lesson .emphasis{background:#fff9e7}
+.equation{background:#f5f8f7;border:1px solid #edf1ef}
+.challenge-off{background:#f3f7f6}
+.code-details{border:1.5px solid #d9e0df;border-radius:20px;box-shadow:0 3px 1px rgba(248,216,89,.55),0 14px 32px rgba(42,54,59,.065)}
+.code-details summary{font-size:16px;padding:18px 22px}
+.code-details summary::after{border:1.5px solid var(--ink);border-radius:8px}
+.code-step{background:#f5f8f7;border-color:#e1e9e6}
+.worked-example{background:#edfaf8;border-left-color:var(--teal)}
+.code-content pre{background:var(--ink);color:#e5ecee}
+.footer strong{color:var(--ink)}
+@media(max-width:1100px){
+  .mode-note{flex-basis:100%;margin-left:0}
+  .hero-stamp{min-width:158px;padding:13px}
+  .hero-stamp strong{font-size:27px}
+}
+@media(max-width:750px){
+  .topbar{min-height:84px;padding:16px 16px 11px;gap:8px}
+  .brand{gap:10px}
+  .brand-mark{width:48px;height:49px;flex-basis:48px}
+  .brand-mark-front{left:1px;top:2px;width:42px;height:43px;border-width:2.5px;border-radius:5px;font-size:14px;letter-spacing:-1.3px}
+  .brand-mark-back{left:6px;top:7px;width:42px;height:42px;border-width:2.5px;border-radius:5px}
+  .brand-kicker{font-size:9px;letter-spacing:.09em}
+  .brand-txt strong{font-size:18px;letter-spacing:-.04em}
+  .site-link{font-size:12px;padding:8px 10px;border-width:2px;box-shadow:3px 4px 0 var(--yellow)}
+  main{padding:14px 14px 45px}
+  .hero{margin:12px 0 22px;gap:12px}
+  .hero h1{font-size:clamp(39px,8.4vw,59px);margin-bottom:12px}
+  .hero p{font-size:14px;max-width:none}
+  .eyebrow{font-size:10px;letter-spacing:.045em;border-width:2px;margin-bottom:15px;padding:7px 10px}
+  .hero-stamp{display:none}
+  .mode-switch-row{display:flex;flex-direction:column;align-items:stretch;gap:10px;margin-bottom:20px}
+  .mode-heading{font-size:12px}
+  .mode-tabs{width:100%;max-width:100%;gap:3px;padding:5px;border-width:2px;border-radius:15px;box-shadow:3px 4px 0 var(--yellow)}
+  .mode-tabs button{font-size:12px;padding:11px 6px;white-space:normal;line-height:1.2;flex:1;border-radius:9px}
+  .mode-note{font-size:12px;flex-basis:auto}
+  .panel-pad{padding:17px 16px 13px}
+  .panel-title{font-size:15px}
+  .grid-charts,.bottom-grid,.grid-top{gap:15px}
+  .controls,.result,.lesson,.challenge{padding:17px}
+  .code-details summary{font-size:14px;padding:15px 13px}
+  .site-link:hover{box-shadow:3px 5px 0 var(--yellow)}
+}
+@media(max-width:385px){
+  .brand-kicker{font-size:8px;letter-spacing:.055em}
+  .brand-txt strong{font-size:16px}
+  .brand{gap:7px}
+  .site-link{font-size:11px;padding:7px 8px}
+  .topbar{padding-left:10px;padding-right:10px}
+  main{padding-left:10px;padding-right:10px}
+  .hero h1{font-size:38px}
+  .mode-tabs button{font-size:11px}
+}
 </style>
 </head>
 <body>
-<header class="topbar"><a href="#inizio" class="brand" aria-label="OMG Virtual Lab — torna all'inizio"><div class="brand-logo">OMG!</div><div class="brand-txt">VIRTUAL<br>LAB</div></a><div class="top-meta"><span class="dot"></span> Circuiti ed elettronica <span style="opacity:.35">/</span> Arduino <span style="opacity:.35">/</span> ADC 10 bit</div></header>
+<header class="topbar">
+  <a href="#inizio" class="brand" aria-label="OMG Virtual Lab — torna all'inizio">
+    <span class="brand-mark" aria-hidden="true"><span class="brand-mark-back"></span><span class="brand-mark-front">OMG!</span></span>
+    <span class="brand-txt"><span class="brand-kicker">ELETTRONI E DINTORNI</span><strong>OMG Virtual Lab</strong></span>
+  </a>
+  <a class="site-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="Apri ohmmygod.it in una nuova scheda">ohmmygod.it <span aria-hidden="true">↗</span></a>
+</header>
 <main id="inizio">
-<section class="hero"><div><div class="eyebrow">Laboratorio interattivo · Arduino UNO R3</div><h1>Da analogico <span>a digitale.</span></h1><p>Una tensione può assumere infiniti valori, ma <strong>analogRead()</strong> la rappresenta con un numero intero. Muovi il potenziometro, osserva il pin A0 e scopri come lavora l'ADC.</p></div><div class="hero-stamp"><strong>0 → 1023</strong><small>10 bit · 1024 livelli</small></div></section>
-<div class="mode-tabs" role="tablist" aria-label="Scegli la sorgente analogica"><button id="tabPot" role="tab" aria-selected="true" aria-controls="potControls">◉ Potenziometro</button><button id="tabWave" role="tab" aria-selected="false" aria-controls="waveControls">∿ Segnale variabile</button></div>
+<section class="hero"><div class="hero-copy">
+  <div class="eyebrow">ELETTRONICA · LABORATORIO INTERATTIVO</div>
+  <h1>Da analogico <span>a digitale</span><b class="hero-dot">.</b></h1>
+  <p>Una tensione può assumere infiniti valori, ma <strong>analogRead()</strong> la rappresenta con un numero intero. Muovi il potenziometro, osserva il pin A0 e scopri come lavora l'ADC.</p>
+</div><div class="hero-stamp"><strong>0 → 1023</strong><small>ARDUINO UNO · ADC A 10 BIT</small></div></section>
+<div class="mode-switch-row">
+  <span class="mode-heading">SCEGLI IL SEGNALE</span>
+  <div class="mode-tabs" role="tablist" aria-label="Scegli la sorgente analogica">
+    <button id="tabPot" type="button" role="tab" aria-selected="true" aria-controls="potControls">◉ Potenziometro</button>
+    <button id="tabWave" type="button" role="tab" aria-selected="false" aria-controls="waveControls">∿ Segnale variabile</button>
+  </div>
+  <span class="mode-note">A0 → ADC a 10 bit → 0–1023</span>
+</div>
 <div class="grid-top">
 <section class="panel"><div class="panel-pad"><h2 class="panel-title"><span class="num">01</span> Il segnale entra in A0</h2><p class="panel-subtitle" id="sourceDescription">Il cursore centrale del potenziometro è collegato ad A0; i due terminali estremi vanno a 5V e GND.</p></div>
 <div class="circuit-box"><div class="readout-inline" id="wireReadout">A0: 2,50 V</div>

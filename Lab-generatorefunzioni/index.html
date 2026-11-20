@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="it">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OMG Virtual Lab · Le forme d’onda e il generatore di funzioni</title><meta name="description" content="Simulatore interattivo di frequenza, periodo, ampiezza, offset e generatore di funzioni."></head>
-<body style="margin:0;background:#f4f7f8">
+<body style="margin:0;background:#fffdf9">
 <div class="omgw" id="omg-wave-lab">
   <style>
     #omg-wave-lab{--ink:#26333b;--muted:#667884;--line:#dfe6e9;--yellow:#f8d859;--coral:#ed5f59;--turquoise:#12acc0;--purple:#8067c7;--screen:#142d34;--surface:#fff;--bg:#f4f7f8;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45;padding:20px;box-sizing:border-box;max-width:1400px;margin:0 auto;border-radius:20px}
@@ -32,14 +32,183 @@
     #omg-wave-lab .bottom{display:flex;align-items:flex-start;gap:10px;padding:15px 18px;margin-top:15px;border:1px dashed #d1dce0;border-radius:13px;background:#fff;color:#60717d;font-size:11px;line-height:1.65} #omg-wave-lab .bottom b{color:#324b52} #omg-wave-lab .bottom .bulb{flex:none;width:25px;height:25px;border-radius:8px;display:grid;place-items:center;background:#fff0b2;font-weight:950;color:#684e09}
     @media(max-width:980px){#omg-wave-lab .workspace{grid-template-columns:1fr} #omg-wave-lab .generator{max-width:none} #omg-wave-lab .wave-tabs button{padding:10px 5px}}
     @media(max-width:580px){#omg-wave-lab{padding:10px;border-radius:12px}#omg-wave-lab .hero{padding:9px 5px 15px;gap:8px}#omg-wave-lab .brand{padding:0 2px}#omg-wave-lab .brandname{font-size:23px}#omg-wave-lab .brandfoot{font-size:9px}#omg-wave-lab .concepts{gap:6px}#omg-wave-lab .concept{padding:8px 9px;border-radius:10px}#omg-wave-lab .ctop{font-size:9px;gap:4px;letter-spacing:0}#omg-wave-lab .cicon{width:17px;height:17px;font-size:10px;border-radius:5px}#omg-wave-lab .cvalue{font-size:19px}#omg-wave-lab .cvalue span{font-size:10px}#omg-wave-lab .cdesc{font-size:9px}#omg-wave-lab .osc-shell{margin:0 6px;border-width:4px}#omg-wave-lab #omgw-scope{min-height:170px}#omg-wave-lab .osc-bar{font-size:8px;padding:0 7px}#omg-wave-lab .scope-controls{padding:12px;gap:7px}#omg-wave-lab .scope-controls .scan-btn{margin-left:0}#omg-wave-lab .formula-row{grid-template-columns:1fr;gap:3px;padding:9px 10px}#omg-wave-lab .formula-steps{font-size:11px}#omg-wave-lab .frequency-lab{margin:0 8px 10px}#omg-wave-lab .cycle-meter output{font-size:20px}}
+  
+
+    /* OMG Virtual Lab · visual identity v2026 — presentation layer only.
+       Functional SVG/JavaScript and all IDs remain unchanged. */
+    #omg-wave-lab {
+      --ink:#20252e;--muted:#647987;--line:#20252e;
+      --yellow:#f8d859;--coral:#ed5f59;--turquoise:#199c92;
+      --surface:#fff;--bg:#fdfaf2;
+      max-width:1640px;width:100%;border-radius:0;
+      padding:clamp(16px,3.7vw,58px);
+      background:
+        radial-gradient(ellipse 88% 46% at 0% 0%,rgba(255,226,160,.69),transparent 95%),
+        radial-gradient(ellipse 100% 66% at 100% 14%,rgba(216,247,241,.75),transparent 88%),
+        linear-gradient(115deg,#fff9ed 0%,#fffdf8 51%,#eefbf8 100%);
+      color:var(--ink);
+    }
+    #omg-wave-lab .omg-masthead{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 clamp(26px,3.2vw,48px)}
+    #omg-wave-lab .omg-identity{display:flex;align-items:center;gap:18px;min-width:0}
+    #omg-wave-lab .omg-stacked-logo{width:70px;height:74px;position:relative;flex:0 0 70px}
+    #omg-wave-lab .omg-logo-front,#omg-wave-lab .omg-logo-back{position:absolute;width:61px;height:63px;border:4px solid var(--ink);border-radius:6px;display:block}
+    #omg-wave-lab .omg-logo-back{background:#54c6cb;transform:rotate(6deg);left:9px;top:8px}
+    #omg-wave-lab .omg-logo-front{background:#ffdd5e;transform:rotate(-8deg);left:0;top:0;display:grid;place-items:center;overflow:visible}
+    #omg-wave-lab .omg-logo-front b{color:var(--ink);font-weight:1000;font-size:22px;letter-spacing:-.09em;line-height:1;transform:rotate(6deg);text-shadow:1.5px 1.5px 0 #fff,-1px -1px 0 #fff}
+    #omg-wave-lab .omg-brand-type{display:flex;flex-direction:column;gap:1px;line-height:1.16}
+    #omg-wave-lab .omg-brand-eyebrow{color:#667985;font-size:clamp(11px,1.1vw,16px);font-weight:950;letter-spacing:.17em}
+    #omg-wave-lab .omg-brand-type strong{font-size:clamp(23px,2vw,31px);letter-spacing:-.055em;font-weight:950}
+    #omg-wave-lab .omg-site-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;padding:13px 21px;border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;box-shadow:5px 5px 0 var(--yellow);font-weight:950;font-size:clamp(15px,1.4vw,22px);letter-spacing:-.04em;text-decoration:none;line-height:1.1;transition:transform .15s,box-shadow .15s}
+    #omg-wave-lab .omg-site-link:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--yellow)}
+    #omg-wave-lab .omg-site-link:focus-visible{outline:3px solid #178e9e;outline-offset:5px}
+    #omg-wave-lab .hero{display:block;padding:0 0 clamp(22px,3vw,37px);margin:0;border:0}
+    #omg-wave-lab .hero-copy{min-width:0}
+    #omg-wave-lab .kicker{display:inline-block;background:#ffdc56;border:3px solid var(--ink);border-radius:9px;color:var(--ink);padding:8px 13px;font-weight:950;font-size:clamp(11px,1.05vw,15px);letter-spacing:.08em;line-height:1.1;transform:rotate(-1.35deg);box-shadow:2px 2px 0 rgba(32,37,46,.15);margin:0 0 15px 3px}
+    #omg-wave-lab .kicker:before{display:none}
+    #omg-wave-lab h1{margin:0 0 12px;font-size:clamp(44px,5.55vw,87px);line-height:1.02;letter-spacing:-.072em;font-weight:1000;color:var(--ink)}
+    #omg-wave-lab .headline-accent{color:var(--turquoise)}
+    #omg-wave-lab .headline-dot{color:var(--coral)}
+    #omg-wave-lab .subtitle{max-width:1100px;color:#627888;font-size:clamp(14px,1.35vw,21px);line-height:1.48;font-weight:500}
+    #omg-wave-lab .microhead{margin:0 1px 13px;gap:15px;align-items:baseline}
+    #omg-wave-lab .microhead b{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6b7f8b;font-weight:950}
+    #omg-wave-lab .microhead small{font-size:12px;font-weight:600;color:#70838c}
+    #omg-wave-lab .concepts{gap:14px;margin-bottom:28px}
+    #omg-wave-lab .concept{border:2.5px solid var(--ink);border-radius:19px;box-shadow:5px 5px 0 var(--yellow);padding:15px 18px;background:white;transition:background .16s,transform .16s,box-shadow .16s}
+    #omg-wave-lab .concept:hover{transform:translate(-1px,-2px);box-shadow:6px 7px 0 var(--yellow)}
+    #omg-wave-lab .concept[aria-pressed=true]{background:var(--ink);border-color:var(--ink);box-shadow:5px 5px 0 var(--yellow)}
+    #omg-wave-lab .concept[aria-pressed=true] .ctop,#omg-wave-lab .concept[aria-pressed=true] .cdesc,#omg-wave-lab .concept[aria-pressed=true] .cvalue span{color:#dbe5e7}
+    #omg-wave-lab .concept[aria-pressed=true] .cvalue{color:white}
+    #omg-wave-lab .ctop{letter-spacing:.09em;font-size:12px;font-weight:900}
+    #omg-wave-lab .cvalue{font-size:clamp(23px,2.6vw,33px);margin:5px 0 2px}
+    #omg-wave-lab .cdesc{font-size:11px;line-height:1.45}
+    #omg-wave-lab .cicon{width:25px;height:25px;border-radius:8px}
+    #omg-wave-lab .workspace{gap:20px;grid-template-columns:minmax(0,1.64fr) minmax(318px,1fr)}
+    #omg-wave-lab .leftstack{gap:18px}
+    #omg-wave-lab .panel{border:3px solid var(--ink);border-radius:23px;box-shadow:5px 5px 0 var(--yellow);background:#fff}
+    #omg-wave-lab .panel-head{padding:19px 21px 15px}
+    #omg-wave-lab .panel-head strong{color:var(--ink);font-size:13px;letter-spacing:.09em;font-weight:950}
+    #omg-wave-lab .panel-head .overline{font-size:11px}
+    #omg-wave-lab .osc-shell{border:7px solid #253941;border-radius:16px;margin:0 15px;box-shadow:none}
+    #omg-wave-lab .scope-controls{padding:14px 18px;gap:11px}
+    #omg-wave-lab .switchlabel{font-size:12px;color:#364750;font-weight:800}
+    #omg-wave-lab .switchlabel input{accent-color:var(--ink);width:17px;height:17px}
+    #omg-wave-lab .scope-controls select{border:2px solid var(--ink);border-radius:10px;padding:7px 10px;font-size:12px;color:var(--ink);font-weight:800;background:#fff}
+    #omg-wave-lab .tinybtn,#omg-wave-lab .compare-actions button,#omg-wave-lab .preset{border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:11px;padding:8px 12px;font-weight:900;transition:background .14s,color .14s,transform .14s}
+    #omg-wave-lab .tinybtn:hover,#omg-wave-lab .compare-actions button:hover,#omg-wave-lab .preset:hover{background:#fff7d7;transform:translateY(-1px)}
+    #omg-wave-lab .tinybtn[aria-pressed=true],#omg-wave-lab .compare-actions button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:white}
+    #omg-wave-lab .frequency-lab{border:2px solid #b8dfe1;background:#f0fbfa;border-radius:14px;margin:0 16px 12px;padding:14px}
+    #omg-wave-lab .frequency-lab-head strong{color:#235d62;font-size:12px;font-weight:950;letter-spacing:.04em}
+    #omg-wave-lab .frequency-lab-head span{font-size:10px}
+    #omg-wave-lab .cycle-meter output{color:#168e89}
+    #omg-wave-lab .frame-note{padding:0 18px 18px}
+    #omg-wave-lab .explain{border:3px solid var(--ink);border-left:8px solid var(--turquoise);border-radius:20px;padding:20px 23px;box-shadow:5px 5px 0 var(--yellow)}
+    #omg-wave-lab .explain .ex-number{font-weight:950;font-size:11px;letter-spacing:.11em;color:#19867f}
+    #omg-wave-lab .explain h3{font-size:21px;font-weight:950;letter-spacing:-.03em}
+    #omg-wave-lab .explain p{font-size:13px}
+    #omg-wave-lab .formulas{gap:9px;margin-top:17px}
+    #omg-wave-lab .formula-row{padding:12px 14px;border-radius:11px;border-left-width:5px}
+    #omg-wave-lab .formula-steps{gap:3px;font-size:13px}
+    #omg-wave-lab .formula-steps b{font-size:15px}
+    #omg-wave-lab .generator{border:3px solid var(--ink);border-radius:23px;padding:9px;box-shadow:6px 6px 0 var(--yellow);background:#26333b}
+    #omg-wave-lab .gen-inner{border-radius:14px;border:1px solid #6a7b81;background:linear-gradient(155deg,#354650 0%,#28353e 90%);padding:17px}
+    #omg-wave-lab .gen-title{font-size:13px;color:white;letter-spacing:.095em}
+    #omg-wave-lab .gen-tag{border:1.5px solid var(--ink);border-radius:7px;transform:rotate(-2deg);font-weight:950}
+    #omg-wave-lab .gen-label,#omg-wave-lab .control-head label{font-size:12px;font-weight:900;color:#d6e5e7}
+    #omg-wave-lab .wave-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;border:2px solid #161e24;border-radius:15px;background:#fff;padding:4px}
+    #omg-wave-lab .wave-tabs button{border:2px solid transparent;border-radius:10px;background:#fff;color:#3e5159;font-size:10px;font-weight:900;min-width:0;min-height:62px;padding:7px 2px}
+    #omg-wave-lab .wave-tabs button[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:#fff}
+    #omg-wave-lab .wave-tabs button:hover:not([aria-pressed=true]){background:#fff5d5}
+    #omg-wave-lab .control-head .range-numeric{background:white;border:2px solid #1c2830;border-radius:9px;padding:5px 8px;min-width:85px}
+    #omg-wave-lab .range-numeric input{color:var(--ink);width:60px;font-weight:950;font-size:13px}
+    #omg-wave-lab .range-numeric span{color:#596d75;font-weight:900}
+    #omg-wave-lab .range{accent-color:var(--yellow);min-height:19px;cursor:pointer}
+    #omg-wave-lab .tickline{font-size:10px;font-weight:700;color:#afc5cc}
+    #omg-wave-lab .range-hint{font-size:11px;color:#bed0d5}
+    #omg-wave-lab .output-wrap{gap:10px}
+    #omg-wave-lab .output-btn{border:2px solid #90e8bd;border-radius:11px;background:#217851;color:#fff;font-size:12px;font-weight:950;padding:10px 12px}
+    #omg-wave-lab .output-btn.off{background:#7a3735;border-color:#e8a5a1;color:#fff}
+    #omg-wave-lab .presets{margin-top:20px;border:3px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--yellow);padding:18px;background:#fff}
+    #omg-wave-lab .presets b{font-size:14px}
+    #omg-wave-lab .presets p{font-size:12px}
+    #omg-wave-lab .presetrow{gap:8px}
+    #omg-wave-lab .preset{font-size:11px}
+    #omg-wave-lab .bottom{margin-top:26px;border:2px solid #c7d5d8;background:rgba(255,255,255,.88);border-radius:15px;padding:15px 18px;line-height:1.75;font-size:12px}
+    #omg-wave-lab .bottom .bulb{background:var(--yellow);border:2px solid var(--ink);border-radius:8px;color:var(--ink)}
+    @media (max-width:980px){
+      #omg-wave-lab .workspace{grid-template-columns:1fr}
+      #omg-wave-lab .hero{padding-bottom:24px}
+      #omg-wave-lab .concepts{margin-bottom:24px}
+      #omg-wave-lab .gen-inner{padding:17px}
+      #omg-wave-lab .generator{max-width:none}
+    }
+    @media(max-width:580px){
+      #omg-wave-lab{padding:18px 13px 27px;border-radius:0}
+      #omg-wave-lab .omg-masthead{gap:10px;margin-bottom:31px}
+      #omg-wave-lab .omg-identity{gap:8px}
+      #omg-wave-lab .omg-stacked-logo{transform:scale(.72);transform-origin:left center;width:48px;flex-basis:48px;height:60px}
+      #omg-wave-lab .omg-brand-eyebrow{font-size:9px;letter-spacing:.09em}
+      #omg-wave-lab .omg-brand-type strong{font-size:19px;letter-spacing:-.065em;white-space:nowrap}
+      #omg-wave-lab .omg-site-link{font-size:12px;padding:9px 10px;border-width:2px;box-shadow:3px 3px 0 var(--yellow);white-space:nowrap}
+      #omg-wave-lab .hero{padding:0 0 24px}
+      #omg-wave-lab .kicker{font-size:10px;padding:7px 9px;border-width:2px;margin:0 0 15px 3px;letter-spacing:.035em}
+      #omg-wave-lab h1{font-size:clamp(42px,11vw,60px);line-height:1.03;letter-spacing:-.066em;margin-bottom:10px}
+      #omg-wave-lab .subtitle{font-size:14px;line-height:1.5}
+      #omg-wave-lab .microhead{flex-wrap:wrap;gap:3px;margin:0 1px 12px}
+      #omg-wave-lab .microhead b{font-size:10px;letter-spacing:.085em}
+      #omg-wave-lab .microhead small{font-size:10px}
+      #omg-wave-lab .concepts{gap:8px;margin-bottom:24px}
+      #omg-wave-lab .concept{padding:10px 8px;border-width:2px;border-radius:13px;box-shadow:3px 3px 0 var(--yellow)}
+      #omg-wave-lab .concept[aria-pressed=true]{box-shadow:3px 3px 0 var(--yellow)}
+      #omg-wave-lab .ctop{font-size:9px;gap:4px;letter-spacing:.01em}
+      #omg-wave-lab .cicon{width:18px;height:18px;font-size:10px;border-radius:5px}
+      #omg-wave-lab .cvalue{font-size:20px;margin:5px 0 2px}
+      #omg-wave-lab .cvalue span{font-size:10px}
+      #omg-wave-lab .cdesc{font-size:9px;line-height:1.35}
+      #omg-wave-lab .workspace{gap:17px}
+      #omg-wave-lab .panel{border-width:2px;border-radius:17px;box-shadow:4px 4px 0 var(--yellow)}
+      #omg-wave-lab .panel-head{padding:12px 10px 10px}
+      #omg-wave-lab .panel-head strong{font-size:11px}
+      #omg-wave-lab .osc-shell{margin:0 6px;border-width:4px;border-radius:10px}
+      #omg-wave-lab #omgw-scope{min-height:170px}
+      #omg-wave-lab .osc-bar{padding:0 6px;font-size:7.5px}
+      #omg-wave-lab .scope-controls{padding:11px 10px;gap:7px}
+      #omg-wave-lab .switchlabel{font-size:11px}
+      #omg-wave-lab .tinybtn{font-size:10px;padding:6px 8px}
+      #omg-wave-lab .frequency-lab{margin:0 9px 11px;padding:11px}
+      #omg-wave-lab .frequency-lab-head strong{font-size:10px}
+      #omg-wave-lab .compare-actions button{font-size:10px;padding:7px 11px}
+      #omg-wave-lab .explain{padding:15px 13px;border-width:2px;border-left-width:6px;border-radius:16px;box-shadow:4px 4px 0 var(--yellow)}
+      #omg-wave-lab .explain h3{font-size:18px}
+      #omg-wave-lab .formula-row{grid-template-columns:1fr;gap:5px}
+      #omg-wave-lab .formula-steps{font-size:11px}
+      #omg-wave-lab .generator{border-width:2px;box-shadow:4px 4px 0 var(--yellow);border-radius:17px;padding:6px}
+      #omg-wave-lab .gen-inner{padding:12px}
+      #omg-wave-lab .gen-title{font-size:11px}
+      #omg-wave-lab .wave-tabs button{font-size:9px;padding:7px 1px}
+      #omg-wave-lab .presets{border-width:2px;box-shadow:4px 4px 0 var(--yellow);border-radius:16px}
+    }
+    @media (max-width:370px){
+      #omg-wave-lab .omg-brand-type strong{font-size:16px}
+      #omg-wave-lab .omg-brand-eyebrow{font-size:8px}
+      #omg-wave-lab .omg-site-link{padding:8px 7px;font-size:11px}
+      #omg-wave-lab .concept{padding:8px 6px}
+      #omg-wave-lab .ctop{font-size:8px}
+    }
+
   </style>
-  <header class="hero">
-    <div>
-      <div class="kicker">OMG Virtual Lab · Elettronica e strumenti</div>
-      <h1>Le forme d’onda <span style="color:#139cad">in azione.</span></h1>
-      <p class="subtitle">Prima impari a leggere periodo, frequenza e ampiezza. Poi li modifichi direttamente dal generatore di funzioni.</p>
+  <div class="omg-masthead">
+    <div class="omg-identity" aria-label="Elettroni e dintorni · OMG Virtual Lab">
+      <div class="omg-stacked-logo" aria-hidden="true"><span class="omg-logo-back"></span><span class="omg-logo-front"><b>OMG!</b></span></div>
+      <div class="omg-brand-type"><span class="omg-brand-eyebrow">ELETTRONI E DINTORNI</span><strong>OMG Virtual Lab</strong></div>
     </div>
-    <div class="brand" aria-label="OMG · ohmmygod.it"><div class="brandname">OMG!</div><div class="blocks"></div><div class="brandfoot">ohmmygod.it</div></div>
+    <a class="omg-site-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="Visita ohmmygod.it (apre una nuova scheda)">ohmmygod.it <span aria-hidden="true">↗</span></a>
+  </div>
+  <header class="hero">
+    <div class="hero-copy">
+      <div class="kicker">ELETTRONICA · LABORATORIO INTERATTIVO</div>
+      <h1>Le forme <span class="headline-accent">d’onda</span><span class="headline-dot">.</span></h1>
+      <p class="subtitle">Periodo, frequenza e ampiezza: osserva il segnale e controllalo con un generatore di funzioni.</p>
+    </div>
   </header>
   <section aria-label="Le tre grandezze principali">
     <div class="microhead"><b>01 · Riconosci le grandezze</b><small>Seleziona una scheda per la spiegazione</small></div>

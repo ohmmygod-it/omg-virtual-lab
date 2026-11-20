@@ -5,65 +5,216 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#00b9c8">
 <title>Resistenze in serie, parallelo e misto | OMG Virtual Lab</title>
-<!-- OMG Virtual Lab • v7: parallelo simmetrico a due rami, generatore sul lato inferiore -->
+<!-- OMG Virtual Lab • v8: restyling grafico. Simulazione JavaScript identica alla v7. -->
 <meta name="description" content="Simulatore interattivo delle resistenze in serie, parallelo e misto: correnti animate e formule con valori reali.">
 <style>
-:root{--ink:#17202d;--cyan:#00b9c8;--turquoise:#148e97;--yellow:#ffe45d;--orange:#d78823;--purple:#765fc5;--magenta:#d83f78;--panel:#f4fafb;--muted:#52717d;--wire:#5c7a86;--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--display:"Avenir Next","Trebuchet MS","Segoe UI",var(--font)}
-*{box-sizing:border-box}html{color-scheme:light}body{margin:0;background:#fff;font:15px/1.4 var(--font);color:var(--ink)}button,input,select{font:inherit}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--magenta);outline-offset:3px}
-.page{max-width:1060px;margin:auto;padding:14px clamp(9px,2vw,22px) 28px}.brand{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 3px 12px}.wordmark{font-family:var(--display);font-size:21px;font-weight:950;letter-spacing:-.065em;text-decoration:none;color:var(--ink)}.wordmark b{color:#008e9a}.brandhint{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
-.lab{background:var(--panel);border:2px solid var(--ink);border-radius:17px;padding:clamp(11px,2vw,20px);box-shadow:4px 4px 0 var(--ink)}.header{display:flex;align-items:start;justify-content:space-between;gap:10px;flex-wrap:wrap}.tag{display:inline-block;background:var(--yellow);border:2px solid var(--ink);border-radius:6px;padding:3px 7px;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}h1{font:950 clamp(25px,3.4vw,33px)/1.07 var(--display);letter-spacing:-.045em;margin:7px 0 0}.lead{margin:7px 0 11px;color:#54717e;font-size:13px}.reset{border:2px solid var(--ink);border-radius:9px;background:white;color:var(--ink);padding:8px 11px;font-weight:900;cursor:pointer}.reset:hover{background:#e9f9fa}
-.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:11px}.tab{border:2px solid #c4dade;border-radius:10px;background:#fff;color:#284754;font-weight:900;font-family:var(--display);padding:9px 5px;cursor:pointer;font-size:14px}.tab[aria-pressed=true]{border-color:var(--ink);background:var(--cyan);color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
-.circuit{background:#fff;border:1px solid #cce0e5;border-radius:14px;padding:7px 8px 3px;position:relative}.svgStage{width:100%}#circuitSVG{width:100%;height:auto;display:block}.wire{stroke:var(--wire);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round;fill:none}.bodyRes{fill:#fff;stroke-width:4.3;rx:5}.battery{fill:#e9f9f9;stroke:var(--turquoise);stroke-width:4.2}.join{fill:var(--wire);stroke:#fff;stroke-width:1.3}.resName{font:950 21px var(--display);fill:var(--ink);text-anchor:middle}.resVal{font:900 19px var(--display);fill:#243d49;text-anchor:middle}.dropText{font:800 17px var(--display);fill:#607e89;text-anchor:middle}.batteryMark{font:900 27px var(--display);fill:#117f8a;text-anchor:middle}.batteryVolts{font:900 18px var(--display);fill:#117f8a;text-anchor:end}.currentText{font:900 17px var(--display);fill:#087d87}.branchArrow{fill:none;stroke:#0d9ea5;stroke-width:4.2;stroke-linecap:round}.caption{font:850 17px var(--display);fill:#65828b;text-anchor:middle}.flowDot{stroke:#fff;stroke-width:.8}
-/* A single control row directly under the circuit */
-.controlStrip{display:flex;align-items:stretch;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;padding:10px 1px 7px;scrollbar-width:thin}.resControl{flex:1 1 160px;min-width:137px;background:#fff;border:1px solid #d4e6e9;border-radius:11px;padding:9px 11px 7px}.resControl[hidden]{display:none}.controlHead{display:flex;justify-content:space-between;align-items:center;gap:4px;white-space:nowrap;margin-bottom:3px}.controlHead label{font:950 15px var(--display)}.controlHead output{font:900 14px var(--display);color:#244350;tab-size:4}.resControl input{width:100%;display:block;margin:6px 0 0;accent-color:var(--turquoise);cursor:pointer}.voltageControl{flex:0 0 250px;min-width:215px;border-radius:11px;padding:9px 11px 7px;background:#e0f3f2}.voltageControl label{display:block;font:900 14px var(--display);margin-bottom:6px}.voltageButtons{display:flex;gap:4px}.volt{flex:1;min-width:0;padding:5px 3px;border:2px solid #a6cbd0;border-radius:7px;background:white;cursor:pointer;color:#325562;font-size:13px;font-weight:950}.volt[aria-pressed=true]{background:var(--yellow);color:var(--ink);border-color:var(--ink)}.voltageSelect{display:none}
-.resultGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:5px}.resultCard{border-radius:12px;border:2px solid var(--ink);padding:12px 14px 13px;min-width:0}.resultCard.eq{background:#17202d;color:#fff}.resultCard.i{background:var(--cyan);color:var(--ink)}.resultTitle{font:850 13px var(--display);margin-bottom:5px}.resultExpression{font:800 15px/1.5 var(--display);min-height:43px;overflow-wrap:anywhere}.resultValue{font:950 clamp(23px,3vw,31px)/1.1 var(--display);letter-spacing:-.035em;margin-top:3px}
-.breakdown{background:white;border:1px solid #d7e8eb;border-radius:12px;margin-top:10px;padding:10px 13px}.breakhead{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px;margin-bottom:7px}.breakhead strong{font:950 15px var(--display)}.breakhead span{font-size:11px;color:var(--muted)}.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.stat{background:#f5fafb;border:1px solid #e1edf0;border-radius:8px;padding:8px 10px}.statTitle{font:950 13px var(--display);margin-bottom:2px}.statLine{font-size:13px;color:#476270}.statLine b{color:#173340}.note{margin:9px 2px 0;color:#506d79;font-size:12px}.share{margin-top:7px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;font-weight:850;color:#355968}.share[hidden]{display:none}.share .track{display:flex;height:11px;border-radius:8px;overflow:hidden;flex:1 1 160px;background:#e0edf0;min-width:100px}.segment{height:100%;transition:width .18s ease}.shareLegend{font-size:11px;color:#567680}
-@media(max-width:680px){.page{padding:8px 6px 20px}.brand{margin-bottom:8px}.lab{padding:9px;border-radius:14px}.brandhint{display:none}.wordmark{font-size:18px}.lead{font-size:12px;line-height:1.35;margin-bottom:10px}h1{font-size:21px}.fullTitle{display:none}.header{position:relative;min-height:42px}.header>div{padding-right:35px}.tag{font-size:9px}.reset{position:absolute;right:0;top:0;font-size:17px;padding:2px 6px}.reset .resetText{display:none}.lead{display:none}.tabs{gap:5px;margin-bottom:8px}.tab{font-size:12px;padding:7px 2px}.circuit{padding:1px 2px 0}.controlStrip{gap:5px;padding-top:7px}.resControl{flex:1 0 100px;min-width:100px;padding:6px 7px 4px}.controlHead{display:block;margin-bottom:0}.controlHead label{font-size:13px}.controlHead output{font-size:12px;float:right}.resControl input{margin-top:7px}.voltageControl{flex:0 0 89px;min-width:89px;padding:6px 6px 4px}.voltageControl label{font-size:12px;line-height:1.2;margin:0 0 5px}.voltageButtons{display:none}.voltageSelect{display:block;width:100%;border:1px solid #8ac8c9;background:#fff;border-radius:6px;font-size:13px;font-weight:900;padding:5px 2px;color:#16414b}.controlStrip.mixedControls .resControl{flex:1 1 0;min-width:0;padding:5px 3px 4px}.controlStrip.mixedControls .controlHead{display:flex;flex-direction:column;align-items:center;gap:0}.controlStrip.mixedControls .controlHead label{font-size:12px}.controlStrip.mixedControls .controlHead output{float:none;font-size:11px}.controlStrip.mixedControls .voltageControl{flex:0 0 76px;min-width:76px;padding:5px 3px 4px}.controlStrip.mixedControls .voltageControl label{font-size:11px}.resultGrid{gap:6px;margin-top:3px}.resultCard{padding:9px 9px 10px;border-radius:10px}.resultTitle{font-size:12px}.resultExpression{font-size:12px;min-height:60px;line-height:1.4}.resultValue{font-size:21px}.breakdown{margin-top:8px;padding:9px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.stat{padding:6px 8px}.statLine{font-size:12px}.note{font-size:11px}}
-@media(min-width:681px) and (max-width:870px){.resControl{min-width:120px}.voltageControl{min-width:195px;flex-basis:195px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
-/* V4: wire-first schematic, labels only inside resistor symbols */
-.circuit{overflow:hidden;padding:8px 8px 0}
+:root {
+  --ink:#20252e; --ink-soft:#38444e; --cyan:#00b9c8; --turquoise:#168f88;
+  --yellow:#ffdc58; --orange:#d78823; --purple:#765fc5; --magenta:#d83f78;
+  --panel:#ffffff; --muted:#617581; --wire:#5c7a86;
+  --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --display:"Avenir Next","Trebuchet MS","Arial Rounded MT Bold","Segoe UI",var(--font);
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{
+  margin:0;min-height:100vh;color:var(--ink);font:15px/1.47 var(--font);
+  background:linear-gradient(100deg,#fff0c9 0%,#fff7e9 31%,#f6f9f5 61%,#e6f8f4 100%);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #b83e84;outline-offset:4px}
+.page{width:min(100%,1410px);margin:0 auto;padding:30px clamp(17px,4.15vw,64px) 54px}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:31px}
+.brandLockup{display:inline-flex;align-items:center;gap:22px;color:var(--ink);text-decoration:none;min-width:0}
+.brandIcon{width:66px;height:76px;display:inline-block;position:relative;flex:0 0 66px}
+.brandIcon::before,.brandIcon::after{content:"";position:absolute;border:4px solid var(--ink);border-radius:5px;width:59px;height:65px}
+.brandIcon::before{background:#60d5d2;left:9px;top:7px;transform:rotate(8deg)}
+.brandIcon::after{background:var(--yellow);left:1px;top:1px;transform:rotate(-8deg)}
+.brandIcon span{position:absolute;z-index:2;top:26px;left:4px;transform:rotate(-8deg);letter-spacing:-.12em;font:1000 24px/.9 var(--display);color:var(--ink);text-shadow:1.4px 1.4px #fff,2px 2px #fff;white-space:nowrap}
+.brandWords{display:flex;flex-direction:column;justify-content:center;gap:2px;white-space:nowrap}
+.brandEyebrow{color:#617581;font:950 14px/1.3 var(--display);letter-spacing:.19em}
+.wordmark{font:1000 clamp(23px,2.35vw,32px)/1.1 var(--display);letter-spacing:-.062em;color:var(--ink)}
+.siteLink{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;text-decoration:none;border:3px solid var(--ink);color:var(--ink);background:white;box-shadow:4px 5px 0 var(--yellow);padding:12px 19px;border-radius:999px;font:950 17px var(--display);transition:transform .15s,box-shadow .15s}
+.siteLink:hover{transform:translateY(-2px);box-shadow:4px 7px 0 var(--yellow)}
+.lab{border:0;background:transparent;box-shadow:none;padding:0;margin:0}
+.header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.tag{display:inline-block;background:var(--yellow);border:2.5px solid var(--ink);border-radius:7px;transform:rotate(-1.8deg);padding:8px 12px;font:950 clamp(10px,1.1vw,14px)/1.25 var(--display);letter-spacing:.078em;text-transform:uppercase;box-shadow:1px 1px 0 rgba(31,37,46,.1)}
+h1{font:1000 clamp(42px,5.7vw,76px)/1.035 var(--display);letter-spacing:-.075em;max-width:1200px;margin:26px 0 15px}
+h1 .accent{color:var(--turquoise)}
+h1 .titleDot{color:#ed5f59}
+.lead{color:#627582;font:500 clamp(15px,1.45vw,19px)/1.54 var(--font);max-width:910px;margin:0 0 25px}
+.modeHeader{display:flex;align-items:center;justify-content:space-between;gap:17px;flex-wrap:wrap;margin:0 0 16px}
+.sectionKicker{color:#71838d;font:950 13px/1.3 var(--display);letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+.modeActions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;align-items:stretch;gap:4px;border:3px solid var(--ink);border-radius:19px;padding:6px;background:#fff;box-shadow:4px 5px 0 var(--yellow);margin:0}
+.tab{border:0;border-radius:12px;padding:12px clamp(14px,2vw,28px);min-height:47px;min-width:94px;background:#fff;color:#57666e;font:950 16px var(--display);transition:background .12s,color .12s;white-space:nowrap}
+.tab:hover:not([aria-pressed=true]){background:#f1f4f4}
+.tab[aria-pressed=true]{background:var(--ink);color:#fff}
+.reset{display:inline-flex;gap:6px;align-items:center;justify-content:center;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);padding:10px 15px;min-height:49px;font:900 14px var(--display);box-shadow:3px 4px 0 var(--yellow)}
+.reset:hover{background:#fffbeb}
+.circuit{background:#fff;border:2.5px solid var(--ink);border-radius:22px;padding:14px 14px 0;position:relative;overflow:hidden;box-shadow:5px 6px 0 var(--yellow)}
+.svgStage{width:100%;max-width:1090px;margin:auto}
+#circuitSVG{display:block;width:100%;height:auto}
+.wire{stroke:var(--wire);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.bodyRes{fill:#fff;stroke-width:4;rx:8}
+.battery{fill:#e9f9f9;stroke:var(--turquoise);stroke-width:4.2}
+.join{fill:var(--wire);stroke:#fff;stroke-width:1.3}
 .resName{font:950 22px var(--display);fill:#1d3c48;text-anchor:middle;dominant-baseline:middle}
+.resVal{font:900 19px var(--display);fill:#243d49;text-anchor:middle}
+.dropText{font:800 17px var(--display);fill:#607e89;text-anchor:middle}
+.batteryMark{font:900 27px var(--display);fill:#117f8a;text-anchor:middle}
+.batteryVolts{font:900 18px var(--display);fill:#117f8a;text-anchor:end}
+.currentText{font:900 17px var(--display);fill:#087d87}
+.branchArrow{fill:none;stroke:#0d9ea5;stroke-width:4.2;stroke-linecap:round}
+.caption{font:850 17px var(--display);fill:#65828b;text-anchor:middle}
 .flowDot{stroke:#fff;stroke-width:1.15;opacity:.97}
 .currentLane{fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.90}
 .branchArrowStatic{stroke:none}
-.circuit .share{display:flex;gap:9px;align-items:center;padding:10px 11px 11px;margin-top:1px;background:#eaf7f8;border-top:1px solid #d6ecef;color:#274957;border-radius:0 0 12px 12px;font-size:13px;font-weight:950}
-.circuit .share[hidden]{display:none}
-.circuit .share .track{height:14px;flex:1 1 220px;min-width:90px;box-shadow:inset 0 0 0 1px #ccdee2}
-.circuit .shareLegend{font-size:12px;font-weight:850;color:#335969}
-@media(max-width:680px){
-  .circuit{padding:2px 2px 0}
-  .circuit .share{display:grid;grid-template-columns:1fr auto;row-gap:3px;padding:7px 10px 8px;line-height:1.25;font-size:11px}
-  .circuit .share .track{grid-column:1/-1;grid-row:2;width:100%;height:12px;min-width:0}
-  .circuit .shareLegend{grid-column:1/-1;grid-row:3;font-size:11px;white-space:normal;text-align:left}
-}
-
-/* V6 • Etichette elettriche integrate nei simboli, leggibili ma discrete. */
 .resCaption{font:800 17px var(--display);fill:#526a76;text-anchor:middle}
 .resOhms{font:850 18px var(--display);fill:#26414a;text-anchor:middle}
 .branchCurrent{font:900 18px var(--display);text-anchor:middle}
 .totalCurrent{font:950 17px var(--display);fill:#bd376a;text-anchor:start}
-.bodyRes{fill:#fff;stroke-width:4;rx:8}
-@media(max-width:680px){
-  .circuit .share{margin-top:0}
+.share{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:13px;font-weight:900;color:#355968}
+.share[hidden]{display:none}
+.circuit .share{padding:14px 15px;margin:4px -14px 0;background:#eaf7f6;border-top:1px solid #d6e8e9;border-radius:0 0 19px 19px}
+.circuit .share[hidden]{display:none}
+.share .track{display:flex;height:13px;border-radius:99px;overflow:hidden;flex:1 1 170px;min-width:95px;background:#d7e8e8;box-shadow:inset 0 0 0 1px #ccdee2}
+.segment{height:100%;transition:width .18s ease}
+.shareLegend{font-size:12px;color:#486976;font-weight:800}
+.controlsHeader{display:flex;justify-content:space-between;align-items:center;margin-top:27px;margin-bottom:8px;gap:10px}
+.helperText{font-size:12px;color:#75878f}
+.controlStrip{display:flex;gap:12px;align-items:stretch;overflow-x:auto;overscroll-behavior-x:contain;padding:5px 3px 10px;scrollbar-width:thin}
+.resControl,.voltageControl{flex:1 1 165px;min-width:136px;border:2px solid var(--ink);background:#fff;border-radius:16px;padding:13px 15px 12px;box-shadow:3px 4px 0 var(--yellow)}
+.resControl[hidden]{display:none}
+.controlHead{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:8px;white-space:nowrap}
+.controlHead label{font:950 17px var(--display)}
+.controlHead output{font:850 14px var(--display);color:#374b57}
+.resControl input{width:100%;display:block;margin:13px 0 4px;accent-color:var(--turquoise);cursor:pointer}
+.voltageControl{background:#fffaf0;flex:0 1 262px;min-width:225px}
+.voltageControl label{display:block;font:900 14px var(--display);margin-bottom:9px;color:#384b55}
+.voltageButtons{display:flex;gap:5px}
+.volt{flex:1;min-width:0;border:1.5px solid #b6c8ca;border-radius:9px;background:#fff;color:#56656d;font:900 13px var(--display);padding:9px 3px;white-space:nowrap}
+.volt[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.voltageSelect{display:none}
+.resultGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:19px}
+.resultCard{border-radius:19px;border:2.5px solid var(--ink);padding:20px 23px 21px;min-width:0;box-shadow:4px 5px 0 var(--yellow)}
+.resultCard.eq{background:var(--ink);color:#fff}
+.resultCard.i{background:#c9f3ed;color:var(--ink)}
+.resultTitle{font:900 13px var(--display);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.resultExpression{font:750 15px/1.5 var(--display);min-height:45px;overflow-wrap:anywhere}
+.resultValue{font:1000 clamp(26px,3.15vw,35px)/1.15 var(--display);letter-spacing:-.04em;margin-top:7px}
+.breakdown{background:white;border:2px solid var(--ink);border-radius:19px;margin-top:19px;padding:18px 20px 21px;box-shadow:4px 5px 0 var(--yellow)}
+.breakhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}
+.breakhead strong{font:950 16px var(--display)}
+.breakhead span{font-size:12px;color:var(--muted)}
+.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:#f6faf9;border:1.5px solid #dce9e9;border-radius:11px;padding:11px 13px;min-width:0}
+.statTitle{font:950 14px var(--display);margin-bottom:4px}
+.statLine{font-size:13px;color:#51666f}
+.statLine b{color:#20363f}
+.note{margin:18px 2px 0;color:#526c77;font-size:13px;line-height:1.6;padding:12px 16px;border-left:4px solid var(--turquoise);background:#fffaf0;border-radius:0 10px 10px 0}
+@media(max-width:1000px){
+ .page{padding:21px 26px 40px}.brand{margin-bottom:29px}
+ h1{font-size:clamp(43px,6vw,64px)}
+ .tab{padding:11px 19px}
+ .controlStrip{gap:10px}.resControl,.voltageControl{min-width:125px;padding:12px 11px}
+ .voltageControl{flex:0 0 230px;min-width:230px}
 }
+@media(max-width:700px){
+ body{background-attachment:scroll}
+ .page{padding:15px 12px 30px}
+ .brand{gap:8px;margin-bottom:29px}
+ .brandLockup{gap:9px}
+ .brandIcon{width:45px;height:54px;flex-basis:45px}
+ .brandIcon::before,.brandIcon::after{width:41px;height:44px;border-width:3px;border-radius:4px}
+ .brandIcon::before{left:5px;top:6px}.brandIcon::after{left:0;top:0}
+ .brandIcon span{top:18px;left:1px;font-size:17px}
+ .brandEyebrow{font-size:8px;letter-spacing:.12em}
+ .wordmark{font-size:18px;letter-spacing:-.055em}
+ .siteLink{padding:9px 10px;font-size:12px;border-width:2px;box-shadow:3px 4px 0 var(--yellow);gap:3px}
+ .header{display:block}
+ .tag{font-size:9px;padding:7px 9px;border-width:2px;letter-spacing:.055em}
+ h1{font-size:clamp(38px,9vw,57px);margin:20px 0 14px;letter-spacing:-.072em;max-width:640px}
+ .lead{font-size:14px;margin:0 0 22px;line-height:1.5}
+ .modeHeader{align-items:flex-start;gap:9px;margin-bottom:14px}
+ .modeActions{width:100%;gap:9px;flex-wrap:nowrap}
+ .tabs{flex:1;gap:2px;border-width:2px;padding:4px;border-radius:14px;box-shadow:3px 4px 0 var(--yellow)}
+ .tab{flex:1;min-width:0;padding:9px 2px;min-height:42px;font-size:13px;border-radius:9px}
+ .reset{min-height:49px;padding:8px 11px;font-size:15px;box-shadow:2px 3px 0 var(--yellow);border-radius:10px}
+ .reset .resetText{display:none}
+ .circuit{padding:4px 4px 0;border-width:2px;border-radius:15px;box-shadow:3px 4px 0 var(--yellow)}
+ .svgStage{max-width:100%}
+ .circuit .share{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:5px;margin:0 -4px;padding:10px 10px 11px;border-radius:0 0 12px 12px;font-size:11px;line-height:1.3}
+ .circuit .share .track{grid-column:1/-1;grid-row:2;width:100%;height:12px;min-width:0}
+ .circuit .shareLegend{grid-column:1/-1;grid-row:3;font-size:11px;white-space:normal;text-align:left}
+ .controlsHeader{margin-top:22px}
+ .helperText{display:none}
+ .controlStrip,.controlStrip.mixedControls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;overflow:visible;padding:4px 3px 10px}
+ .resControl,.controlStrip.mixedControls .resControl{min-width:0;flex:none;padding:10px 12px 9px;border-radius:12px}
+ .controlHead,.controlStrip.mixedControls .controlHead{display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:6px}
+ .controlHead label,.controlStrip.mixedControls .controlHead label{font-size:14px}
+ .controlHead output,.controlStrip.mixedControls .controlHead output{font-size:12px;float:none}
+ .resControl input{margin:10px 0 1px}
+ .voltageControl,.controlStrip.mixedControls .voltageControl{grid-column:1/-1;min-width:0;flex:none;padding:11px 13px}
+ .voltageControl label,.controlStrip.mixedControls .voltageControl label{font-size:13px;margin:0 0 7px}
+ .voltageButtons{display:flex;gap:6px}
+ .volt{padding:8px 4px;font-size:13px}
+ .voltageSelect{display:none}
+ .resultGrid{gap:9px;margin-top:16px}
+ .resultCard{padding:12px 12px 14px;border-width:2px;border-radius:13px;box-shadow:3px 4px 0 var(--yellow)}
+ .resultTitle{font-size:10px;min-height:30px;line-height:1.3;margin-bottom:7px}
+ .resultExpression{font-size:12px;line-height:1.43;min-height:62px}
+ .resultValue{font-size:22px}
+ .breakdown{margin-top:17px;padding:13px 12px 14px;border-width:2px;border-radius:13px;box-shadow:3px 4px 0 var(--yellow)}
+ .breakhead{gap:3px;margin-bottom:10px}
+ .breakhead strong{font-size:15px}.breakhead span{font-size:11px}
+ .readouts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .stat{padding:8px 9px;border-radius:9px}
+ .statTitle{font-size:12px}.statLine{font-size:12px}
+ .note{font-size:12px}
+}
+@media(max-width:360px){
+ .brandEyebrow{font-size:7px}.wordmark{font-size:16px}.siteLink{font-size:11px;padding:8px}
+ h1{font-size:36px}
+ .tab{font-size:12px}
+ .resultValue{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 <main class="page">
- <div class="brand"><a href="https://ohmmygod.it" class="wordmark" target="_blank" rel="noopener">OMG <b>Virtual Lab</b></a><span class="brandhint">Elettroni e dintorni</span></div>
+ <div class="brand">
+  <a href="https://ohmmygod.it" class="brandLockup" target="_blank" rel="noopener" aria-label="OMG Virtual Lab – Elettroni e dintorni">
+   <span class="brandIcon" aria-hidden="true"><span>OMG!</span></span>
+   <span class="brandWords"><span class="brandEyebrow">ELETTRONI E DINTORNI</span><span class="wordmark">OMG Virtual Lab</span></span>
+  </a>
+  <a class="siteLink" href="https://ohmmygod.it" target="_blank" rel="noopener">ohmmygod.it <span aria-hidden="true">↗</span></a>
+ </div>
  <section class="lab" id="omgApp" aria-label="Simulatore resistenze serie parallelo e misto">
-  <div class="header"><div><span class="tag">OMG · Laboratorio interattivo</span><h1><span class="fullTitle">Resistenze: </span>Serie, parallelo e misto</h1></div><button id="reset" class="reset" type="button" aria-label="Ripristina i valori iniziali">↺ <span class="resetText">Ripristina</span></button></div>
-  <p class="lead">I percorsi colorati mostrano come la corrente si divide nei rami. Cambia le resistenze per confrontarla.</p>
-  <div class="tabs" role="group" aria-label="Scegli il tipo di circuito">
-   <button type="button" class="tab" data-mode="series" aria-pressed="true">Serie</button>
-   <button type="button" class="tab" data-mode="parallel" aria-pressed="false">Parallelo</button>
-   <button type="button" class="tab" data-mode="mixed" aria-pressed="false">Misto</button>
+  <div class="header"><div>
+   <span class="tag">ELETTRONICA · LABORATORIO INTERATTIVO</span>
+   <h1>Resistenze in <span class="accent">serie, parallelo e misto</span><span class="titleDot">.</span></h1>
+   <p class="lead">Esplora tre configurazioni, modifica le resistenze e osserva in tempo reale come cambiano correnti, tensioni e resistenza equivalente.</p>
+  </div></div>
+  <div class="modeHeader">
+   <span class="sectionKicker">SCEGLI IL CIRCUITO</span>
+   <div class="modeActions">
+    <div class="tabs" role="group" aria-label="Scegli il tipo di circuito">
+     <button type="button" class="tab" data-mode="series" aria-pressed="true">Serie</button>
+     <button type="button" class="tab" data-mode="parallel" aria-pressed="false">Parallelo</button>
+     <button type="button" class="tab" data-mode="mixed" aria-pressed="false">Misto</button>
+    </div>
+    <button id="reset" class="reset" type="button" aria-label="Ripristina i valori iniziali" title="Ripristina i valori iniziali">↺ <span class="resetText">Ripristina</span></button>
+   </div>
   </div>
   <div class="circuit"><div class="svgStage"><svg id="circuitSVG" viewBox="0 0 960 380" role="img" aria-label="Schema elettrico semplificato: correnti rappresentate da colori e punti animati">
     <g id="wires"></g><g id="movingDots"></g><g id="symbols"></g><g id="texts"></g>
   </svg></div><div class="share" id="share" hidden><span id="shareTitle">Divisione della corrente</span><div class="track"><span class="segment" id="seg1" style="background:var(--orange)"></span><span class="segment" id="seg2" style="background:var(--turquoise)"></span></div><span class="shareLegend" id="shareLabels"></span></div></div>
+  <div class="controlsHeader"><span class="sectionKicker">REGOLA I COMPONENTI</span><span class="helperText">Trascina gli slider o scegli l’alimentazione</span></div>
   <div class="controlStrip" id="controlStrip" aria-label="Regolazione dei componenti">
    <div class="resControl" data-index="0"><div class="controlHead"><label for="res1" style="color:var(--orange)">R₁</label><output id="out1">100 Ω</output></div><input id="res1" type="range" min="100" max="1000" step="10" value="100"></div>
    <div class="resControl" data-index="1"><div class="controlHead"><label for="res2" style="color:var(--turquoise)">R₂</label><output id="out2">220 Ω</output></div><input id="res2" type="range" min="100" max="1000" step="10" value="220"></div>

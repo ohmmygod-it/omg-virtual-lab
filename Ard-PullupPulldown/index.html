@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f7f7f5" />
+  <meta name="theme-color" content="#f9f6ec" />
   <title>Pull-up & Pull-down | OMG Virtual Lab</title>
   <style>
     :root{
@@ -189,22 +189,201 @@
     .schematic .circ-footer-muted{font:750 13px Inter,Arial,sans-serif;fill:#718692}
     .schematic [data-toggle-button]:hover rect:first-child,.schematic [data-toggle-button]:focus rect:first-child{opacity:.28}
     @media(max-width:700px){.schematic-box{overflow-x:auto}.schematic{min-width:610px}.schematic-box:after{content:'Scorri lo schema per esplorarlo →';position:sticky;left:12px;display:block;width:max-content;background:#f5f8f9;color:#6a7c88;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:750;margin:0 0 6px 8px}}
+
+    /* === OMG VIRTUAL LAB / IDENTITÀ CONDIVISA ===
+       Solo presentazione: le funzioni JS e i calcoli della simulazione restano invariati. */
+    :root{
+      --ink:#20242c; --muted:#627483; --subtle:#dce5e9; --paper:#f8f9f7;
+      --white:#fff; --coral:#ed5f59; --yellow:#f8d859; --teal:#16968e;
+      --green:#418d55; --blue:#667c89; --shadow:0 5px 20px rgba(26,43,48,.045);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      min-width:320px; color:var(--ink); background-color:#f6f9f7;
+      background-image:radial-gradient(ellipse 66% 50% at 0% 3%,rgba(255,225,162,.62) 0%,rgba(255,240,204,.20) 59%,transparent 100%),
+        radial-gradient(ellipse 60% 70% at 100% 18%,rgba(203,243,232,.63) 0%,transparent 75%),
+        linear-gradient(115deg,#fff8ea 0%,#fffefd 45%,#ecf9f5 100%);
+      background-attachment:fixed; font-size:14px;
+      font-family:Inter,"Avenir Next",Avenir,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    .wrap{max-width:1490px;padding:25px clamp(17px,4.3vw,68px) 48px}
+    .omg-top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 39px}
+    .omg-identity{display:inline-flex;align-items:center;gap:20px;text-decoration:none;color:var(--ink);min-width:0}
+    .logo-stack{position:relative;width:59px;height:65px;flex:none;display:block;transform:rotate(-7deg)}
+    .logo-stack:before,.logo-stack:after{position:absolute;content:"";border:4px solid #222731;border-radius:6px;width:56px;height:59px}
+    .logo-stack:before{background:#4ac4bf;left:9px;top:7px;transform:rotate(10deg)}
+    .logo-stack:after{background:#ffdf68;left:0;top:0}
+    .logo-front{position:absolute;z-index:1;left:3px;top:21px;font-size:22px;font-weight:1000;letter-spacing:-.1em;transform:rotate(-4deg);color:#20242c;text-shadow:1.2px 1.2px white,-.6px -.6px white}
+    .identity-text{display:flex;flex-direction:column;gap:3px;line-height:1.1}
+    .identity-overline{color:#627481;letter-spacing:.16em;font-size:13px;font-weight:900}
+    .identity-text strong{font-size:clamp(19px,2.2vw,30px);font-weight:950;letter-spacing:-.052em}
+    .site-link{display:inline-flex;align-items:center;gap:8px;flex:none;text-decoration:none;color:var(--ink);font-size:20px;font-weight:950;letter-spacing:-.045em;padding:12px 23px;border:3px solid var(--ink);border-radius:999px;background:#fff;box-shadow:5px 6px 0 var(--yellow);transition:transform .15s ease,box-shadow .15s ease}
+    .site-link:hover{transform:translateY(-2px);box-shadow:6px 8px 0 var(--yellow)}
+    .site-link:focus-visible,.omg-identity:focus-visible{outline:3px solid var(--teal);outline-offset:5px}
+    .hero{display:block;margin-bottom:27px}
+    .hero>div{min-width:0}
+    .kicker{display:inline-flex;gap:0;align-items:center;width:max-content;max-width:100%;background:var(--yellow);border:3px solid var(--ink);color:var(--ink);border-radius:8px;padding:9px 15px;margin:0 0 12px;font-size:12px;font-weight:950;letter-spacing:.10em;line-height:1.1;transform:rotate(-1.6deg);box-shadow:1px 2px 0 rgba(32,36,44,.05)}
+    .kicker:before{display:none}
+    h1{font-size:clamp(42px,5.25vw,80px);font-weight:1000;letter-spacing:-.072em;line-height:1.07;margin:10px 0 13px;overflow-wrap:normal}
+    h1 em{color:var(--teal);font-style:normal}
+    .title-amp{color:var(--ink)}
+    .hero-dot{color:var(--coral)}
+    .hero-desc{max-width:1010px;color:#5e7383;font-size:clamp(14px,1.35vw,18px);line-height:1.58;margin:0}
+    .step-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+    .section-label{color:#657a89;font-size:12px;font-weight:950;letter-spacing:.115em}
+    .step-summary{font-size:12px;color:#738592;font-weight:750}
+    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:7px;gap:6px;background:#fff;border:3px solid var(--ink);border-radius:21px;box-shadow:5px 6px 0 var(--yellow);margin:0 0 25px}
+    .step,.step.active{border:0;border-radius:13px;box-shadow:none;min-height:74px;padding:12px;display:flex;align-items:center;gap:10px;transition:background .12s ease,color .12s ease;transform:none}
+    .step{background:#fff;color:#3f4d57}
+    .step:hover:not(.active){background:#f1f6f5;box-shadow:none;transform:none}
+    .step.active{background:var(--ink);color:#fff}
+    .step-no{background:#edf1f2;color:#64737e;border:0;font-size:12px;font-weight:950;border-radius:9px;width:36px;height:36px}
+    .step.active .step-no{background:var(--yellow);color:var(--ink)}
+    .step .step-name{color:inherit;font-size:14px;letter-spacing:-.025em;font-weight:950}
+    .step .step-sub{color:#7b8c96;font-size:11px;line-height:1.3;font-weight:650}
+    .step.active .step-sub{color:#c2cbd1}
+    .work-grid{grid-template-columns:minmax(0,1.06fr) minmax(420px,.94fr);gap:18px}
+    .panel,.concept,.mini-panel,.quiz{border:2px solid #d3dde1;border-radius:19px;box-shadow:var(--shadow);background:#fff}
+    .panel-pad{padding:20px 21px}
+    .section-head{margin-bottom:14px}
+    .section-head h2{font-size:16px;font-weight:950;letter-spacing:-.035em}
+    .section-head .dot{width:10px;height:10px;background:var(--teal);border:2px solid var(--ink)}
+    .microtag{background:#fff8df;border:1.5px solid #e8d6a0;color:#67604d;font-weight:950;letter-spacing:.075em;font-size:10px;border-radius:7px}
+    .schematic-box{border:1.5px solid #dce5e9;background:linear-gradient(145deg,#fff,#f6faf9);border-radius:14px}
+    .schematic-box:before{opacity:.13}
+    .button-row{align-items:center;gap:14px}
+    .press{background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);box-shadow:3px 4px 0 var(--ink);border-radius:12px;font-weight:950;padding:12px 17px}
+    .press:hover{transform:translateY(-2px);box-shadow:4px 6px 0 var(--ink)}
+    .press.pressed{background:#b6e7d9;box-shadow:1px 2px 0 var(--ink)}
+    .btn-state{font-size:12px}
+    .btn-state b{font-weight:950}
+    .state-output{gap:10px;margin-top:16px}
+    .state-tile{background:#f7faf9;border:1.5px solid #e0e8e7;border-radius:12px;padding:12px 13px}
+    .state-tile .sm{color:#718594;font-weight:950;letter-spacing:.065em}
+    .state-tile .big{font-weight:1000;font-size:21px}
+    .lab-tip{background:#edfaf6;border-left:5px solid var(--teal);padding:14px 16px;border-radius:7px 11px 11px 7px}
+    .lab-tip strong{color:#147c75;font-weight:950}
+    .scope{border:2px solid #1b3442;border-radius:13px;background:#142833}
+    .scope-insight{border:1.5px solid #cfe3e0;background:#f1faf8;color:#3d6466;border-radius:11px}
+    .scope-caption{gap:10px}
+    .chart-clear{border:2px solid var(--ink);background:#fff;border-radius:10px;padding:7px 12px;color:var(--ink);font-weight:900;box-shadow:2px 3px 0 var(--yellow)}
+    .chart-clear:hover{background:#fffae9}
+    .controls{margin-top:17px;border-top:2px solid #ebeff1;padding-top:17px}
+    .range-label,.resistance-wrap label{color:#334752;font-size:12px;font-weight:950}
+    .range-label b{color:#bd584f;font-weight:950}
+    input[type=range]{accent-color:var(--teal)}
+    input[type=range]::-webkit-slider-thumb{cursor:grab}
+    .resistance-wrap select{border:2px solid #b8c8cc;background:#fff;border-radius:11px;color:var(--ink);font-weight:900;min-height:39px}
+    .controls-note{border:1.5px solid #f0ddab;background:#fff9e9;border-radius:11px}
+    .concept{padding:19px 22px;margin-top:18px}
+    .concept-head h2{font-size:20px}
+    .tag{border:1.5px solid #bcdbd6;background:#eff9f5;color:#21867e;border-radius:8px}
+    .resistor-explainer{border:2px solid #ecd8a4;background:#fff9e8;border-radius:16px;margin-top:17px;padding:17px 21px}
+    .resistor-explainer strong{font-size:15px;font-weight:950}
+    .resistor-formula{background:#fff0be;border:1.5px solid #e3c875;border-radius:10px;color:#735a2c}
+    .bottom-grid{gap:18px;margin-top:18px}
+    .mini-panel{padding:20px 22px}
+    .mini-panel h3{font-size:16px;font-weight:950}
+    .copy{border:2px solid var(--ink);color:var(--ink);border-radius:10px;background:#fff;box-shadow:2px 3px 0 var(--yellow);font-weight:950}
+    .copy:hover{background:#fff9e5}
+    pre{border-radius:12px;background:#172934}
+    .quiz{margin-top:18px;grid-template-columns:190px minmax(0,1fr);gap:18px;padding:20px 23px}
+    .quiz-kicker{color:#5b7b85;font-weight:950}
+    .quiz h3{font-size:23px}
+    .answer{background:#fff;border:2px solid #ccd8dc;border-radius:11px;font-weight:950;padding:10px 15px;color:var(--ink)}
+    .answer:hover:not(:disabled){border-color:var(--teal);background:#f2faf7}
+    .answer.correct{border-color:var(--green)}
+    .answer.wrong{border-color:var(--coral)}
+    .quiz-next{background:var(--ink);border:2px solid var(--ink);border-radius:9px}
+    footer{margin-top:28px}
+    @media(max-width:1100px){
+      .work-grid{grid-template-columns:1fr}
+      .bottom-grid{grid-template-columns:1fr 1fr}
+      .scope{min-height:310px}
+    }
+    @media(max-width:770px){
+      .wrap{padding:19px 18px 38px}
+      .omg-top{margin-bottom:33px}
+      .site-link{font-size:16px;padding:10px 15px;box-shadow:3px 4px 0 var(--yellow)}
+      .identity-overline{font-size:10px;letter-spacing:.11em}
+      .identity-text strong{font-size:21px}
+      .logo-stack{transform:scale(.83) rotate(-7deg);transform-origin:left center;width:52px}
+      .omg-identity{gap:8px}
+      .hero{margin-bottom:22px}
+      h1{font-size:clamp(39px,7.6vw,65px)}
+      .hero-desc{font-size:15px}
+      .step-summary{display:none}
+      .steps{grid-template-columns:1fr 1fr;padding:6px}
+      .step,.step.active{min-height:67px;padding:10px}
+      .panel-pad{padding:16px}
+      .bottom-grid{grid-template-columns:1fr}
+      .quiz{grid-template-columns:1fr}
+      .state-tile .big{font-size:18px}
+      .schematic-box{overflow-x:auto}
+      .schematic{min-width:610px}
+    }
+    @media(max-width:520px){
+      .wrap{padding:18px 12px 34px}
+      .omg-top{align-items:flex-start;gap:12px;margin-bottom:34px}
+      .logo-stack{transform:scale(.68) rotate(-7deg);width:42px;height:49px}
+      .omg-identity{gap:4px}
+      .identity-overline{font-size:9px;max-width:160px;letter-spacing:.07em}
+      .identity-text strong{font-size:18px}
+      .site-link{font-size:12px;padding:9px 10px;border-width:2px;white-space:nowrap}
+      .kicker{font-size:9px;padding:8px 9px;letter-spacing:.075em}
+      h1{font-size:clamp(38px,9.5vw,48px);line-height:1.05;letter-spacing:-.065em}
+      .hero-desc{font-size:14px;line-height:1.48}
+      .step-header{margin-bottom:9px}
+      .section-label{font-size:10px}
+      .steps{margin-bottom:19px}
+      .step,.step.active{gap:7px;padding:9px 8px}
+      .step-no{width:27px;height:30px;font-size:10px}
+      .step .step-name{font-size:12px}
+      .step .step-sub{font-size:10px}
+      .work-grid{gap:12px}
+      .section-head h2{font-size:14px}
+      .microtag{font-size:8px;letter-spacing:0}
+      .state-output{grid-template-columns:1fr 1fr;gap:7px}
+      .state-tile:last-child{grid-column:1/-1}
+      .state-tile{padding:10px}
+      .state-tile .big{font-size:18px}
+      .controls{grid-template-columns:1fr;gap:12px}
+      .resistance-wrap{min-width:0}
+      .resistor-formula{width:100%;text-align:center}
+      .concept{padding:17px}
+      .concept-head{display:block}
+      .tag{display:inline-block;margin-top:12px}
+      .chart-clear{font-size:10px}
+      .scope-caption{font-size:10px}
+    }
+    @media(max-width:370px){
+      .identity-overline{font-size:8px}
+      .identity-text strong{font-size:15px}
+      .site-link{font-size:11px;padding:8px}
+      h1{font-size:36px}
+      .step .step-name{font-size:11px}
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <header class="hero">
-      <div>
-        <div class="kicker">OMG Virtual Lab · Elettronica e componenti</div>
-        <h1>Pull-<em>up</em> & Pull-<em>down</em></h1>
-        <p class="hero-desc">Perché un pin Arduino può leggere HIGH e LOW «da solo»? Scopri i disturbi, aggiungi una resistenza e osserva come cambia il segnale.</p>
-      </div>
-      <div class="brand" aria-label="ohmmygod.it">
-        <span class="brand-symbol" aria-hidden="true"></span>
-        <span class="brand-text"><b>ohmmygod.it</b><small>virtual lab</small></span>
-      </div>
+    <header class="omg-top" aria-label="Intestazione OMG Virtual Lab">
+      <a class="omg-identity" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="OMG Virtual Lab, visita ohmmygod.it">
+        <span class="logo-stack" aria-hidden="true"><span class="logo-front">OMG!</span></span>
+        <span class="identity-text"><span class="identity-overline">ELETTRONI E DINTORNI</span><strong>OMG Virtual Lab</strong></span>
+      </a>
+      <a class="site-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it <span aria-hidden="true">↗</span></a>
     </header>
 
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <div class="kicker">ELETTRONICA · LABORATORIO INTERATTIVO</div>
+        <h1 id="page-title">Pull-up <span class="title-amp">&</span> <em>pull-down</em><span class="hero-dot">.</span></h1>
+        <p class="hero-desc">Perché un pin Arduino può leggere HIGH e LOW «da solo»? Osserva le interferenze su un ingresso flottante, inserisci una resistenza e scopri come si stabilizza il segnale.</p>
+      </div>
+    </section>
+
+    <div class="step-header"><span class="section-label">SCEGLI LA CONFIGURAZIONE</span><span class="step-summary">4 circuiti · dal pin flottante al pull-up interno</span></div>
     <nav class="steps" aria-label="Le quattro tappe del laboratorio">
       <button class="step active" data-mode="floating" aria-current="step"><span class="step-no">01</span><span><span class="step-name">Pin flottante</span><span class="step-sub">Senza resistenza</span></span></button>
       <button class="step" data-mode="down"><span class="step-no">02</span><span><span class="step-name">Pull-down</span><span class="step-sub">Resistenza verso GND</span></span></button>

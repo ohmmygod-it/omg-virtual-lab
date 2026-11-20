@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#145a83">
+  <meta name="theme-color" content="#fff1d4">
   <meta name="description" content="OMG Virtual Lab: scopri come funziona un potenziometro come partitore di tensione, con due multimetri digitali e resistenze interattive.">
   <title>Il potenziometro · OMG Virtual Lab</title>
   <style>
@@ -24,22 +24,225 @@
        Su tablet e smartphone le dimensioni rimangono leggibili. */
     @media(min-width:851px){body{zoom:.85}}
     @media(max-width:850px){.bottom{grid-template-columns:1fr}.idea-strip{grid-template-columns:1fr}.intro{align-items:flex-start}.supply-pill{padding:9px}.page{width:min(100% - 24px,1200px)}.diagram-card{padding:17px 12px 11px}.control-card,.math-card{padding:20px}.diagram-footer{padding-inline:4px}.swipe-cue{display:block;text-align:right;color:var(--blue-dark);font-size:11px;font-weight:800;margin:5px 5px 0}}@media(max-width:550px){.intro{flex-direction:column;gap:12px}h1{letter-spacing:-1.2px}.top{margin-bottom:21px}.nav-tag{font-size:10px;padding:6px 9px}.brand-name{font-size:14px}.control-layout{gap:12px}.dial{width:98px;height:98px;flex-basis:98px;border-width:6px}.dial::before{height:17px;transform-origin:center 39px}.dial-num{font-size:29px}.quick{gap:5px}.quick button{min-width:0;flex:1;padding:7px 4px}.read-num{font-size:31px}.control-card,.math-card{padding:16px}.section-title{font-size:17px}.res-val{font-size:23px}.footer{flex-direction:column;align-items:flex-start}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+    /* =============================================================
+       OMG VIRTUAL LAB · Identità condivisa (restyling, solo CSS)
+       Il funzionamento dello schema e lo script restano invariati.
+       ============================================================= */
+    :root{
+      --navy:#22272f;
+      --blue:#148f8a;
+      --blue-dark:#117b77;
+      --cyan:#26b5c0;
+      --yellow:#ffda5c;
+      --red:#f06566;
+      --mint:#dcf5ed;
+      --ink:#22272f;
+      --muted:#657987;
+      --line:#293039;
+      --paper:#fff8e8;
+      --card:#ffffff;
+      --shadow:5px 6px 0 #ffda5c;
+    }
+    html{background:#f8f8f2}
+    body{
+      color:var(--ink);
+      background:
+        radial-gradient(ellipse at 0% 0%,rgba(255,219,137,.38) 0%,transparent 47%),
+        radial-gradient(ellipse at 99% 7%,rgba(202,246,231,.57) 0%,transparent 49%),
+        linear-gradient(111deg,#fff3dc 0%,#fffbf3 46%,#effaf7 100%);
+      background-attachment:scroll;min-height:100vh;
+      font-size:15px;
+    }
+    .page{width:min(1250px,calc(100% - 42px));padding:26px 0 42px}
+    .top{margin-bottom:25px;gap:22px}
+    .brand{gap:17px;min-width:0}
+    .brand-copy{display:flex;flex-direction:column;gap:2px}
+    .logo{
+      position:relative;flex:0 0 71px;width:71px;height:74px;
+      display:grid;place-items:center;background:transparent;border:0;box-shadow:none;
+      border-radius:0;transform:none;color:var(--ink);font-size:23px;
+      line-height:1;isolation:isolate;
+    }
+    .logo::before,.logo::after{content:"";position:absolute;border:4px solid #22272f;border-radius:6px}
+    .logo::before{width:58px;height:61px;top:8px;left:10px;transform:rotate(6deg);background:#51c8c3;z-index:-2}
+    .logo::after{width:58px;height:61px;top:1px;left:2px;transform:rotate(-8deg);background:#ffda5c;z-index:-1}
+    .logo-letters{position:relative;z-index:1;transform:rotate(-8deg);font-size:23px;font-weight:1000;letter-spacing:-2.7px;text-shadow:1.3px 1.3px 0 #fff,-1px -1px 0 #fff}
+    .brand-sub{color:#667c89;font-size:13px;font-weight:950;line-height:1.3;letter-spacing:2.35px}
+    .brand-name{color:var(--ink);font-size:24px;font-weight:950;line-height:1.12;letter-spacing:-1px}
+    .nav-tag{
+      flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+      background:#fff;border:3px solid #22272f;border-radius:999px;
+      box-shadow:4px 5px 0 var(--yellow);padding:12px 20px;
+      color:var(--ink);font-size:16px;letter-spacing:-.4px;font-weight:900;
+      text-decoration:none;transition:transform .15s,box-shadow .15s;
+    }
+    .nav-tag:hover{transform:translateY(-2px);box-shadow:4px 7px 0 var(--yellow)}
+    .nav-tag:active{transform:translateY(2px);box-shadow:2px 2px 0 var(--yellow)}
+    .intro{align-items:flex-end;margin-bottom:22px;gap:25px}
+    .intro-copy{min-width:0}
+    .eyebrow{
+      display:inline-block;align-items:initial;gap:0;
+      padding:9px 13px 7px;border:3px solid #242a31;border-radius:8px;
+      background:var(--yellow);color:#22272f;transform:rotate(-1.5deg);
+      font-size:11px;font-weight:950;letter-spacing:1.6px;line-height:1.25;
+      box-shadow:1px 2px 0 rgba(35,41,49,.1);margin:0 0 9px 2px;
+    }
+    .eyebrow::before{display:none}
+    h1{font-size:clamp(43px,5.15vw,70px);font-weight:950;color:var(--ink);letter-spacing:-3.5px;line-height:1.04;margin:9px 0 12px}
+    h1 em{color:#16978e;font-style:normal}
+    .title-dot{color:#f06566}
+    .subtitle{color:#5e7380;font-size:16px;max-width:785px;line-height:1.55}
+    .subtitle strong{color:#283039}
+    .supply-pill{
+      flex-shrink:0;background:#fff;border:2.5px solid #22272f;
+      border-radius:16px;box-shadow:4px 4px 0 var(--yellow);
+      padding:13px 15px;color:var(--ink);font-size:11px;font-weight:950;
+      letter-spacing:.7px;line-height:1.4;
+    }
+    .supply-pill strong{display:inline-block;color:#147f79;letter-spacing:-.8px;font-size:23px;line-height:1.2}
+    .tiny-dot{background:#2bb890;box-shadow:0 0 0 4px #ddf5eb}
+    .card{background:#fff;border:2.5px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}
+    .diagram-card{padding:19px 23px 10px}
+    .section-title{color:#252b32;font-weight:900;font-size:17px;letter-spacing:-.4px}
+    .section-id{display:inline-block;color:#6c7f8c;font-size:10px;letter-spacing:1.3px;font-weight:950;margin-right:11px}
+    .hint{color:#677b88}
+    .legend span{color:#5d7381;font-weight:750}
+    .swatch{border:1px solid rgba(35,41,49,.3)}
+    .diagram .wire{stroke:#81929c}
+    .diagram .terminal{stroke:#27323d}
+    .diagram .meter{stroke:#202a33}
+    .diagram .node-label{fill:#22272f}
+    .diagram-footer{border-top:1.5px solid #e9edec;color:#637682}
+    .diagram-footer strong{color:var(--ink)}
+    .bottom{gap:17px;margin-top:17px}
+    .control-card,.math-card{padding:22px}
+    .dial{
+      border:8px solid #f5e2a2;background:radial-gradient(circle at 39% 25%,#fff 0%,#f8f4e7 100%);
+      box-shadow:inset 0 0 0 2.5px #26323a,3px 4px 0 #ffda5c;
+    }
+    .dial-num{color:var(--ink)}
+    .dial-caption{color:#667987}
+    .slider-top{color:var(--ink)}
+    .slider-top span:last-child{color:var(--blue-dark)}
+    .range{height:13px;background:linear-gradient(to right,#1bb5b8 0%,#1bb5b8 var(--fill,50%),#e1e8e7 var(--fill,50%),#e1e8e7 100%)}
+    .range::-webkit-slider-thumb{width:30px;height:30px;border:4px solid #232831;background:#fff;box-shadow:3px 3px 0 var(--yellow)}
+    .range::-moz-range-thumb{width:22px;height:22px;border:4px solid #232831;background:#fff;box-shadow:3px 3px 0 var(--yellow)}
+    .quick button{
+      background:#fff;border:2px solid #293039;border-radius:11px;
+      color:#44525b;font-size:12px;font-weight:900;padding:7px 11px;
+      box-shadow:2px 3px 0 #ffda5c;
+    }
+    .quick button:hover{border-color:#232831;background:#fff8dc}
+    .quick button.active{background:#22272f;color:white;border-color:#22272f;box-shadow:2px 3px 0 var(--yellow)}
+    .resistance-select{border-top:1.5px solid #e6e9e7;color:var(--ink)}
+    .resistance-select select{
+      color:var(--ink);background:#fff;border:2px solid #293039;border-radius:12px;
+      padding:9px 30px 9px 12px;font-weight:900;box-shadow:3px 3px 0 var(--yellow);
+    }
+    .res-grid{gap:12px}
+    .res-item{background:#eaf9f8;border:2px solid #9dd9d6;border-radius:14px}
+    .res-item.right{background:#fff8df;border:2px solid #f2df9e}
+    .res-name{color:#557480;font-weight:800}
+    .res-val{color:#117e7a}
+    .res-item.right .res-val{color:#a57714}
+    .readout{background:#eaf9f8;border:2px solid #9dd9d6;border-radius:14px}
+    .readout.b{background:#fff8df;border:2px solid #f2df9e}
+    .read-label{color:#496b75}
+    .readout.b .read-label{color:#876b2b}
+    .read-num{color:#117e7a}
+    .readout.b .read-num{color:#a57714}
+    .equation{background:#fafbfa;border:1.5px solid #e1e7e5;border-radius:13px}
+    .equation .introline{color:#687c88;letter-spacing:.6px}
+    .equation .formula{color:var(--ink)}
+    .formula b{color:#128981}
+    .equation .complement{color:#557582}
+    .current{color:#607681}
+    .current strong{color:var(--ink)}
+    .idea{border:2px solid #273039;border-radius:15px;box-shadow:3px 4px 0 #ffda5c;padding:16px;background:#fff}
+    .idea .number{color:var(--ink);background:#ffda5c;border:1.5px solid #273039;border-radius:7px}
+    .idea strong{color:var(--ink);font-weight:900}
+    .idea p{color:#607380}
+    .footer{margin-top:24px;color:#667b87}
+    .footer a{color:#117f79}
+    /* Le dimensioni rimangono al 85% su desktop: è la preferenza già impostata. */
+    @media(min-width:851px){body{zoom:1}.page{zoom:.85}}
+    @media (max-width:1000px) and (min-width:851px){
+      h1{font-size:clamp(38px,5vw,58px)}
+      .supply-pill{padding:9px 12px}
+    }
+    @media (max-width:850px){
+      .page{width:min(100% - 26px,1250px);padding-top:18px}
+      .top{margin-bottom:23px}
+      .logo{flex-basis:63px;width:63px;height:68px}
+      .logo::before,.logo::after{width:52px;height:55px}
+      .logo-letters{font-size:21px}
+      .brand-sub{font-size:11px;letter-spacing:1.55px}
+      .brand-name{font-size:20px}
+      .nav-tag{font-size:13px;padding:9px 14px;border-width:2.5px}
+      .intro{gap:14px}
+      h1{font-size:clamp(36px,6.2vw,57px);letter-spacing:-2px}
+      .subtitle{font-size:14px}
+      .diagram-card{padding:17px 12px 11px}
+      .control-card,.math-card{padding:20px}
+      .swipe-cue{color:#127d77}
+    }
+    @media (max-width:550px){
+      .top{gap:9px;align-items:center}
+      .brand{gap:9px}
+      .logo{width:49px;height:58px;flex-basis:49px}
+      .logo::before{width:41px;height:44px;top:8px;left:6px;border-width:3px}
+      .logo::after{width:41px;height:44px;top:2px;left:0;border-width:3px}
+      .logo-letters{font-size:17px;letter-spacing:-2px}
+      .brand-sub{font-size:8px;letter-spacing:.85px}
+      .brand-name{font-size:15px;letter-spacing:-.5px}
+      .nav-tag{font-size:11px;padding:7px 10px;box-shadow:2px 3px 0 var(--yellow);white-space:nowrap}
+      .eyebrow{font-size:9px;letter-spacing:1.05px;padding:7px 9px 6px}
+      h1{font-size:clamp(32px,8.5vw,45px);letter-spacing:-1.8px;margin-top:12px}
+      .intro{align-items:flex-start;gap:14px}
+      .supply-pill{font-size:10px;padding:8px 12px;box-shadow:3px 3px 0 var(--yellow)}
+      .supply-pill strong{font-size:20px}
+      .section-title{font-size:16px}
+      .section-id{font-size:9px;margin-right:7px;letter-spacing:.55px}
+      .legend{gap:9px}
+      .control-layout{gap:12px}
+      .dial{width:98px;height:98px;flex-basis:98px;border-width:6px}
+      .quick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+      .quick button{min-width:0;padding:6px 0;font-size:10px;white-space:nowrap}
+      .resistance-select{flex-wrap:wrap}
+      .resistance-select select{margin-left:auto}
+      .control-card,.math-card{padding:16px}
+      .read-num{font-size:30px}
+      .res-val{font-size:23px}
+    }
+    @media (max-width:370px){
+      .slider-top{flex-direction:column;align-items:flex-start;gap:3px}
+      .slider-top span:last-child{font-size:11px}
+      .range-labels{font-size:9px;gap:3px}
+      .range-labels span:nth-child(2){display:none}
+      .quick{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .brand-sub{font-size:7px;letter-spacing:.6px}
+      .brand-name{font-size:13px}
+      .nav-tag{font-size:10px;padding:6px 7px}
+      .logo{flex-basis:44px}
+    }
   </style>
 </head>
 <body>
   <main class="page">
     <header class="top">
-      <a class="brand" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="Visita OMG — Elettroni e dintorni">
-        <span class="logo" aria-hidden="true">OMG</span><span><span class="brand-name">OMG Virtual Lab</span><br><span class="brand-sub">ELETTRONI E DINTORNI</span></span>
+      <a class="brand" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="OMG Virtual Lab – visita ohmmygod.it">
+        <span class="logo" aria-hidden="true"><span class="logo-letters">OMG!</span></span>
+        <span class="brand-copy"><span class="brand-sub">ELETTRONI E DINTORNI</span><span class="brand-name">OMG Virtual Lab</span></span>
       </a>
-      <div class="nav-tag">CIRCUITI ED ELETTRONICA</div>
+      <a class="nav-tag" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it <span aria-hidden="true">↗</span></a>
     </header>
     <section class="intro">
-      <div><div class="eyebrow">Esperimento interattivo · 01</div><h1>Dentro il <em>potenziometro</em></h1><p class="subtitle">Sposta il cursore: i due multimetri misurano tensioni diverse, ma la loro somma rimane sempre <strong>5 V</strong>. Scopri perché.</p></div>
-      <div class="supply-pill" aria-label="Alimentazione del circuito: cinque volt continui"><span class="tiny-dot" aria-hidden="true"></span><span>Alimentazione<br><strong>5,00 V DC</strong></span></div>
+      <div class="intro-copy"><div class="eyebrow">ELETTRONICA · LABORATORIO INTERATTIVO</div><h1>Il <em>potenziometro</em><span class="title-dot">.</span></h1><p class="subtitle">Sposta il cursore: i due multimetri misurano tensioni diverse, ma la loro somma rimane sempre <strong>5 V</strong>. Scopri perché.</p></div>
+      <div class="supply-pill" aria-label="Alimentazione del circuito: cinque volt continui"><span class="tiny-dot" aria-hidden="true"></span><span>ALIMENTAZIONE<br><strong>5,00 V DC</strong></span></div>
     </section>
     <section class="card diagram-card" aria-label="Schema interattivo del potenziometro e due voltmetri">
-      <div class="section-head"><div class="section-title"><span class="section-id">01</span>Il circuito e i due multimetri</div><div class="legend"><span><i class="swatch cyan"></i>Tratto GND → cursore</span><span><i class="swatch yellow"></i>Tratto cursore → +5 V</span></div></div>
+      <div class="section-head"><div class="section-title"><span class="section-id">01 · SCHEMA INTERATTIVO</span>Il circuito e i due multimetri</div><div class="legend"><span><i class="swatch cyan"></i>Tratto GND → cursore</span><span><i class="swatch yellow"></i>Tratto cursore → +5 V</span></div></div>
       <div class="swipe-cue">Scorri lo schema verso destra per vedere il secondo multimetro →</div>
       <div class="diagram-wrap" role="region" aria-label="Schema elettrico con potenziometro e due voltmetri; scorrimento orizzontale su schermi piccoli" tabindex="0">
         <svg class="diagram" viewBox="0 0 1000 482" role="img" aria-labelledby="svg-title svg-desc" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +284,7 @@
     </section>
     <div class="bottom">
       <section class="card control-card" aria-labelledby="control-title">
-        <div class="section-head"><div id="control-title" class="section-title"><span class="section-id">02</span>Muovi il cursore</div><span class="hint">Trascina lo slider o il cursore sullo schema</span></div>
+        <div class="section-head"><div id="control-title" class="section-title"><span class="section-id">02 · REGOLAZIONE</span>Muovi il cursore</div><span class="hint">Trascina lo slider o il cursore sullo schema</span></div>
         <div class="control-layout">
           <div id="dial" class="dial" aria-hidden="true"><div id="dial-number" class="dial-num">50%</div><div class="dial-caption">POSIZIONE</div></div>
           <div class="slider-area"><div class="slider-top"><label for="position">Posizione del cursore</label><span id="position-text">50% verso +5 V</span></div><input id="position" class="range" type="range" min="0" max="100" step="1" value="50" aria-valuetext="50 per cento verso cinque volt"><div class="range-labels"><span>0% · GND</span><span>50%</span><span>100% · +5 V</span></div><div class="quick" id="presets" aria-label="Posizioni rapide"><button type="button" data-value="0">0%</button><button type="button" data-value="25">25%</button><button type="button" data-value="50" class="active">50%</button><button type="button" data-value="75">75%</button><button type="button" data-value="100">100%</button></div></div>
@@ -90,7 +293,7 @@
         <div class="res-grid"><div class="res-item"><div class="res-name">R₁ · GND → cursore</div><div class="res-val" id="r-left">5,00 kΩ</div></div><div class="res-item right"><div class="res-name">R₂ · cursore → +5 V</div><div class="res-val" id="r-right">5,00 kΩ</div></div></div><div class="small-note">R₁ + R₂ = <strong id="r-sum">10 kΩ</strong> in qualsiasi posizione.</div>
       </section>
       <section class="card math-card" aria-labelledby="results-title">
-        <div class="section-head"><div id="results-title" class="section-title"><span class="section-id">03</span>Leggi e calcola</div><span class="hint">Due tensioni complementari</span></div>
+        <div class="section-head"><div id="results-title" class="section-title"><span class="section-id">03 · MISURE</span>Leggi e calcola</div><span class="hint">Due tensioni complementari</span></div>
         <div class="readouts"><div class="readout"><div class="read-label">Multimetro A<br>V tra GND e W</div><div id="v-left" class="read-num" aria-live="off">2,50 <small>V</small></div></div><div class="readout b"><div class="read-label">Multimetro B<br>V tra W e +5 V</div><div id="v-right" class="read-num" aria-live="off">2,50 <small>V</small></div></div></div>
         <div class="equation"><div class="introline">PARTITORE DI TENSIONE · LEGGE DI OHM</div><div class="formula">V<sub>A</sub> = 5 × <span id="formula-left">5.000 / 10.000</span> = <b id="formula-a">2,50 V</b></div><div class="formula">V<sub>B</sub> = 5 × <span id="formula-right">5.000 / 10.000</span> = <b id="formula-b">2,50 V</b></div><div class="complement">V<sub>A</sub> + V<sub>B</sub> = <strong id="sum-voltage">5,00 V</strong> · sempre!</div></div>
         <div class="current"><span>Corrente nella pista resistiva<br><small>(voltmetri ideali, senza carico)</small></span><strong id="current">0,50 mA</strong></div>

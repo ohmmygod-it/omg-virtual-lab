@@ -22,17 +22,292 @@
 button{font:inherit}button:focus-visible,[tabindex]:focus-visible{outline:3px solid #1abbb5;outline-offset:3px}
 @media(max-width:930px){.workspace{grid-template-columns:1fr}.instrument{display:flex;flex-direction:column;align-items:center;padding:14px}.instrument .meter{width:290px}.instrument .readout{width:100%;max-width:550px}.instrument .actionrow{justify-content:center}.board{min-height:auto}.lcd-display{font-size:36px}}@media(max-width:610px){.app{padding:13px 10px 24px}.topbar h1{font-size:25px}.topbar p{font-size:12px}.brand{padding:7px 9px}.tabs{gap:5px}.tab{padding:10px 3px;font-size:11px;gap:3px;flex-direction:column;border-radius:9px}.tab .symbol{font-size:16px}.paneltop{padding:14px 13px 0}.paneltop h2{font-size:14px}.scope{font-size:9px}.board{margin:12px 8px 5px}.probebar{margin:4px 9px 11px;gap:6px}.probe{padding:8px 8px;font-size:11px;gap:5px}.probe .value{font-size:10px}.guide{flex-basis:100%;margin:0 0 3px}.controls{padding:12px 10px 15px}.mission{margin:10px 9px;padding:10px}.mission p{font-size:11px}.config{grid-template-columns:repeat(2,minmax(0,1fr))}.learning{grid-template-columns:1fr;gap:5px;padding:13px 14px}.learning-tag{font-size:10px}.board .device-label{font-size:17px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Challenge: stessa identita OMG, banco di prova a quattro rami */
+[hidden]{display:none!important}
+.tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tab.challenge-tab{background:#fff8e6;border-color:#efd69c;color:#795619}
+.tab.challenge-tab.active{background:var(--navy);border-color:var(--navy);color:white}
+.board.challenge-board{min-height:0;overflow-x:auto;scrollbar-color:#c2d6dc transparent}
+.board.challenge-board svg{min-width:740px;width:100%;height:auto}
+.board .ch-socket .point-outer{fill:#fff;stroke:#0c9390;stroke-width:3}
+.board .ch-socket .point-inner{fill:#008d8b}
+.board .ch-socket .point-letter{font-size:12px;font-weight:850}
+.board .ch-bridge{cursor:pointer;outline:none}
+.board .ch-bridge:focus .bridge-hit,.board .ch-bridge:hover .bridge-hit{stroke:#008d8b;fill:#e5f7f3}
+.board .bridge-hit{fill:#fff7e8;stroke:#e5c488;stroke-width:1.7}
+.board .bridge-wire{stroke:#d49838;stroke-width:5;fill:none;stroke-linecap:round}
+.board .bridge-gap{stroke:#cf786f;stroke-width:4;stroke-linecap:round}
+.board .ch-resistor{cursor:pointer;outline:none}
+.board .ch-resistor:hover .resistor-hit,.board .ch-resistor:focus .resistor-hit{fill:#eaf7f4;stroke:#32a9a0}
+.board .resistor-hit{fill:#f3f6fa;stroke:#c5d6df;stroke-width:1.5}
+.board .ch-component-label{font-size:14px;fill:#344f64;font-weight:900;text-anchor:middle}
+.board .ch-tiny{font-size:11px;fill:#6a8190;font-weight:750;text-anchor:middle}
+.board .ch-row-n{font-size:11px;fill:#008d8b;font-weight:900;text-anchor:middle}
+.challengebar{margin:0 17px 13px;border:1px solid #cfe5e1;background:#f8fcfb;border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;gap:9px}
+.challenge-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:space-between}
+.challenge-progress{font-weight:900;font-size:12px;color:#0a7773}
+.challenge-steps{display:flex;gap:5px;flex:1;min-width:130px}
+.challenge-steps span{flex:1;height:7px;border-radius:9px;background:#dce8e9}
+.challenge-steps span.done{background:#008d8b}.challenge-steps span.current{background:#f8bf49}
+.challenge-help{font-size:12px;line-height:1.5;color:#5a7282}
+.challenge-help.ok{color:#126c50;font-weight:800}.challenge-help.bad{color:#9d4740;font-weight:750}
+.challenge-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.challenge-buttons button{border:1px solid #cadde0;background:#fff;color:#2f5363;border-radius:9px;padding:9px 11px;font-size:12px;font-weight:850;cursor:pointer}
+.challenge-buttons button.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.challenge-buttons button:disabled{opacity:.45;cursor:not-allowed}
+.challenge-controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between;width:100%}
+.ch-power{border:1px solid #d8e4e7;border-radius:9px;padding:10px 12px;background:#fff;color:#6f5860;font-weight:850;cursor:pointer}
+.ch-power.on{background:#e4f6eb;border-color:#a8ddbd;color:#176647}
+.ch-explanation{font-size:11px;color:#607686;line-height:1.55;flex:1;min-width:200px}
+@media(max-width:610px){.tabs{gap:4px}.tab{font-size:10px;padding:9px 2px}.tab .symbol{font-size:15px}.board.challenge-board{margin:12px 8px 6px}.challengebar{margin:0 9px 10px}.challenge-steps{min-width:90px}}
+
+
+/* PCB diagnostica: maschera verde, piazzole reali e piste controllate dal modello elettrico */
+.board.pcb-board{min-height:0;overflow-x:auto;scrollbar-color:#9fc6bb transparent;background:#0c573e;border-color:#327c5a}
+.board.pcb-board svg{display:block;width:100%;min-width:770px;height:auto}
+.board .pcb-track{fill:none;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px #07331b85)}
+.board .pcb-track-fine{fill:none;stroke:#fff8d340;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.board .pcb-pad{cursor:pointer}
+.board .pcb-pad .point-outer{fill:#e5eaf0;stroke:#b7c6cf;stroke-width:3}
+.board .pcb-pad .point-inner{fill:#275846;stroke:none}
+.board .pcb-pad .point-letter{fill:#eff9e8;font-size:14px;font-weight:900;paint-order:stroke;stroke:#06412c;stroke-width:3px}
+.board .pcb-pad.red .point-outer{fill:#ffe4e0;stroke:#fa6861;stroke-width:4}
+.board .pcb-pad.red .point-inner{fill:#e04f49}
+.board .pcb-pad.black .point-outer{fill:#dce7f4;stroke:#1c344a;stroke-width:4}
+.board .pcb-pad.black .point-inner{fill:#24394a}
+.board .pcb-pad:hover .point-outer,.board .pcb-pad:focus .point-outer{stroke:#fff7a9;stroke-width:4}
+.board .pcb-fault{cursor:pointer;outline:none}
+.board .pcb-fault:hover .pcb-fault-hit,.board .pcb-fault:focus .pcb-fault-hit{fill:#ffffff25;stroke:#ecdc7a}
+.board .pcb-fault-hit{fill:#ffffff08;stroke:#d4e6bf3a;stroke-width:1.5;stroke-dasharray:4 5}
+.board .pcb-silk{font-weight:900;fill:#d2ecd9;letter-spacing:1px}
+.board .pcb-silk-minor{font-weight:700;fill:#b7d9c8}
+.pcb-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%}
+.pcb-controls .pill.on{background:#d6f5e9;border-color:#90d5be;color:#09664e}
+.pcb-guide{flex:1;min-width:220px;font-size:11px;line-height:1.45;color:#5f7982}
+@media(max-width:610px){.board.pcb-board{margin:12px 8px 6px}}
+
+/* -----------------------------------------------------------------------
+   OMG Virtual Lab | Identità condivisa (solo presentazione)
+   La logica originale dei circuiti, delle misure e delle sfide è invariata.
+   ----------------------------------------------------------------------- */
+:root{
+  --navy:#20252e;--navy2:#344452;--mint:#138f89;--mintlight:#e9f8f3;
+  --red:#ee615f;--yellow:#ffda5d;--paper:#fffdfa;--line:#d4dfdf;
+  --muted:#647584;--green:#185e43;--deep:#20252e;
+  --omg-ink:#20252e;--omg-teal:#138f89;--omg-gold:#ffda5d;--omg-coral:#f36561;
+}
+html{background:#fbf8ee}
+body{
+  min-height:100vh;
+  color:var(--omg-ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(ellipse 72% 62% at 0% 0%,#ffedc5 0%,transparent 74%),
+    radial-gradient(ellipse 72% 68% at 100% 3%,#e4f8f0 0%,transparent 80%),
+    linear-gradient(120deg,#fff8e9 0%,#fffdf7 47%,#effaf6 100%);
+  background-attachment:fixed;
+}
+.app{max-width:1540px;margin:0 auto;padding:27px 35px 38px}
+/* Brand and header */
+.omg-sitehead{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 36px}
+.omg-brand-lockup{display:flex;align-items:center;gap:15px;min-width:0}
+.omg-logo{width:70px;height:74px;flex:none;position:relative;isolation:isolate}
+.omg-logo:before,.omg-logo-face{content:"";position:absolute;width:59px;height:64px;border:4px solid var(--omg-ink);border-radius:6px}
+.omg-logo:before{background:#55bfbd;top:8px;left:10px;transform:rotate(7deg);z-index:0}
+.omg-logo-face{display:block;top:2px;left:2px;background:var(--omg-gold);transform:rotate(-7deg);z-index:1}
+.omg-logo strong{position:absolute;left:6px;top:27px;z-index:2;color:var(--omg-ink);font-size:23px;letter-spacing:-.12em;font-weight:1000;line-height:1;transform:rotate(-7deg);text-shadow:-1px -1px #fff,1px 1px #fff,1.6px -1.6px #fff}
+.omg-brand-eyebrow{font-size:clamp(10px,1vw,14px);font-weight:950;letter-spacing:.2em;color:#687783;margin-bottom:3px}
+.omg-brand-name{font-size:clamp(20px,2.15vw,29px);font-weight:950;letter-spacing:-.055em;line-height:1.08}
+.omg-site-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;text-decoration:none;color:var(--omg-ink);background:#fff;border:3px solid var(--omg-ink);border-radius:999px;min-height:49px;padding:8px 20px;font-weight:950;font-size:clamp(13px,1.4vw,18px);letter-spacing:-.035em;box-shadow:4px 5px 0 var(--omg-gold);transition:transform .15s,box-shadow .15s}
+.omg-site-link:hover{transform:translate(1px,2px);box-shadow:2px 3px 0 var(--omg-gold)}
+.omg-site-link span{margin-left:6px}
+/* Hero */
+.omg-hero{display:flex;align-items:end;justify-content:space-between;gap:22px;margin:0 0 26px}
+.omg-hero-copy{max-width:920px;min-width:0}
+.omg-sticker{display:inline-block;background:var(--omg-gold);border:2.6px solid var(--omg-ink);border-radius:8px;padding:8px 13px;color:var(--omg-ink);font-size:clamp(10px,1.05vw,14px);font-weight:950;letter-spacing:.09em;transform:rotate(-1.2deg);box-shadow:1px 2px 0 #20252e19;margin-bottom:17px}
+.omg-hero h1{font-size:clamp(45px,5.6vw,78px);letter-spacing:-.076em;line-height:1.02;font-weight:1000;margin:0 0 15px}
+.omg-hero h1 span{color:var(--omg-teal)}
+.omg-dot{font-style:normal;color:var(--omg-coral)}
+.omg-hero p{font-size:clamp(14px,1.35vw,18px);line-height:1.48;color:#627584;max-width:790px;margin:0;font-weight:500}
+.omg-activity{flex:none;display:flex;align-items:flex-end;flex-direction:column;gap:9px;padding-bottom:3px}
+.omg-section-label{font-size:12px;font-weight:950;letter-spacing:.125em;color:#798994;white-space:nowrap}
+.omg-segmented{border:3px solid var(--omg-ink);border-radius:18px;background:white;padding:5px;display:flex;align-items:stretch;gap:4px;box-shadow:4px 5px 0 var(--omg-gold)}
+.omg-segmented .omg-mode-btn,.omg-segmented .challenge-tab{position:static;min-width:115px;height:auto;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 16px;border:0;border-radius:11px;color:#5b6871;background:transparent;font-size:17px;font-weight:950;white-space:nowrap;box-shadow:none;cursor:pointer}
+.omg-segmented .omg-mode-btn.active,.omg-segmented .challenge-tab.active{color:white;background:var(--omg-ink);border-color:transparent;box-shadow:none}
+.omg-segmented .omg-mode-btn:not(.active):hover,.omg-segmented .challenge-tab:not(.active):hover{background:#fff7de;color:var(--omg-ink)}
+/* Measuring tabs */
+.omg-measure-bar{display:flex;align-items:center;gap:17px;flex-wrap:wrap;margin:0 0 21px}
+.omg-measure-bar .omg-section-label{flex:none}
+.omg-measure-tip{font-size:12px;color:#687985;font-weight:650;margin-left:auto;white-space:nowrap}
+.tabs{display:flex;align-items:stretch;grid-template-columns:none;gap:3px;margin:0;padding:5px;background:#fff;border:3px solid var(--omg-ink);border-radius:19px;box-shadow:4px 5px 0 var(--omg-gold);width:max-content;max-width:100%}
+.tabs .tab{min-width:0;border:0;border-radius:11px;padding:13px 16px;background:transparent;color:#5a6872;font-size:14px;white-space:nowrap;font-weight:900;box-shadow:none;display:flex;flex-direction:row;gap:8px}
+.tabs .tab:hover:not(.active){background:#fff7de;color:var(--omg-ink)}
+.tabs .tab.active{background:var(--omg-ink);color:#fff;box-shadow:none;border-color:transparent}
+.tabs .tab .symbol{font-size:18px;line-height:1;color:var(--omg-teal)}
+.tabs .tab.active .symbol{color:var(--omg-gold)}
+.omg-measure-bar.in-challenge .tabs{border-color:#546068;box-shadow:3px 4px 0 #ffe4a0}
+/* Main cards */
+.workspace{grid-template-columns:minmax(0,1fr) 344px;gap:17px;align-items:start}
+.panel{background:#fff;border:2px solid #252a31;border-radius:22px;box-shadow:5px 5px 0 #ffdc6699;overflow:hidden}
+.paneltop{padding:17px 20px 0;gap:8px;flex-wrap:wrap}
+.paneltop h2{font-size:19px;font-weight:950;letter-spacing:-.035em}
+.scope{background:#e4f5ef;color:#136e65;border:1px solid #abd8cb;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:900}
+.board{margin:14px 17px 8px;background:#f8fbfd;border:2px solid #dbe7e7;border-radius:15px;min-height:0}
+.board.pcb-board{background:#0c573e;border-color:#277755}
+.board.challenge-board{border-color:#c3dede}
+.probebar{margin:8px 17px 12px;gap:9px}
+.probe{background:#fff;border:2px solid #bbcbd0;border-radius:12px;padding:10px 11px;color:#364e60}
+.probe.selected{border-color:var(--omg-ink);box-shadow:3px 3px 0 var(--omg-gold)}
+.probe .value{font-size:10px}
+.guide{font-size:11px;line-height:1.5}
+.mission{background:#fff9e8;border:1.5px solid #e4cb91;border-radius:14px;margin:12px 17px;padding:13px 14px;gap:12px}
+.mission-icon{background:var(--omg-gold);color:var(--omg-ink);border:1.6px solid var(--omg-ink);border-radius:9px;font-weight:950}
+.mission strong{color:var(--omg-ink);font-size:12px;font-weight:950;letter-spacing:.01em}
+.mission p{font-size:12px;color:#5d7080}
+.controls{background:#fbfaf6;border-top:2px solid #ebebe3;padding:14px 18px 17px}
+.controls-title{font-size:11px;color:#73838d;letter-spacing:.12em}
+.controls-top{margin-bottom:11px}
+.field label{color:#536879;font-weight:850}
+.field input{border:2px solid #cddbdc;border-radius:10px;background:white;color:var(--omg-ink);padding-top:10px;padding-bottom:10px}
+.field input:focus{border-color:var(--omg-teal);box-shadow:0 0 0 3px #168e8c20}
+.pill,.switch-btn,.ch-power{background:#fff;border:2px solid #abbec4;border-radius:10px;color:var(--omg-ink);font-weight:900;box-shadow:2px 2px 0 #ffda5d77;transition:background .14s,transform .14s}
+.pill:hover,.switch-btn:hover,.ch-power:hover{background:#fff4d4}
+.pill.on{background:var(--omg-ink);color:#fff;border-color:var(--omg-ink)}
+.switch-btn.closed,.ch-power.on{background:#e4f6eb;border-color:#98d7b2;color:#175c42}
+/* Meter retains yellow physical instrument and dark rotary selector */
+.instrument{background:linear-gradient(152deg,#fffdfa 0%,#f7f9f7 100%);padding:15px 15px 17px}
+.instrument-title{letter-spacing:.15em;font-size:10px;color:#75848a;margin:0 0 12px}
+.meter{border-color:#c78e25;box-shadow:inset 0 2px 3px #fff8,0 12px 15px #213a4d22;max-width:290px}
+.meter-inner{background:#293948}
+.modepick.on{color:#ffda73}
+.readout{border:1.5px solid #cadbde;border-radius:13px;background:#fff;margin-top:14px;padding:13px}
+.readout-head{font-size:13px}
+.readout p{color:#506879}
+.actionrow{gap:7px;margin-top:11px}
+.act{border:1.6px solid #b4c7cc;border-radius:10px;background:#fff;padding:10px 12px;color:var(--omg-ink);font-weight:850;font-size:11px}
+.act.primary{background:#e3f5ee;border-color:#8dcebb;color:#126b60}
+.act:hover{background:#fff6df;border-color:#bca36a}
+/* Challenges, diagnostics, explanations */
+.challengebar{background:#f6fbf9;border:1.5px solid #b7d9d3;border-radius:14px;padding:13px;margin:0 17px 13px}
+.challenge-progress{color:#0e7771}
+.challenge-buttons button{background:#fff;border:1.7px solid #b4c7cc;border-radius:10px;font-weight:900;padding:10px 12px;color:var(--omg-ink)}
+.challenge-buttons button.primary{background:var(--omg-ink);border-color:var(--omg-ink);color:#fff}
+.challenge-buttons button:hover:not(:disabled){filter:brightness(.96)}
+.pcb-controls .pill.on{background:var(--omg-ink);border-color:var(--omg-ink);color:#fff}
+.learning{border:2px solid var(--omg-ink);border-radius:17px;box-shadow:4px 4px 0 #ffe6a2;margin-top:21px;padding:17px 21px;grid-template-columns:150px 1fr;gap:16px;background:#fff}
+.learning-tag{color:var(--omg-teal);letter-spacing:.14em}
+.learning-main h3{font-size:16px;color:var(--omg-ink);font-weight:950}
+.learning-main p{color:#536b78}
+.safety{line-height:1.65;margin-top:17px;color:#7b7180}
+.safety strong{color:#b44e4b}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--omg-teal);outline-offset:3px}
+@media(max-width:1200px){
+ .app{padding:23px 22px 30px}
+ .workspace{grid-template-columns:minmax(0,1fr) 330px}
+ .omg-measure-tip{display:none}
+ .omg-hero h1{font-size:clamp(43px,5.2vw,70px)}
+}
+@media(max-width:930px){
+ .omg-sitehead{margin-bottom:29px}
+ .omg-hero{align-items:start;gap:18px}
+ .omg-activity{padding-top:23px}
+ .omg-segmented .omg-mode-btn,.omg-segmented .challenge-tab{min-width:94px;font-size:14px;padding:11px}
+ .workspace{grid-template-columns:1fr}
+ .instrument{display:flex;flex-direction:column;align-items:center}
+ .instrument .meter{width:290px}
+ .instrument .readout{width:100%;max-width:580px}
+ .instrument .actionrow{justify-content:center}
+ .tabs{flex-wrap:wrap}
+}
+@media(max-width:650px){
+ .app{padding:15px 12px 25px}
+ .omg-sitehead{align-items:center;gap:8px;margin-bottom:26px}
+ .omg-logo{width:51px;height:56px}
+ .omg-logo:before,.omg-logo-face{width:44px;height:49px;border-width:3px;border-radius:5px}
+ .omg-logo:before{top:6px;left:7px}
+ .omg-logo-face{top:1px;left:1px}
+ .omg-logo strong{left:4px;top:21px;font-size:17px}
+ .omg-brand-lockup{gap:8px}
+ .omg-brand-eyebrow{font-size:8px;letter-spacing:.12em;margin-bottom:4px}
+ .omg-brand-name{font-size:18px;letter-spacing:-.045em}
+ .omg-site-link{min-height:38px;padding:6px 9px;font-size:11px;border-width:2px;box-shadow:3px 3px 0 var(--omg-gold)}
+ .omg-site-link span{margin-left:3px}
+ .omg-hero{flex-direction:column;align-items:stretch;gap:18px;margin-bottom:18px}
+ .omg-sticker{font-size:9px;letter-spacing:.055em;padding:7px 9px;border-width:2px;margin-bottom:13px}
+ .omg-hero h1{font-size:clamp(39px,10vw,58px);margin-bottom:11px}
+ .omg-hero p{font-size:13px;line-height:1.5}
+ .omg-activity{padding:0;align-items:flex-start;gap:8px}
+ .omg-segmented{border-width:2px;border-radius:15px;box-shadow:3px 3px 0 var(--omg-gold)}
+ .omg-segmented .omg-mode-btn,.omg-segmented .challenge-tab{font-size:14px;min-width:110px;padding:10px 13px}
+ .omg-section-label{font-size:10px}
+ .omg-measure-bar{gap:9px;margin-bottom:16px}
+ .tabs{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;border-radius:15px;border-width:2px;box-shadow:3px 3px 0 var(--omg-gold);padding:4px}
+ .tabs .tab{font-size:12px;min-height:40px;justify-content:center;padding:9px 5px;gap:5px;white-space:normal}
+ .tabs .tab .symbol{font-size:15px}
+ .panel{border-radius:16px;border-width:1.8px;box-shadow:3px 3px 0 #ffdc6680}
+ .paneltop{padding:13px 13px 0}
+ .paneltop h2{font-size:16px}
+ .scope{font-size:9px}
+ .board{margin:12px 8px 6px}
+ .probebar{margin:6px 9px 10px;gap:7px}
+ .probe{padding:8px;border-radius:10px}
+ .mission{margin:11px 9px 10px;padding:11px}
+ .mission p{font-size:11px}
+ .controls{padding:12px 10px 15px}
+ .config{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .challengebar{margin:0 9px 11px}
+ .instrument{padding:15px 10px}
+ .learning{grid-template-columns:1fr;gap:7px;border-radius:14px;padding:14px;margin-top:16px}
+ .learning-tag{font-size:10px}
+ .learning-main h3{font-size:14px}
+ .learning-main p{font-size:12px}
+ .pcb-guide{min-width:100%}
+}
+@media(max-width:365px){
+ .omg-brand-name{font-size:16px}
+ .omg-brand-eyebrow{font-size:7px}
+ .omg-site-link{font-size:10px;padding:5px 7px}
+ .omg-hero h1{font-size:38px}
+ .omg-segmented{width:100%}
+ .omg-segmented .omg-mode-btn,.omg-segmented .challenge-tab{flex:1;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){.omg-site-link,.pill,.switch-btn,.ch-power{transition:none}}
+
 </style>
 </head>
 <body>
 <main class="app" id="omgMultimeter">
-  <header class="topbar"><div><div class="eyebrow">OMG · LABORATORIO INTERATTIVO</div><h1>Il multimetro virtuale</h1><p>Misura tensione, corrente, resistenza e continuità. Qui puoi anche sbagliare senza bruciare il fusibile.</p></div><div class="brand"><b>OHM</b> MY GOD<span aria-hidden="true"> ⚡</span></div></header>
-  <nav class="tabs" aria-label="Scegli il tipo di esercizio">
-    <button type="button" class="tab active" data-scenario="volts"><span class="symbol">V⎓</span> Tensione</button>
-    <button type="button" class="tab" data-scenario="amps"><span class="symbol">A⎓</span> Corrente</button>
-    <button type="button" class="tab" data-scenario="ohms"><span class="symbol">Ω</span> Resistenza</button>
-    <button type="button" class="tab" data-scenario="cont"><span class="symbol">◖))</span> Continuità</button>
-  </nav>
+  <header class="omg-sitehead" aria-label="OMG Virtual Lab">
+    <div class="omg-brand-lockup">
+      <div class="omg-logo" aria-hidden="true"><span class="omg-logo-face"></span><strong>OMG!</strong></div>
+      <div class="omg-brand-copy"><div class="omg-brand-eyebrow">ELETTRONI E DINTORNI</div><div class="omg-brand-name">OMG Virtual Lab</div></div>
+    </div>
+    <a class="omg-site-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="omg-hero" aria-label="Presentazione laboratorio">
+    <div class="omg-hero-copy">
+      <span class="omg-sticker">ELETTRONICA · LABORATORIO INTERATTIVO</span>
+      <h1>Il multimetro <span>virtuale</span><b class="omg-dot">.</b></h1>
+      <p>Impara a misurare tensione, corrente, resistenza e continuità. Prova il multimetro e mettiti alla prova su circuiti e PCB.</p>
+    </div>
+    <div class="omg-activity">
+      <span class="omg-section-label">ATTIVITÀ</span>
+      <div class="omg-segmented" aria-label="Modalità di attività">
+        <button type="button" id="exploreMode" class="omg-mode-btn active" aria-pressed="true">Esplora</button>
+        <button type="button" class="tab challenge-tab" data-scenario="challenge" aria-pressed="false"><span aria-hidden="true">★</span> Challenge</button>
+      </div>
+    </div>
+  </section>
+  <div class="omg-measure-bar">
+    <span class="omg-section-label">SCEGLI LA MISURA</span>
+    <nav class="tabs" aria-label="Scegli la misura da esplorare">
+      <button type="button" class="tab active" data-scenario="volts"><span class="symbol">V⎓</span> Tensione</button>
+      <button type="button" class="tab" data-scenario="amps"><span class="symbol">A⎓</span> Corrente</button>
+      <button type="button" class="tab" data-scenario="ohms"><span class="symbol">Ω</span> Resistenza</button>
+      <button type="button" class="tab" data-scenario="cont"><span class="symbol">◖))</span> Continuità</button>
+    </nav>
+    <span class="omg-measure-tip">Scegli una funzione e collega i puntali</span>
+  </div>
   <div class="workspace">
     <section class="panel bench" aria-label="Banco di misura">
       <div class="paneltop"><h2 id="workTitle">Misura della tensione</h2><span class="scope" id="scopeLabel">Circuito alimentato</span></div>
@@ -43,6 +318,11 @@ button{font:inherit}button:focus-visible,[tabindex]:focus-visible{outline:3px so
         <span class="guide">Seleziona un puntale e tocca un contatto nello schema. Puoi anche trascinarlo sul contatto.</span>
       </div>
       <div class="mission"><div class="mission-icon">↗</div><div><strong id="missionTitle">MISSIONE · Trova la tensione totale</strong><p id="missionText">Imposta V⎓ e misura tra A e D. Quanto vale la caduta su R2?</p></div></div>
+      <div id="challengeBar" class="challengebar" hidden>
+        <div class="challenge-line"><span class="challenge-progress" id="chProgress">Sfida 1 / 6</span><div id="chSteps" class="challenge-steps" aria-hidden="true"></div><span class="challenge-progress" id="chScore">0 / 6</span></div>
+        <div id="chMessage" class="challenge-help" role="status" aria-live="polite">Imposta lo strumento e realizza la misura richiesta.</div>
+        <div class="challenge-buttons"><button class="primary" type="button" id="chCheck">Verifica misura</button><button class="primary" type="button" id="chNext" hidden>Prossima sfida →</button><button type="button" id="chHint">Un indizio</button><button type="button" id="chRestart">Nuova sessione</button></div>
+      </div>
       <div class="controls"><div class="controls-top"><span class="controls-title" id="controlTitle">Valori del circuito</span><span class="smallnote" id="controlNote">Modifica i valori e osserva la lettura</span></div><div id="config" class="config"></div></div>
     </section>
     <section class="panel instrument" aria-label="Multimetro digitale">
@@ -86,17 +366,296 @@ const meta={
  volts:{title:'Misura della tensione',scope:'Circuito alimentato',control:'Valori del circuito',note:'La tensione si misura in parallelo',learnTitle:'Il voltmetro si collega in parallelo',learn:'Con il selettore su V⎓ e il puntale rosso nella presa V Ω, scegli due nodi qualsiasi (A, B, C, D). La lettura è la differenza di potenziale tra il rosso e il nero.'},
  amps:{title:'Misura della corrente',scope:'Circuito aperto per la misura',control:'Valori del circuito',note:'La corrente si misura in serie',learnTitle:'L’amperometro si inserisce in serie',learn:'Il circuito presenta una piccola interruzione tra P e Q. Sposta il rosso su mA, ruota su A⎓ e chiudi l’interruzione con i due puntali. Non collegare mai un amperometro direttamente ai poli di una batteria.'},
  ohms:{title:'Misura di resistenza',scope:'Componente scollegato',control:'Resistenza di prova',note:'Nessuna alimentazione',learnTitle:'La resistenza si misura senza alimentazione',learn:'Seleziona Ω, usa COM e V Ω, quindi tocca P e Q. La resistenza è stata scollegata dal circuito: così gli altri componenti non falsano la lettura.'},
- cont:{title:'Test di continuità',scope:'Circuito non alimentato',control:'Interruttore di prova',note:'Un percorso chiuso conduce',learnTitle:'La continuità cerca un percorso conduttivo',learn:'Seleziona ◖)) e usa COM e V Ω. Collega P e Q, poi apri e chiudi l’interruttore. Se esiste un collegamento a bassa resistenza, il multimetro emette un breve beep. Il limite varia con il modello reale.'}
+ cont:{title:'Continuità · diagnostica PCB',scope:'PCB senza alimentazione',control:'Diagnostica delle piste',note:'Scopri interruzioni e ponti di stagno',learnTitle:'Il test di continuità serve a trovare piste interrotte e cortocircuiti',learn:'Questa PCB è priva di alimentazione e componenti. Imposta la funzione continuità e usa COM e V Ω: se due piazzole appartengono alla stessa rete elettrica, senti il beep. Le piste spezzate interrompono il collegamento; un ponte di stagno può unire due reti che dovrebbero restare separate. Tocca le zone difettose per simulare una riparazione.'},
+  challenge:{title:'Banco di prova · 4 rami',scope:'6 missioni progressive',control:'Alimentazione e preparazione',note:'I valori cambiano a ogni sessione',learnTitle:'Sei tu a preparare il circuito e il multimetro',learn:'Scegli la funzione con il selettore, inserisci il rosso nella presa V Ω oppure mA e collega i due puntali alle boccole. Tocca i ponticelli J0–J4 per interrompere i rami e le resistenze R1–R4 per sollevare un terminale. Per misurare Ω e continuità spegni sempre l’alimentazione.'}
 };
 const val=n=>Number(n).toLocaleString('it-IT',{maximumFractionDigits:0});
-const pointsByScenario={volts:['A','B','C','D'],amps:['P','Q'],ohms:['P','Q'],cont:['P','Q']};
+const pointsByScenario={volts:['A','B','C','D'],amps:['P','Q'],ohms:['P','Q'],cont:Array.from({length:16},(_,i)=>`TP${i+1}`),challenge:['S+','0V','M1','M2',...Array.from({length:4},(_,i)=>[ `L${i+1}`,`P${i+1}`,`T${i+1}` ]).flat()]};
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function node(name,x,y,labelY=52){const cs=(state.red===name?' red':'')+(state.black===name?' black':'');return `<text class="point-letter" x="${x}" y="${labelY}">${name}</text><g class="point-hit${cs}" data-point="${name}" role="button" tabindex="0" aria-label="Punto di misura ${name}" transform="translate(${x} ${y})"><circle class="point-outer" r="18"/><circle class="point-inner" r="5"/></g>`;}
 function zigzag(x1,x2,y){let n=9,dx=(x2-x1)/n,a=[`${x1},${y}`];for(let i=1;i<n;i++){a.push(`${(x1+i*dx).toFixed(2)},${y+(i%2? -13:13)}`);}a.push(`${x2},${y}`);return `<polyline class="resistor" points="${a.join(' ')}"/>`;}
 function battery(){return `<line class="wire" x1="96" y1="90" x2="96" y2="155"/><line class="wire" x1="96" y1="215" x2="96" y2="278"/><line stroke="#0e8f89" stroke-width="5" x1="66" y1="173" x2="126" y2="173"/><line stroke="#0e8f89" stroke-width="5" x1="78" y1="195" x2="114" y2="195"/><line stroke="#0e8f89" stroke-width="3" x1="96" y1="155" x2="96" y2="173"/><line stroke="#0e8f89" stroke-width="3" x1="96" y1="195" x2="96" y2="215"/><text class="batterytext" x="131" y="177">+</text><text class="batterytext" x="132" y="200">−</text><text class="minor-label" x="152" y="235">${String(state.voltage).replace('.',',')} V</text>`;}
 function svgShell(contents){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 328" aria-label="Schema circuitale con punti di misura interattivi"><rect x="0" y="0" width="720" height="328" fill="#f8fbfd"/><g opacity=".7" fill="#e8f0f3">${Array.from({length:15},(_,i)=>Array.from({length:7},(_,j)=>`<circle cx="${20+i*49}" cy="${17+j*49}" r="1.6"/>`).join('')).join('')}</g>${contents}</svg>`;}
 function leadLines(locations){let a='';for(const [lead,anchor] of [['red',[80,312]],['black',[640,312]]]){const p=state[lead];if(p&&locations[p]){const [x,y]=locations[p];a+=`<path class="connection ${lead}" d="M${anchor[0]} ${anchor[1]} Q ${lead==='red'?Math.max(25,x-80):Math.min(695,x+80)} 280 ${x} ${y+19}"/>`;}}return a;}
+
+
+// PCB didattica: calcolo delle reti mediante grafo di connessioni, nessuna tabella di coppie predefinite.
+const pcb={cutB:true,cutC:true,bridge:true,reveal:false};
+const pcbPads=[
+ ['TP1',110,112],['TP2',315,112],['TP3',565,112],['TP4',795,112],
+ ['TP5',110,226],['TP6',315,226],['TP7',565,226],['TP8',795,226],
+ ['TP9',110,350],['TP10',315,350],['TP11',565,350],['TP12',795,350],
+ ['TP13',110,455],['TP14',315,455],['TP15',565,455],['TP16',795,455]
+];
+function pcbNetworks(){
+ const parent=Array.from({length:16},(_,i)=>i);
+ const root=k=>{while(parent[k]!==k){parent[k]=parent[parent[k]];k=parent[k];}return k;};
+ const join=(a,b)=>{parent[root(b-1)]=root(a-1);};
+ // Quattro reti nominali: due guasti aperti e un corto tra le due reti centrali.
+ [[1,2],[2,3],[3,4],[5,6],[7,8],[9,10],[10,11],[13,14],[14,15],[15,16]].forEach(([a,b])=>join(a,b));
+ if(!pcb.cutB)join(6,7);
+ if(!pcb.cutC)join(11,12);
+ if(pcb.bridge)join(5,9);
+ return Array.from({length:16},(_,i)=>root(i));
+}
+function pcbConnected(a,b){
+ const ia=Number(a?.slice(2)),ib=Number(b?.slice(2));
+ if(!/^TP(?:[1-9]|1[0-6])$/.test(a||'')||!/^TP(?:[1-9]|1[0-6])$/.test(b||''))return false;
+ const comps=pcbNetworks();return comps[ia-1]===comps[ib-1];
+}
+function pcbReset(){pcb.cutB=true;pcb.cutC=true;pcb.bridge=true;pcb.reveal=false;}
+function pcbReading(){
+ const a=state.red,b=state.black;
+ if(!a||!b)return {n:'— — —',u:'',class:'warning',title:'Scegli due piazzole della PCB',text:'Seleziona il puntale rosso o nero e tocca due boccole TP. Cerca collegamenti corretti, interruzioni e ponti di stagno.'};
+ const same=pcbConnected(a,b);
+ return same?
+ {n:'0.2',u:'Ω',class:'ok',beep:true,title:'Continuità presente · BEEP!',text:a===b?`I due puntali sono sulla stessa piazzola ${a}: ovviamente c’è continuità. Prova due punti diversi.`:`${a} e ${b} sono elettricamente collegati. Il multimetro simula 0,2 Ω, quindi emette il segnale acustico.`}:
+ {n:'OL',u:'',class:'warning',beep:false,title:'Nessuna continuità',text:`Tra ${a} e ${b} non esiste un percorso conduttivo. Potrebbero essere reti distinte oppure esserci una pista interrotta.`};
+}
+function pcbSVG(){
+ const comps=pcbNetworks(),palette=['#f9d46b','#78d9ed','#f59c8b','#bdabfc','#a8e08c','#ffb6da'];
+ const colorByRoot=new Map();
+ const color=n=>{
+  if(!pcb.reveal)return '#c5b879';
+  const root=comps[n-1];
+  if(!colorByRoot.has(root))colorByRoot.set(root,palette[colorByRoot.size%palette.length]);
+  return colorByRoot.get(root);
+ };
+ const track=(n,d)=>`<path class="pcb-track" stroke="${color(n)}" d="${d}"/><path class="pcb-track-fine" d="${d}"/>`;
+ let traces='';
+ // Rete A: quattro contatti con percorso continuo.
+ traces+=track(1,'M110 112 H230 V128 H260 V112 H315')+track(2,'M315 112 H460 V95 H500 V112 H565')+track(3,'M565 112 H705 V130 H735 V112 H795');
+ // Rete B: interruzione fra TP6 e TP7.
+ traces+=track(5,'M110 226 H200 V212 H240 V226 H315')+track(6,'M315 226 H432');
+ if(!pcb.cutB)traces+=track(6,'M432 226 H454');
+ traces+=track(7,'M454 226 H565')+track(7,'M565 226 H700 V207 H735 V226 H795');
+ // Rete C: interruzione fra TP11 e TP12.
+ traces+=track(9,'M110 350 H250 V332 H270 V350 H315')+track(10,'M315 350 H430 V368 H472 V350 H565')+track(11,'M565 350 H680');
+ if(!pcb.cutC)traces+=track(11,'M680 350 H702');
+ traces+=track(12,'M702 350 H795');
+ // Rete D sempre integra.
+ traces+=track(13,'M110 455 H215 V440 H250 V455 H315')+track(14,'M315 455 H565')+track(15,'M565 455 H694 V471 H730 V455 H795');
+ // Due derivazioni con ponte di stagno tra B e C, simulando un corto accidentale.
+ traces+=track(5,'M240 226 V275')+track(9,'M240 301 V350');
+ if(pcb.bridge)traces+=track(5,'M240 275 V301');
+ const cuts=`<g class="pcb-fault" data-pcb-fault="cutB" role="button" tabindex="0" aria-label="${pcb.cutB?'Ripara':'Interrompi'} pista fra TP6 e TP7"><title>Clicca per ${pcb.cutB?'riparare':'interrompere'} questa pista</title><rect class="pcb-fault-hit" x="426" y="206" width="35" height="41" rx="8"/>${pcb.cutB?'<path d="M437 216 l7 19 m-9 0 l12 -19" stroke="#e4dfc0" stroke-width="2.5" stroke-linecap="round"/>':''}</g>
+ <g class="pcb-fault" data-pcb-fault="cutC" role="button" tabindex="0" aria-label="${pcb.cutC?'Ripara':'Interrompi'} pista fra TP11 e TP12"><title>Clicca per ${pcb.cutC?'riparare':'interrompere'} questa pista</title><rect class="pcb-fault-hit" x="674" y="331" width="35" height="38" rx="8"/>${pcb.cutC?'<path d="M685 341 l8 18 m-10 -1 l13 -17" stroke="#e4dfc0" stroke-width="2.5" stroke-linecap="round"/>':''}</g>`;
+ const blob=`<g class="pcb-fault" data-pcb-fault="bridge" role="button" tabindex="0" aria-label="${pcb.bridge?'Rimuovi':'Ricrea'} ponte di stagno"><title>Clicca per ${pcb.bridge?'rimuovere':'ripristinare'} il ponte di stagno</title><rect class="pcb-fault-hit" x="220" y="265" width="40" height="47" rx="11"/>${pcb.bridge?'<path d="M235 275 q-13 6 -4 15 q-5 11 8 14 q14 2 11 -12 q9 -10 -4 -18 z" fill="#e1e5e2" stroke="#a7b1ac" stroke-width="2"/><circle cx="237" cy="280" r="3" fill="#ffffffad"/>':'<circle cx="240" cy="275" r="5" fill="#d9dbd1"/><circle cx="240" cy="301" r="5" fill="#d9dbd1"/>'}</g>`;
+ const pads=pcbPads.map(([id,x,y],index)=>{
+  const n=index+1,sel=(state.red===id?' red':'')+(state.black===id?' black':'');
+  const ring=pcb.reveal?`<circle r="17" fill="none" stroke="${color(n)}" stroke-width="5" opacity=".95"/>`:'';
+  return `<g class="point-hit pcb-pad${sel}" data-point="${id}" role="button" tabindex="0" aria-label="Piazzola ${id}" transform="translate(${x} ${y})"><circle r="23" fill="transparent"/>${ring}<circle class="point-outer" r="12"/><circle class="point-inner" r="4"/><text class="point-letter" x="0" y="-21">${id}</text></g>`;
+ }).join('');
+ const leadPositions=Object.fromEntries(pcbPads.map(([id,x,y])=>[id,[x,y]]));
+ let leads='';
+ for(const [which,start] of [['red',[55,511]],['black',[850,511]]]){
+  const at=leadPositions[state[which]];
+  if(at)leads+=`<path class="connection ${which}" d="M${start[0]} ${start[1]} Q${Math.round((start[0]+at[0])/2)} 500 ${at[0]} ${at[1]+13}"/>`;
+ }
+ const screws=[[32,32],[868,32],[32,490],[868,490]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="13" fill="#083d2d" stroke="#62ad89" stroke-width="2"/><circle cx="${x}" cy="${y}" r="6" fill="#163b31" stroke="#8ab59c"/><path d="M${x-4} ${y+4} L${x+4} ${y-4}" stroke="#689781" stroke-width="2"/>`).join('');
+ const vias=[[178,112],[413,112],[640,112],[166,226],[390,226],[620,226],[193,350],[397,350],[615,350],[155,455],[421,455],[637,455]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#154f36" stroke="#8eb38e" stroke-width="2"/>`).join('');
+ const message=pcb.reveal?'<text class="pcb-silk-minor" x="450" y="507" text-anchor="middle" font-size="12">COLORI = RETI ELETTRICAMENTE COLLEGATE · CLICCA I DIFETTI PER RIPARARLI</text>':'<text class="pcb-silk-minor" x="450" y="507" text-anchor="middle" font-size="12">16 PIAZZOLE DI TEST · 2 PISTE INTERROTTE · 1 PONTE DI STAGNO</text>';
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 528" aria-label="PCB interattiva: sedici piazzole, piste interrotte e un ponte di stagno"><defs><linearGradient id="pcbBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#126b4b"/><stop offset="1" stop-color="#094b38"/></linearGradient><pattern id="pcbTexture" width="21" height="21" patternUnits="userSpaceOnUse"><circle cx="5" cy="7" r="1" fill="#c0e0a6" opacity=".1"/></pattern></defs><rect width="900" height="528" rx="16" fill="url(#pcbBg)"/><rect x="13" y="13" width="874" height="502" rx="13" fill="url(#pcbTexture)" stroke="#b3dabc" stroke-opacity=".4" stroke-width="1.3"/>${screws}<text x="70" y="48" class="pcb-silk" font-size="19">OMG · CONTINUITY BOARD</text><text x="70" y="68" class="pcb-silk-minor" font-size="11">LABORATORIO DI DIAGNOSTICA / REV. 01</text><text x="821" y="48" text-anchor="end" class="pcb-silk-minor" font-size="11">NO POWER • TEST POINTS</text>${traces}${vias}${cuts}${blob}${pads}${leads}${message}</svg>`;
+}
+function pcbCircuitAction(el){if(state.scenario!=='cont')return false;
+ const target=el.closest('[data-pcb-fault]');if(!target)return false;
+ const key=target.dataset.pcbFault;
+ if(key==='cutB')pcb.cutB=!pcb.cutB;
+ else if(key==='cutC')pcb.cutC=!pcb.cutC;
+ else if(key==='bridge')pcb.bridge=!pcb.bridge;
+ else return false;
+ redraw();beep();return true;
+}
+
+// Laboratorio Challenge: quattro rami paralleli preceduti da R0 in serie.
+// Un amperometro puo chiudere solo un ponticello effettivamente aperto.
+const ch={power:true,voltage:12,r0:150,rs:[220,330,470,680],links:[true,true,true,true],mainLink:true,lift:[false,false,false,false],tasks:[],index:0,passed:0,errors:0,completed:false,verdict:null,hint:false};
+const chRandom=a=>a[Math.floor(Math.random()*a.length)];
+function chShuffle(a){const out=a.slice();for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
+function newChallenge(){
+ ch.voltage=chRandom([6,9,12]);ch.r0=chRandom([100,150,180]);ch.rs=chShuffle([220,330,470,560,680,820,1000,1200]).slice(0,4);
+ const b=chShuffle([0,1,2,3]);const wantClosed=Math.random()>.5;
+ ch.tasks=[
+  {kind:'source',level:'FACILE',prompt:'Misura la tensione continua positiva fornita dall’alimentatore. Dove vanno i puntali?',hint:'Il voltmetro si collega in parallelo: rosso sul positivo S+, nero sul ritorno 0V.'},
+  {kind:'vbranch',i:b[0],level:'BASE',prompt:`Misura la tensione positiva ai capi di R${b[0]+1} con il circuito alimentato.`,hint:`R${b[0]+1} e tra T${b[0]+1} e 0V: usa il voltmetro in parallelo.`},
+  {kind:'continuity',i:b[1],closed:wantClosed,level:'BASE +',prompt:`A circuito spento, verifica ${wantClosed?'che il ponticello J'+(b[1]+1)+' conduca (beep)':'che il ponticello J'+(b[1]+1)+' NON dia continuità'}.`,hint:`Togli alimentazione, imposta continuità, usa V Ω e COM, collega L${b[1]+1} e P${b[1]+1}. Il ponticello deve essere ${wantClosed?'chiuso':'aperto'}.`},
+  {kind:'ibranch',i:b[2],level:'INTERMEDIO',prompt:`Misura la corrente positiva in mA che attraversa R${b[2]+1}.`,hint:`Apri J${b[2]+1}, imposta A⎓, sposta il rosso in mA e usa L${b[2]+1} (rosso) e P${b[2]+1} (nero) per chiudere il ramo.`},
+  {kind:'rbranch',i:b[3],level:'AVANZATO',prompt:`Misura la resistenza R${b[3]+1} isolando il componente, senza alimentazione.`,hint:`Spegni l’alimentazione, clicca R${b[3]+1} per sollevare un terminale; Ω con presa V Ω, fra T${b[3]+1} e 0V.`},
+  {kind:'itotal',level:'ESPERTO',prompt:'Misura la corrente totale positiva in mA che raggiunge tutti e quattro i rami.',hint:'Apri J0 sul ramo principale, imposta A⎓ e mA. Rosso su M1, nero su M2; il circuito va alimentato.'}
+ ];
+ ch.index=0;ch.passed=0;ch.errors=0;ch.completed=false;ch.verdict=null;ch.hint=false;
+ resetChallengeCircuit();state.red=null;state.black=null;state.probe='red';
+}
+function resetChallengeCircuit(){ch.power=true;ch.mainLink=true;ch.links.fill(true);ch.lift.fill(false);}
+function chTouch(){if(!ch.completed && ch.verdict?.ok!==true)ch.verdict=null;}
+const isPair=(a,b,x,y)=>(a===x&&b===y)||(a===y&&b===x);
+const chRow=i=>153+i*64;
+function chSocket(name,x,y,above=true){
+ const klass=(state.red===name?' red':'')+(state.black===name?' black':'');
+ return `<g class="point-hit ch-socket${klass}" data-point="${name}" role="button" tabindex="0" aria-label="Boccola ${name}" transform="translate(${x} ${y})"><circle class="point-outer" r="11"/><circle class="point-inner" r="3.7"/><text class="point-letter" x="0" y="${above?-17:26}">${name}</text></g>`;
+}
+function chBridge(id,x1,x2,y,closed){
+ const mid=(x1+x2)/2;
+ return `<g class="ch-bridge" role="button" tabindex="0" data-bridge="${id}" aria-label="${closed?'Apri':'Chiudi'} ponticello J${id}"><rect class="bridge-hit" x="${mid-16}" y="${y-20}" width="32" height="40" rx="7"/><path class="${closed?'bridge-wire':'bridge-gap'}" d="${closed?`M${x1+2} ${y} H${x2-2}`:`M${x1+1} ${y} l8 -6 M${x2-1} ${y} l-8 -6`}"/><text x="${mid}" y="${y-27}" class="ch-row-n">J${id} ${closed?'●':'○'}</text></g>`;
+}
+function challengeSVG(){
+ const loc={'S+':[88,91],'0V':[792,424],M1:[287,91],M2:[349,91]};
+ let lines=`<path class="wire" d="M88 91 H175 M252 91 H287 M349 91 H423 V345 M792 153 V424 H88 V252 M88 178 V91"/>`;
+ lines+=`<line x1="69" y1="204" x2="107" y2="204" stroke="#008d8b" stroke-width="5"/><line x1="77" y1="219" x2="99" y2="219" stroke="#008d8b" stroke-width="5"/><path class="wire" d="M88 178 V204 M88 219 V252"/><text x="111" y="202" class="batterytext">+</text><text x="111" y="225" class="batterytext">−</text><text x="88" y="286" class="ch-component-label">${ch.voltage} V DC</text>`;
+ lines+=zigzag(175,252,91)+`<text class="ch-component-label" x="213" y="56">R0</text><text class="ch-tiny" x="213" y="75">${ch.r0} Ω</text>`;
+ lines+=chBridge(0,287,349,91,ch.mainLink);
+ for(let i=0;i<4;i++){
+  const y=chRow(i),n=i+1;loc[`L${n}`]=[469,y];loc[`P${n}`]=[519,y];loc[`T${n}`]=[631,y];
+  lines+=`<path class="wire" d="M423 ${y} H469 M519 ${y} H${ch.lift[i]?598:631} M718 ${y} H792"/>`;
+  lines+=chBridge(n,469,519,y,ch.links[i]);
+  lines+=`<g data-lift="${i}" class="ch-resistor" role="button" tabindex="0" aria-label="${ch.lift[i]?'Ricollega':'Solleva un terminale di'} resistenza R${n}"><rect class="resistor-hit" x="641" y="${y-16}" width="84" height="32" rx="9"/><path class="resistor" d="M646 ${y} l8 -10 10 20 10 -20 10 20 10 -20 10 20 9 -10"/><text class="ch-component-label" x="679" y="${y-26}">R${n} ${ch.lift[i]?'↗':''}</text></g>`;
+  lines+=`<path class="wire" d="M631 ${y} H646"/>`;
+  if(ch.lift[i])lines+=`<path d="M598 ${y} L607 ${y-7} M614 ${y-11} L631 ${y}" stroke="#d08a51" stroke-width="3" fill="none"/><text x="591" y="${y+27}" font-size="10" font-weight="800" fill="#b66a47">SOLLEVATA</text>`;
+  lines+=chSocket(`L${n}`,469,y,false)+chSocket(`P${n}`,519,y,false)+chSocket(`T${n}`,631,y,false);
+ }
+ const connections=Object.entries(loc);
+ // Solo due cavetti, visibili e distinti, collegano puntali e boccole.
+ for(const [lead,start] of [['red',[104,480]],['black',[790,480]]]){
+  const p=loc[state[lead]];
+  if(p)lines+=`<path class="connection ${lead}" d="M${start[0]} ${start[1]} Q ${Math.round((start[0]+p[0])/2)} ${Math.min(470,p[1]+70)} ${p[0]} ${p[1]+11}"/>`;
+ }
+ lines+=chSocket('S+',88,91,false)+chSocket('0V',792,424,false)+chSocket('M1',287,91,false)+chSocket('M2',349,91,false);
+ const h=`<text x="20" y="30" font-size="14" font-weight="900" fill="#345266">4 RAMI IN PARALLELO + R0 IN SERIE</text><text x="20" y="465" font-size="11" fill="#708493">J = ponticello cliccabile · clicca R per sollevare un terminale</text><text x="451" y="478" class="ch-tiny">Seleziona un puntale e tocca una boccola • scorri orizzontalmente su mobile</text>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 497" aria-label="Circuito misto con quattro rami, boccole, ponticelli e resistenze scollegabili"><rect width="900" height="497" fill="#f8fbfd"/><g fill="#e6edf1">${Array.from({length:18},(_,i)=>Array.from({length:10},(_,j)=>`<circle cx="${26+i*49}" cy="${20+j*49}" r="1.3"/>`).join('')).join('')}</g>${h}${lines}</svg>`;
+}
+function chMeterGap(){
+ if(state.mode!=='amps'||state.port!=='ma'||!state.red||!state.black)return null;
+ if(isPair(state.red,state.black,'M1','M2')&&!ch.mainLink)return {type:'main',sign:state.red==='M1'?1:-1};
+ for(let i=0;i<4;i++)if(isPair(state.red,state.black,`L${i+1}`,`P${i+1}`)&&!ch.links[i])return {type:'branch',i,sign:state.red===`L${i+1}`?1:-1};
+ return null;
+}
+function chNetwork(){
+ const meter=chMeterGap(),main=ch.mainLink||(meter?.type==='main');
+ const connected=ch.links.map((v,i)=>v||(meter?.type==='branch'&&meter.i===i));
+ const active=ch.power&&main;
+ const g=connected.reduce((sum,link,i)=>sum+(link&&!ch.lift[i]?1/ch.rs[i]:0),0);
+ const req=g?1/g:Infinity;
+ const total=active&&g?ch.voltage/(ch.r0+req):0;
+ const bus=active?(g?total*req:ch.voltage):0;
+ const before=ch.power?ch.voltage-total*ch.r0:0;
+ return {meter,connected,total,bus,before,branch:ch.rs.map((r,i)=>connected[i]&&!ch.lift[i]?bus/r:0)};
+}
+function chVoltageAt(pt,net){
+ if(pt==='S+')return ch.power?ch.voltage:0;
+ if(pt==='0V')return 0;
+ if(pt==='M1')return net.before;
+ if(pt==='M2')return net.bus;
+ const n=Number(pt.slice(1))-1;if(!(n>=0&&n<4))return 0;
+ if(pt[0]==='L')return net.bus;
+ if(pt[0]==='P')return net.connected[n]?net.bus:0;
+ if(pt[0]==='T')return !ch.lift[n]&&net.connected[n]?net.bus:0;
+ return 0;
+}
+function chFormatOhms(r){return Number.isFinite(r)?r>=1000?{n:(r/1000).toFixed(2),u:'kΩ'}:{n:r.toFixed(r<10?1:0),u:'Ω'}:{n:'OL',u:''};}
+function chResistance(a,b){
+ if(a===b)return .2;
+ if(a==='0V'||b==='0V'){
+  const n=a==='0V'?b:a;
+  if(/^T[1-4]$/.test(n)){
+   const i=Number(n[1])-1;
+   if(ch.lift[i]||!ch.links[i])return ch.rs[i];
+   const g=ch.rs.reduce((sum,r,j)=>sum+(ch.links[j]&&!ch.lift[j]?1/r:0),0);
+   return g?1/g:Infinity;
+  }
+ }
+ for(let i=0;i<4;i++){
+  if(isPair(a,b,`L${i+1}`,`P${i+1}`)){
+   if(ch.links[i])return .2;
+   if(ch.lift[i])return Infinity;
+   const others=ch.rs.reduce((sum,r,j)=>sum+(j!==i&&ch.links[j]&&!ch.lift[j]?1/r:0),0);
+   return others?ch.rs[i]+1/others:Infinity;
+  }
+ }
+ return Infinity;
+}
+function challengeReading(){
+ const mode=state.mode,a=state.red,b=state.black;
+ if(state.port!==(mode==='amps'?'ma':'vohm'))return {n:'LEAd',u:'',class:'error',title:'Presa del puntale rosso non corretta',text:mode==='amps'?'Per A⎓ sposta fisicamente il cavo rosso nella boccola mA.':'Per V⎓, Ω e continuità il rosso va nella boccola V Ω. La boccola mA può causare un cortocircuito.'};
+ if((mode==='ohms'||mode==='cont')&&ch.power)return {n:'Err',u:'',class:'error',title:'Spegni prima l’alimentazione',text:'Non eseguire misure di resistenza o continuità su un circuito alimentato.'};
+ if(!a||!b)return {n:'— — —',u:'',class:'warning',title:'Puntali in attesa',text:'Seleziona il puntale rosso o nero e tocca una delle boccole del circuito. Puoi scegliere liberamente funzione e presa.'};
+ if(mode==='volts'){
+  const net=chNetwork(),v=chVoltageAt(a,net)-chVoltageAt(b,net);
+  return {n:v.toFixed(2),u:'V',class:'ok',title:'Differenza di potenziale misurata',text:`Rosso ${a}, nero ${b}: ${v.toFixed(2).replace('.',',')} V. Cambiando la configurazione dei rami, il risultato si aggiorna.`};
+ }
+ if(mode==='amps'){
+  const net=chNetwork();
+  if(!net.meter)return {n:'Err',u:'',class:'error',title:'Amperometro non inserito in serie',text:'Devi prima APRIRE un ponticello e collegare i due puntali alle due boccole ai suoi lati. Non inserire un amperometro in parallelo alla sorgente o a una resistenza.'};
+  const amp=(net.meter.type==='main'?net.total:net.branch[net.meter.i])*net.meter.sign*1000;
+  if(Math.abs(amp)>200)return {n:'OL',u:'mA',class:'error',title:'Sovraccarico mA',text:'La corrente supera i 200 mA didattici previsti per questa presa. Rimuovi i puntali.'};
+  return {n:amp.toFixed(2),u:'mA',class:'ok',title:'Amperometro collegato in serie',text:`Corrente: ${amp.toFixed(2).replace('.',',')} mA. ${amp<0?'Segno negativo: polarità invertita.':'Il multimetro chiude realmente il ponticello aperto.'}`};
+ }
+ const r=chResistance(a,b),fmt=chFormatOhms(r);
+ if(mode==='ohms'){
+  let caution='';
+  if((a==='0V'&&/^T[1-4]$/.test(b))||(b==='0V'&&/^T[1-4]$/.test(a))){const i=Number((a==='0V'?b:a)[1])-1;if(!ch.lift[i]&&ch.links[i])caution=' Attenzione: componente ancora nel circuito; il valore include altri percorsi in parallelo.';}
+  return {n:fmt.n,u:fmt.u,class:Number.isFinite(r)?'ok':'warning',title:'Lettura ohmmetrica',text:`Lettura: ${fmt.n}${fmt.u?' '+fmt.u:''}.${caution}`};
+ }
+ const conducts=r<=30;
+ return conducts?{n:'0.2',u:'Ω',class:'ok',beep:true,title:'Continuità presente · BEEP!',text:'Il percorso fra i puntali è a bassissima resistenza: segnale acustico attivo.'}:{n:'OL',u:'',class:'ok',title:'Continuità assente',text:'Non c’è continuità a bassa resistenza fra le boccole. OL non equivale sempre a resistenza infinita: possono esserci percorsi resistivi alternativi.'};
+}
+function currentChallenge(){return ch.tasks[ch.index];}
+function chValidate(){
+ const t=currentChallenge();if(!t)return {ok:false,why:'Sessione terminata.'};
+ const wantMode=({source:'volts',vbranch:'volts',continuity:'cont',ibranch:'amps',rbranch:'ohms',itotal:'amps'})[t.kind];
+ const wantPort=wantMode==='amps'?'ma':'vohm';
+ const wantPower=!(t.kind==='continuity'||t.kind==='rbranch');
+ if(ch.power!==wantPower)return {ok:false,why:wantPower?'Devi accendere l’alimentatore.':'Prima di questa misura devi spegnere l’alimentatore.'};
+ if(state.mode!==wantMode)return {ok:false,why:'La posizione del selettore non è adatta alla misura richiesta.'};
+ if(state.port!==wantPort)return {ok:false,why:wantPort==='ma'?'Sposta il cavo rosso nella boccola mA del multimetro.':'Sposta il cavo rosso nella boccola V Ω del multimetro.'};
+ if(!state.red||!state.black)return {ok:false,why:'Mancano uno o entrambi i puntali sul circuito.'};
+ const i=t.i,n=(i??0)+1;
+ if(t.kind==='source'&&!(state.red==='S+'&&state.black==='0V'))return {ok:false,why:'Stai misurando due punti diversi da quelli richiesti, oppure hai invertito la polarità positiva.'};
+ if(t.kind==='vbranch'&&(!ch.links[i]||ch.lift[i]))return {ok:false,why:`Il ramo di R${n} va ripristinato per la misura di tensione: chiudi J${n} e ricollega R${n}.`};
+ if(t.kind==='vbranch'&&!(state.red===`T${n}`&&state.black==='0V'))return {ok:false,why:`La misura deve essere positiva e presa esattamente ai capi di R${n}.`};
+ if(t.kind==='ibranch'){
+  if(ch.links[i])return {ok:false,why:`Il ponticello J${n} è ancora chiuso: aprilo per inserire il multimetro in serie.`};
+  if(!(state.red===`L${n}`&&state.black===`P${n}`))return {ok:false,why:`I puntali non stanno richiudendo J${n} con polarità positiva.`};
+  if(ch.lift[i]||ch.lift.some(Boolean))return {ok:false,why:'Ricollega tutte le resistenze prima della misura di corrente.'};
+ }
+ if(t.kind==='itotal'){
+  if(ch.mainLink)return {ok:false,why:'Apri il ponticello J0 per inserire lo strumento nel ramo principale.'};
+  if(!(state.red==='M1'&&state.black==='M2'))return {ok:false,why:'Per leggere una corrente totale positiva, collega rosso M1 e nero M2.'};
+  if(ch.lift.some(Boolean)||ch.links.some(x=>!x))return {ok:false,why:'Ripristina tutti gli altri rami: la domanda richiede la corrente totale con quattro resistenze collegate.'};
+ }
+ if(t.kind==='rbranch'){
+  if(!ch.lift[i])return {ok:false,why:`La resistenza R${n} non è ancora isolata: clicca sul suo simbolo per sollevare un terminale.`};
+  if(!isPair(state.red,state.black,`T${n}`,'0V'))return {ok:false,why:`Misura ai due capi della resistenza R${n}, usando T${n} e 0V.`};
+ }
+ if(t.kind==='continuity'){
+  if(ch.links[i]!==t.closed)return {ok:false,why:`Il ponticello J${n} deve essere ${t.closed?'chiuso':'aperto'} per questa prova.`};
+  if(!isPair(state.red,state.black,`L${n}`,`P${n}`))return {ok:false,why:`Per verificare J${n} tocca direttamente i suoi due lati.`};
+ }
+ if(['source','vbranch','ibranch','rbranch','continuity'].includes(t.kind)&&(!ch.mainLink||ch.links.some((v,j)=>j!==i&&!v)))return {ok:false,why:'Ci sono altri ponticelli aperti: ripristina il circuito lasciando modificato solo quello richiesto.'};
+ const reading=challengeReading();if(reading.class==='error'||reading.class==='warning')return {ok:false,why:'La lettura non è ancora valida: controlla il messaggio del multimetro.'};
+ return {ok:true,why:`Misura corretta! ${reading.n}${reading.u?' '+reading.u:''}. Hai preparato correttamente circuito, boccole, puntali e selettore.`};
+}
+function challengeCheck(){if(ch.completed||ch.verdict?.ok)return;ch.verdict=chValidate();if(ch.verdict.ok){ch.passed++;if(ch.index===ch.tasks.length-1)ch.completed=true;}else ch.errors++;redraw();if(ch.verdict.ok)beep();}
+function challengeNext(){if(!ch.verdict?.ok||ch.completed)return;ch.index++;ch.verdict=null;ch.hint=false;resetChallengeCircuit();state.red=null;state.black=null;state.probe='red';redraw();}
+function chDrawBar(){
+ const on=state.scenario==='challenge';$('#challengeBar').hidden=!on;if(!on)return;
+ const t=currentChallenge();
+ $('#chProgress').textContent=ch.completed?'SESSIONE COMPLETATA':`SFIDA ${ch.index+1} / ${ch.tasks.length} · ${t.level}`;
+ $('#chScore').textContent=`${ch.passed} / ${ch.tasks.length} corrette`;
+ $('#chSteps').innerHTML=ch.tasks.map((_,i)=>`<span class="${i<ch.passed?'done':i===ch.index?'current':''}"></span>`).join('');
+ const msg=$('#chMessage');msg.className='challenge-help';
+ if(ch.completed){msg.classList.add('ok');msg.textContent=`Ottimo: ${ch.passed}/${ch.tasks.length} missioni completate, ${ch.errors} ${ch.errors===1?'tentativo da correggere':'tentativi da correggere'}. Avvia una nuova sessione per ricevere altri valori e altre domande.`;}
+ else if(ch.verdict){msg.classList.add(ch.verdict.ok?'ok':'bad');msg.textContent=ch.verdict.why;}
+ else if(ch.hint)msg.textContent=`INDIZIO · ${t.hint}`;
+ else msg.textContent='Scegli funzione e presa del multimetro, prepara il circuito, collega i puntali e premi «Verifica misura». Nessuna impostazione automatica.';
+ $('#chCheck').hidden=ch.completed||Boolean(ch.verdict?.ok);
+ $('#chNext').hidden=ch.completed||!ch.verdict?.ok;
+ $('#chHint').hidden=ch.completed||Boolean(ch.verdict?.ok);
+ $('#chRestart').textContent=ch.completed?'Gioca ancora':'Nuova sessione';
+}
+
 function circuitSVG(){
+ if(state.scenario==='challenge')return challengeSVG();
+ if(state.scenario==='cont')return pcbSVG();
  if(state.scenario==='volts'){
  const loc={A:[96,90],B:[271,90],C:[446,90],D:[620,90]};
  const s=`<path class="wire" d="M96 90 H141 M226 90 H271 H316 M401 90 H446 H491 M576 90 H620 V278 H96"/>${battery()}${zigzag(141,226,90)}${zigzag(316,401,90)}${zigzag(491,576,90)}<text class="device-label" x="183" y="49">R1 · ${val(state.r1)} Ω</text><text class="device-label" x="359" y="49">R2 · ${val(state.r2)} Ω</text><text class="device-label" x="534" y="49">R3 · ${val(state.r3)} Ω</text><text class="minor-label" x="380" y="255">3 resistenze in serie</text><text class="minor-label" x="380" y="280">Tocca due nodi per misurare la tensione</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,130)).join('')}`;return svgShell(s);
@@ -109,20 +668,22 @@ function circuitSVG(){
  const loc={P:[164,155],Q:[559,155]};
  const s=`<path class="wire" d="M164 155 H303 M414 155 H559"/>${zigzag(303,414,155)}<text class="device-label" x="359" y="108">R = ${val(state.ohm)} Ω</text><text x="359" y="225" class="minor-label">Resistenza isolata, non alimentata</text><text x="359" y="251" class="minor-label">Misura tra P e Q</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,100)).join('')}`;return svgShell(s);
  }
- const loc={P:[170,155],Q:[553,155]},closed=state.closed;
- const s=`<path class="wire" d="M170 155 H303 M414 155 H553"/><circle cx="308" cy="155" r="6" fill="#45677b"/><circle cx="408" cy="155" r="6" fill="#45677b"/><path d="M308 155 L${closed?'408 155':'391 113'}" stroke="${closed?'#1e9565':'#b56b4e'}" stroke-width="6" stroke-linecap="round"/><g class="switch-target" data-toggle="1" tabindex="0" role="button" aria-label="${closed?'Apri':'Chiudi'} interruttore"><rect x="285" y="95" width="149" height="88" rx="14" fill="#eaf4f6" opacity=".2" stroke="#bed6dc" stroke-dasharray="4 4"/><text x="360" y="84" class="device-label">Interruttore</text></g><text class="minor-label" x="359" y="225">Stato: ${closed?'CHIUSO — contatto conduttivo':'APERTO — circuito interrotto'}</text><text class="minor-label" x="359" y="252">Tocca l’interruttore per cambiarne lo stato</text>${leadLines(loc)}${Object.entries(loc).map(([n,[x,y]])=>node(n,x,y,103)).join('')}`;return svgShell(s);
+
 }
 function controls(){
  const host=$('#config');host.className='config';
+  if(state.scenario==='cont'){host.className='pcb-controls';host.innerHTML=`<button type="button" class="pill ${pcb.reveal?'on':''}" data-pcb-reveal="1">${pcb.reveal?'Nascondi collegamenti':'Mostra piste collegate'}</button><button type="button" class="pill" data-pcb-reset="1">Ripristina difetti</button><span class="pcb-guide">Esplora i 16 punti di prova. Clicca una pista interrotta per ripararla o il ponte di stagno per rimuoverlo.</span>`;return;}
+ if(state.scenario==='challenge'){host.className='challenge-controls';host.innerHTML=`<button class="ch-power ${ch.power?'on':''}" type="button" data-power="1">${ch.power?'● ALIMENTAZIONE ON':'○ ALIMENTAZIONE OFF'} · ${ch.voltage} V</button><span class="ch-explanation">J0 apre il circuito principale; J1–J4 aprono i rami. Tocca R1–R4 per sollevare / ricollegare un terminale.</span><button class="pill" type="button" data-chreset="1">Ripristina circuito</button>`;return;} 
  if(['volts','amps'].includes(state.scenario)){host.innerHTML=[['voltage','Alimentazione','V',0.5,24,0.5],['r1','R1','Ω',1,10000,1],['r2','R2','Ω',1,10000,1],['r3','R3','Ω',1,10000,1]].map(([id,label,unit,min,max,step])=>`<div class="field"><label for="control-${id}">${label}</label><div class="unit"><input id="control-${id}" data-value="${id}" type="number" inputmode="decimal" step="${step}" min="${min}" max="${max}" value="${state[id]}"><span class="suffix">${unit}</span></div></div>`).join(''); }
  else if(state.scenario==='ohms'){host.className='select-res';host.innerHTML=[100,220,330,470,1000,2200].map(v=>`<button type="button" class="pill ${state.ohm===v?'on':''}" data-res="${v}">${val(v)} Ω</button>`).join('');}
- else{host.className='switch-row';host.innerHTML=`<button type="button" class="switch-btn ${state.closed?'closed':''}" id="switchBtn">${state.closed?'● CHIUSO':'○ APERTO'} — clicca</button><span>${state.closed?'Il filo conduce.':'Il collegamento è interrotto.'}</span>`;}
+
 }
 function dataReading(){
  const scenario=state.scenario,mode=state.mode;
+ if(scenario==='challenge')return challengeReading();
  if(state.port !== (mode==='amps'?'ma':'vohm'))return {n:'LEAd',u:'',class:'error',title:'Controlla la presa del puntale rosso',text:mode==='amps'?'Per misurare la corrente devi spostare il puntale rosso nella presa mA. Il nero rimane in COM.':'Per questa misura il rosso deve stare nella presa V Ω. Usare la presa mA in parallelo può provocare un cortocircuito.'};
  if(scenario!==mode)return {n:'Err',u:'',class:'warning',title:'Funzione del selettore non adatta',text:scenario==='volts'?'Il circuito è alimentato: per questa prova usa V⎓. Non misurare Ω o continuità su circuiti sotto tensione.':scenario==='amps'?'Per questa prova con il circuito interrotto seleziona A⎓ e collega il puntale rosso a mA.':scenario==='ohms'?'Questo componente non alimentato va misurato con Ω, non con V⎓ o A⎓.':'Per questa prova seleziona la modalità continuità ◖)) sul selettore.'};
- if(!state.red||!state.black)return {n:'— — —',u:'',class:'warning',title:'Collega entrambi i puntali',text:scenario==='volts'?'Prova a mettere il rosso su A e il nero su D per misurare la tensione totale.':scenario==='amps'?'La corrente si misura tra P e Q: il multimetro deve chiudere l’interruzione.':'Tocca P e Q con i due puntali, in qualsiasi ordine.'};
+ if(!state.red||!state.black)return {n:'— — —',u:'',class:'warning',title:'Collega entrambi i puntali',text:scenario==='volts'?'Prova a mettere il rosso su A e il nero su D per misurare la tensione totale.':scenario==='amps'?'La corrente si misura tra P e Q: il multimetro deve chiudere l’interruzione.':scenario==='cont'?'Tocca due piazzole TP della PCB, in qualsiasi ordine.':'Tocca P e Q con i due puntali, in qualsiasi ordine.'};
  const same=state.red===state.black;
  if(scenario==='volts'){
  const R=state.r1+state.r2+state.r3,i=state.voltage/R;
@@ -143,20 +704,30 @@ function dataReading(){
  const isK=state.ohm>=1000;
  return {n:(isK?(state.ohm/1000).toFixed(2):state.ohm.toFixed(0)),u:isK?'kΩ':'Ω',class:'ok',title:'Resistenza misurata',text:`Il valore del componente isolato è ${val(state.ohm)} Ω. In modalità Ω la polarità dei puntali non cambia la lettura di una resistenza ideale.`};
  }
- if(same)return {n:'0.0',u:'Ω',class:'warning',title:'Puntali sullo stesso contatto',text:'Stai cortocircuitando i puntali sullo stesso nodo. Collega P e Q per verificare il percorso completo.'};
- return state.closed?{n:'0.2',u:'Ω',class:'ok',title:'Continuità presente · BEEP!',text:'L’interruttore è chiuso. Il percorso ha una resistenza molto bassa (0,2 Ω simulati): il multimetro segnala continuità.'}:{n:'OL',u:'',class:'warning',title:'Nessuna continuità',text:'L’interruttore è aperto: non esiste un percorso conduttivo fra P e Q. OL significa circuito aperto / fuori scala.'};
+ return pcbReading();
 }
 function redraw(){
  const m=meta[state.scenario];
- const missions={volts:['MISSIONE · Esplora le cadute','Misura prima tra A e D, poi tra B e C. Inverti i puntali e osserva il segno.'],amps:['MISSIONE · Chiudi il circuito','Imposta A⎓, sposta il rosso su mA e collega P con Q. Poi cambia il valore di R1.'],ohms:['MISSIONE · Misura il componente','Seleziona Ω, collega i puntali e prova resistenze da 100 Ω fino a 2.200 Ω.'],cont:['MISSIONE · Trova il contatto','Con i puntali fra P e Q, apri e chiudi l’interruttore. Quando senti il beep?']};
+ if(state.scenario==='challenge'&&!ch.tasks.length)newChallenge();
+ const missions={challenge:[`SFIDA ${ch.index+1} / ${ch.tasks.length} · ${currentChallenge()?.level||''}`,currentChallenge()?.prompt||''],volts:['MISSIONE · Esplora le cadute','Misura prima tra A e D, poi tra B e C. Inverti i puntali e osserva il segno.'],amps:['MISSIONE · Chiudi il circuito','Imposta A⎓, sposta il rosso su mA e collega P con Q. Poi cambia il valore di R1.'],ohms:['MISSIONE · Misura il componente','Seleziona Ω, collega i puntali e prova resistenze da 100 Ω fino a 2.200 Ω.'],cont:['ESPLORA LA PCB · Cerca i collegamenti','Senza alimentazione, confronta piazzole diverse: quali sono collegate? Trova due piste interrotte e un ponte di stagno. Puoi riparare i difetti cliccandoli.']};
  $('#missionTitle').textContent=missions[state.scenario][0];$('#missionText').textContent=missions[state.scenario][1];
  $$('#omgMultimeter .tab').forEach(el=>{el.classList.toggle('active',el.dataset.scenario===state.scenario);el.setAttribute('aria-pressed',String(el.dataset.scenario===state.scenario));});
+  const inExplore=state.scenario!=='challenge';
+  $('#exploreMode').classList.toggle('active',inExplore);
+  $('#exploreMode').setAttribute('aria-pressed',String(inExplore));
+  $('#exploreMode').setAttribute('aria-label',inExplore?'Modalità Esplora attiva':'Torna alle misure guidate');
+  $('.omg-measure-bar').classList.toggle('in-challenge',!inExplore);
  $$('#omgMultimeter .modepick').forEach(el=>{el.classList.toggle('on',el.dataset.mode===state.mode);el.setAttribute('aria-pressed',String(el.dataset.mode===state.mode));});
  $$('#omgMultimeter .jack[data-port]').forEach(el=>{el.classList.toggle('plugged',el.dataset.port===state.port);el.setAttribute('aria-pressed',String(el.dataset.port===state.port));});
  $$('#omgMultimeter .probe').forEach(el=>{const on=el.dataset.probe===state.probe;el.classList.toggle('selected',on);el.setAttribute('aria-pressed',String(on));});
  $('#dialIndicator').style.transform=`rotate(${({volts:-40,amps:40,ohms:-140,cont:140})[state.mode]}deg)`;
  $('#workTitle').textContent=m.title;$('#scopeLabel').textContent=m.scope;$('#controlTitle').textContent=m.control;$('#controlNote').textContent=m.note;$('#learnTitle').textContent=m.learnTitle;$('#learnText').textContent=m.learn;
+ $('#board').classList.toggle('challenge-board',state.scenario==='challenge');
+ $('#board').classList.toggle('pcb-board',state.scenario==='cont');
  $('#board').innerHTML=circuitSVG();
+ chDrawBar();
+ $('.probebar .guide').textContent=state.scenario==='cont'?'Seleziona Rosso o Nero e tocca una piazzola TP1–TP16. Su smartphone scorri la PCB lateralmente; il beep segnala una connessione metallica.':state.scenario==='challenge'?'Seleziona Rosso o Nero, poi tocca una boccola (S+, 0V, M, L, P, T). Per la corrente apri J0–J4; per Ω tocca una resistenza per sollevarla.':'Seleziona un puntale e tocca un contatto nello schema. Puoi anche trascinarlo sul contatto.';
+ $('#example').textContent=state.scenario==='challenge'?'Un indizio':state.scenario==='cont'?'Mostra un esempio':'Mostra il collegamento corretto';
  $('#redStatus').textContent=state.red?`su ${state.red}`:'non collegato';$('#blackStatus').textContent=state.black?`su ${state.black}`:'non collegato';
  controls();
  const r=dataReading();$('#lcdValue').textContent=r.n;$('#lcdUnit').textContent=r.u;
@@ -166,26 +737,43 @@ function redraw(){
  const f=$('#feedback');f.className='readout '+(r.class==='ok'?'':r.class);$('#feedbackTitle').textContent=r.title;$('#feedbackText').textContent=r.text;
  $('#sound').textContent=`♪ Suono: ${state.sound?'ON':'OFF'}`;$('#sound').setAttribute('aria-pressed',String(state.sound));
 }
-function putProbe(name){if(!pointsByScenario[state.scenario].includes(name))return;state[state.probe]=name;state.probe=state.probe==='red'?'black':'red';redraw();}
+function putProbe(name){if(!pointsByScenario[state.scenario].includes(name))return;state[state.probe]=name;state.probe=state.probe==='red'?'black':'red';chTouch();redraw();}
 let audioCtx;
-function beep(){if(!state.sound||state.scenario!=='cont'||!state.closed||!state.red||!state.black||state.red===state.black||state.port!=='vohm'||state.mode!=='cont')return;
+function beep(){if(!state.sound)return;
+  if(state.scenario==='challenge'){if(state.mode!=='cont'||!challengeReading().beep)return;}
+  else if(state.scenario==='cont'){if(state.mode!=='cont'||state.port!=='vohm'||!pcbReading().beep)return;}
+  else return;
  try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioCtx=audioCtx||new Audio();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=1120;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.07,audioCtx.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.19);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.2);}catch(_e){}
 }
 function toggleSwitch(){state.closed=!state.closed;redraw();if(state.closed)beep();}
-function doScenario(s){if(!meta[s])return;state.scenario=s;state.mode=s;state.red=null;state.black=null;state.probe='red';redraw();}
+let lastExploreMode="volts";
+function doScenario(s){if(!meta[s])return;state.scenario=s;if(s!=='challenge'){state.mode=s;lastExploreMode=s;}else if(!ch.tasks.length)newChallenge();state.red=null;state.black=null;state.probe='red';redraw();}
+
+function chCircuitAction(el){if(state.scenario!=='challenge')return false;
+ const bridge=el.closest('[data-bridge]'),lift=el.closest('[data-lift]');
+ if(bridge){const k=Number(bridge.dataset.bridge);if(k===0)ch.mainLink=!ch.mainLink;else ch.links[k-1]=!ch.links[k-1];chTouch();redraw();beep();return true;}
+ if(lift){const k=Number(lift.dataset.lift);ch.lift[k]=!ch.lift[k];chTouch();redraw();beep();return true;}
+ return false;
+}
+
 $$('.tab').forEach(el=>el.addEventListener('click',()=>doScenario(el.dataset.scenario)));
-$$('.modepick').forEach(el=>el.addEventListener('click',()=>{state.mode=el.dataset.mode;redraw();beep();}));
-$$('.jack[data-port]').forEach(el=>el.addEventListener('click',()=>{state.port=el.dataset.port;redraw();beep();}));
+$('#exploreMode').addEventListener('click',()=>{if(state.scenario==='challenge')doScenario(lastExploreMode);});
+$$('.modepick').forEach(el=>el.addEventListener('click',()=>{state.mode=el.dataset.mode;chTouch();redraw();beep();}));
+$$('.jack[data-port]').forEach(el=>el.addEventListener('click',()=>{state.port=el.dataset.port;chTouch();redraw();beep();}));
 $$('.probe').forEach(el=>{el.addEventListener('click',()=>{state.probe=el.dataset.probe;redraw();});el.addEventListener('dragstart',e=>{state.probe=el.dataset.probe;e.dataTransfer.setData('text/plain',state.probe);e.dataTransfer.effectAllowed='move';});});
-$('#board').addEventListener('click',e=>{const point=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(point){putProbe(point.dataset.point);beep();}else if(sw){toggleSwitch();}});
-$('#board').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const p=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(p||sw){e.preventDefault();if(p){putProbe(p.dataset.point);beep();}else toggleSwitch();}}});
+$('#board').addEventListener('click',e=>{const point=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(point){putProbe(point.dataset.point);beep();}else if(sw){toggleSwitch();}else if(!chCircuitAction(e.target))pcbCircuitAction(e.target);});
+$('#board').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const p=e.target.closest('[data-point]'),sw=e.target.closest('[data-toggle]');if(p||sw||e.target.closest('[data-bridge],[data-lift],[data-pcb-fault]')){e.preventDefault();if(p){putProbe(p.dataset.point);beep();}else if(sw)toggleSwitch();else if(!chCircuitAction(e.target))pcbCircuitAction(e.target);}}});
 $('#board').addEventListener('dragover',e=>{if(e.target.closest('[data-point]'))e.preventDefault();});
 $('#board').addEventListener('drop',e=>{const point=e.target.closest('[data-point]');if(!point)return;e.preventDefault();const probe=e.dataTransfer.getData('text/plain');if(probe==='black'||probe==='red')state.probe=probe;putProbe(point.dataset.point);beep();});
 $('#config').addEventListener('change',e=>{const inp=e.target.closest('[data-value]');if(inp){const id=inp.dataset.value,min=Number(inp.min),max=Number(inp.max);const parsed=Number(String(inp.value).replace(',','.'));if(Number.isFinite(parsed))state[id]=Math.min(max,Math.max(min,parsed));redraw();}});
-$('#config').addEventListener('click',e=>{const r=e.target.closest('[data-res]');if(r){state.ohm=Number(r.dataset.res);redraw();}else if(e.target.closest('#switchBtn'))toggleSwitch();});
+$('#config').addEventListener('click',e=>{const r=e.target.closest('[data-res]');if(r){state.ohm=Number(r.dataset.res);redraw();}else if(e.target.closest('[data-pcb-reveal]')){pcb.reveal=!pcb.reveal;redraw();}else if(e.target.closest('[data-pcb-reset]')){pcbReset();redraw();beep();}else if(e.target.closest('[data-power]')){ch.power=!ch.power;chTouch();redraw();}else if(e.target.closest('[data-chreset]')){resetChallengeCircuit();state.red=null;state.black=null;state.probe='red';chTouch();redraw();}});
 $('#clear').addEventListener('click',()=>{state.red=null;state.black=null;state.probe='red';redraw();});
-$('#example').addEventListener('click',()=>{state.mode=state.scenario;state.port=state.scenario==='amps'?'ma':'vohm';state.red=state.scenario==='volts'?'A':'P';state.black=state.scenario==='volts'?'D':state.scenario==='amps'?'Q':'Q';state.probe='red';if(state.scenario==='cont')state.closed=true;redraw();beep();});
+$('#example').addEventListener('click',()=>{if(state.scenario==='challenge'){ch.hint=true;redraw();return;}state.mode=state.scenario;state.port=state.scenario==='amps'?'ma':'vohm';state.red=state.scenario==='volts'?'A':'P';state.black=state.scenario==='volts'?'D':state.scenario==='amps'?'Q':'Q';state.probe='red';if(state.scenario==='cont'){state.red='TP1';state.black='TP2';}redraw();beep();});
 $('#sound').addEventListener('click',()=>{state.sound=!state.sound;redraw();if(state.sound)beep();});
+$('#chCheck').addEventListener('click',challengeCheck);
+$('#chNext').addEventListener('click',challengeNext);
+$('#chHint').addEventListener('click',()=>{ch.hint=true;redraw();});
+$('#chRestart').addEventListener('click',()=>{newChallenge();redraw();});
 redraw();
 })();
 </script>

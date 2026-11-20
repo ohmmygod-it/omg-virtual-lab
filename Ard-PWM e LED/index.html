@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#13558a">
+  <meta name="theme-color" content="#fff1ce">
   <title>PWM Arduino · OMG Virtual Lab</title>
   <style>
     :root{--ink:#17314d;--muted:#627589;--blue:#155a91;--blue2:#0b416e;--cyan:#21abc4;--line:#dce6ef;--paper:#fff;--bg:#f3f7fb;--yellow:#ffc94b;--red:#ea4151;--shadow:0 10px 35px rgba(17,53,83,.07)}
@@ -85,24 +85,237 @@
     }
     @media(min-width:721px) and (max-width:930px){.experiment-cell{padding:10px}.visual-heading{min-height:36px}.experiment-cell .graph-caption{min-height:48px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+    /* OMG Virtual Lab · sistema grafico condiviso · restyling visuale 2026 */
+    :root{
+      --ink:#20252e;--muted:#667987;--blue:#15968b;--blue2:#127e78;
+      --cyan:#36bbbc;--line:#dfe3e3;--paper:#fff;--bg:#fdf8ed;
+      --yellow:#ffda5d;--red:#ed6665;--shadow:4px 5px 0 rgba(255,218,93,.88);
+    }
+    html{background:#fdf8ed}
+    body{
+      background:linear-gradient(112deg,#ffebc3 0%,#fdf6e8 31%,#fcfaf4 56%,#e5f7f3 100%);
+      background-attachment:fixed;color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    button,input,a{font:inherit}
+    button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #149a93;outline-offset:4px}
+    .wrap{max-width:1360px;padding:32px 30px 52px}
+    .topbar{margin-bottom:33px;gap:16px;align-items:center}
+    .brand{gap:16px;color:var(--ink);letter-spacing:normal}
+    .brandmark{
+      position:relative;isolation:isolate;display:grid;place-items:center;
+      width:70px;height:71px;flex-shrink:0;background:transparent;border:0;
+      color:var(--ink);box-shadow:none;border-radius:0;transform:none;
+    }
+    .brandmark::before,.brandmark::after{
+      content:"";display:block;position:absolute;inset:7px 4px 7px 7px;
+      border:4px solid var(--ink);border-radius:7px;
+    }
+    .brandmark::before{background:#46bbb8;transform:rotate(8deg) translate(8px,5px);z-index:-2}
+    .brandmark::after{background:#ffdc5e;transform:rotate(-8deg);z-index:-1}
+    .brandmark span{
+      font-size:25px;letter-spacing:-.09em;font-weight:1000;line-height:1;
+      transform:rotate(-8deg);text-shadow:1.5px 1.5px #fff,-1px 1px #fff;
+      font-family:Inter,Arial Black,Arial,sans-serif;
+    }
+    .brand-copy{display:flex;flex-direction:column;gap:0}
+    .brand-copy small{
+      display:block;color:#667985;font-size:14px;font-weight:950;letter-spacing:.19em;
+      text-transform:uppercase;line-height:1.3;
+    }
+    .brand-copy strong{
+      display:block;color:var(--ink);font-weight:950;font-size:27px;
+      letter-spacing:-.065em;line-height:1.14;margin-top:3px;
+    }
+    .site-link{
+      display:inline-flex;align-items:center;justify-content:center;gap:5px;
+      border:3px solid var(--ink);color:var(--ink);background:#fff;
+      font-size:20px;font-weight:900;text-decoration:none;letter-spacing:-.05em;
+      padding:11px 23px;border-radius:999px;line-height:1.25;
+      box-shadow:4px 5px 0 var(--yellow);white-space:nowrap;
+      transition:transform .13s,box-shadow .13s;
+    }
+    .site-link:hover{transform:translate(-1px,-2px);box-shadow:5px 7px 0 var(--yellow)}
+    .intro{margin-bottom:28px}
+    .intro .eyebrow{
+      display:inline-block;width:max-content;max-width:100%;border:2.5px solid var(--ink);
+      background:var(--yellow);border-radius:8px;color:var(--ink);
+      font-size:13px;font-weight:950;letter-spacing:.09em;line-height:1.35;
+      padding:9px 14px;margin:0 0 18px;transform:rotate(-1.5deg);
+      box-shadow:1px 2px 0 rgba(32,37,46,.1);
+    }
+    .intro h1{
+      font-size:clamp(43px,5.45vw,73px);line-height:1.04;
+      font-weight:1000;letter-spacing:-.079em;margin:0 0 17px;color:var(--ink);
+    }
+    .intro h1 span{color:#169b8f}
+    .intro h1 i{color:var(--red);font-style:normal;letter-spacing:-.07em}
+    .intro p:not(.eyebrow){font-size:clamp(15px,1.45vw,19px);line-height:1.47;max-width:1020px;color:#5e7380}
+    .panel{
+      background:var(--paper);border:2px solid var(--ink);border-radius:23px;
+      box-shadow:5px 6px 0 rgba(255,218,93,.85);overflow:hidden;
+    }
+    .panel-head{padding:19px 24px;border-bottom:2px solid #e5e7e5;gap:16px}
+    h2{font-size:21px;font-weight:950;letter-spacing:-.048em;color:var(--ink)}
+    h3{font-size:20px;font-weight:940;letter-spacing:-.04em;color:var(--ink)}
+    .hint{color:var(--muted);font-size:12px;font-weight:700}
+    .pin-picker{gap:10px;display:flex;align-items:center}
+    .pin-picker > span{color:#627480;font-size:12px;letter-spacing:.105em;font-weight:950;text-transform:uppercase;margin-right:1px}
+    .pin-picker .segmented-pins{
+      display:flex;gap:4px;padding:5px;border:3px solid var(--ink);border-radius:15px;
+      background:#fff;box-shadow:3px 4px 0 var(--yellow);
+    }
+    .pin-btn{
+      border:2px solid transparent;border-radius:9px;min-width:58px;padding:8px 11px;
+      font-size:14px;font-weight:900;color:#56636b;background:#fff;box-shadow:none;
+    }
+    .pin-btn[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .pin-btn:hover:not([aria-pressed="true"]){background:#f6f7f4}
+    .experiment-grid{background:linear-gradient(135deg,#f8fcfb,#fdfefa 100%)}
+    .experiment-cell{padding:20px 22px 22px}
+    .experiment-cell + .experiment-cell{background:#fff;border-left:2px solid #e8ece9}
+    .visual-heading strong{color:var(--ink);font-weight:900;font-size:13px}
+    .visual-heading small{color:#7b8b91;font-weight:750}
+    .experiment-cell .wave-svg{max-height:194px}
+    .osc-bg{fill:#f5faf9}.osc-grid{stroke:#dfeae7}
+    .osc-label{fill:#6a7e88}
+    .wave-line{stroke:#168f8a;stroke-width:4.6}
+    .avg-line{stroke:#e86a70;stroke-width:2.3}
+    .signal-summary strong{color:#15998e;font-weight:950}
+    .signal-summary span{color:#6b7e86}
+    .duty-track{border:1px solid #cbdcd9;background:#e5f1ee}
+    .duty-track .duty-on{background:linear-gradient(90deg,#087d7b,#38bdac)}
+    .duty-track .duty-off{background:#e9efef}
+    .signal-legend b{color:#138e86}
+    .signal-legend em{color:#7e9094}
+    .experiment-cell .graph-caption{color:#4e676e}
+    .control-wrap{padding:23px 25px 25px;background:#fff}
+    .control-title{font-size:15px;font-weight:930;color:var(--ink)}
+    .control-title code{font-size:.91em;background:#f3f4ef;color:#244a51;padding:2px 5px;border-radius:5px}
+    .readout-big{color:#188e84;font-weight:950;font-size:34px}
+    .readout-big small{color:#697c86}
+    .slider{height:13px;box-shadow:inset 0 0 0 1px #cad6d3;background:linear-gradient(to right,var(--blue) 50%,#e0e9e6 50%)}
+    .slider::-webkit-slider-thumb{width:30px;height:30px;border:6px solid var(--ink);background:var(--yellow);box-shadow:2px 3px 0 rgba(32,37,46,.13)}
+    .slider::-moz-range-thumb{width:18px;height:18px;border:6px solid var(--ink);background:var(--yellow);box-shadow:2px 3px 0 rgba(32,37,46,.13)}
+    .end-labels{color:#6a8089}
+    .quick{gap:6px}
+    .quick button{
+      padding:8px 12px;border:2px solid var(--ink);border-radius:10px;
+      color:var(--ink);background:#fff;font-size:12px;font-weight:900;
+      box-shadow:2px 3px 0 var(--yellow);
+    }
+    .quick button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+    .quick button:hover:not([aria-pressed="true"]){background:#fff6d5}
+    .metrics{gap:12px;margin-top:22px}
+    .metric{background:#fbfcfa;border:2px solid #e2e8e5;border-radius:14px;padding:15px 17px}
+    .metric span{color:#6b8089;font-size:12px;font-weight:800}
+    .metric strong{color:var(--ink);font-weight:950;font-size:25px}
+    .metric small{color:#71838b;font-weight:690}
+    .one-explanation{margin-top:23px}
+    .one-explanation .explain{padding:24px 26px}
+    .explain p{color:#546d78;font-size:14px;line-height:1.6}
+    .explain strong{color:var(--ink)}
+    .formula{
+      color:#155d5a;background:#e8f7f3;border:2px solid #b9ddd4;
+      border-radius:12px;font-size:14px;font-weight:900;padding:12px;
+    }
+    .note{background:#fff8df;border-left:4px solid #f5c748;color:#615838;border-radius:0 11px 11px 0;padding:13px 15px;line-height:1.6}
+    .code-panel{margin-top:23px}
+    .code{background:#20252e;color:#e1f4ee;padding:23px 26px;font-size:13px}
+    .code .key{color:#8ce2db}.code .fn{color:#9ee3ac}.code .num{color:#ffe07e}.code .comment{color:#b7c6c4}
+    .copy{
+      border:2px solid var(--ink);color:var(--ink);background:#fff;border-radius:11px;
+      font-size:13px;font-weight:900;padding:9px 14px;box-shadow:3px 4px 0 var(--yellow);
+    }
+    .copy:hover{background:#fff7d7}
+    footer{color:#607b82;font-size:12px;padding-top:26px}
+    .foot-dot{background:var(--cyan)}
+    @media(max-width:980px){
+      .wrap{padding:24px 20px 42px}
+      .intro h1{font-size:clamp(41px,5.8vw,65px)}
+      .site-link{font-size:17px;padding:10px 17px}
+      .brand-copy strong{font-size:24px}
+      .brand-copy small{font-size:12px}
+      .experiment-cell{padding:15px 14px 18px}
+      .metrics{gap:9px}
+      .metric{padding:13px}
+      .metric strong{font-size:22px}
+    }
+    @media(max-width:720px){
+      .experiment-cell + .experiment-cell{border-left:0;border-top:2px solid #e8ece9}
+      .experiment-cell{padding:17px 18px 20px}
+      .visual-heading{margin-bottom:7px}
+      .compact-circuit{max-height:310px}
+      .experiment-cell .wave-svg{max-height:205px}
+      .one-explanation .explain{padding:20px}
+    }
+    @media(max-width:600px){
+      .wrap{padding:17px 13px 36px}
+      .topbar{gap:12px;margin-bottom:26px}
+      .brand{gap:11px}
+      .brandmark{width:55px;height:58px}
+      .brandmark::before,.brandmark::after{border-width:3px;border-radius:5px}
+      .brandmark span{font-size:19px}
+      .brand-copy small{font-size:9px;letter-spacing:.1em}
+      .brand-copy strong{font-size:19px;letter-spacing:-.055em}
+      .site-link{font-size:13px;padding:8px 13px;border-width:2.5px;box-shadow:3px 4px 0 var(--yellow);margin-left:auto}
+      .intro{margin-bottom:20px}
+      .intro .eyebrow{font-size:10px;line-height:1.25;letter-spacing:.065em;border-width:2px;padding:8px 10px;margin-bottom:16px}
+      .intro h1{font-size:clamp(36px,9.7vw,50px);letter-spacing:-.065em;margin-bottom:10px}
+      .intro p:not(.eyebrow){font-size:14px}
+      .panel{border-width:2px;border-radius:17px;box-shadow:3px 4px 0 rgba(255,218,93,.8)}
+      .panel-head{padding:16px;gap:12px}
+      h2{font-size:18px}
+      .pin-picker{width:100%;justify-content:space-between}
+      .pin-picker .segmented-pins{border-width:2px;padding:3px;box-shadow:2px 3px 0 var(--yellow)}
+      .pin-btn{padding:6px 9px;min-width:60px}
+      .experiment-cell{padding:13px 11px 17px}
+      .control-wrap{padding:18px 16px 20px}
+      .control-title{font-size:13px}
+      .readout-big{font-size:29px}
+      .slider-row{gap:18px}
+      .quick{width:100%;justify-content:space-between}
+      .quick button{flex:1;min-width:0;padding:7px 2px;font-size:11px}
+      .metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:20px}
+      .metric{padding:9px 7px;border-width:1.5px;border-radius:10px}
+      .metric span{font-size:10px;line-height:1.3;min-height:27px}
+      .metric strong{font-size:17px}
+      .metric small{font-size:10px;line-height:1.3;display:block;margin-top:4px}
+      .one-explanation{margin-top:15px}
+      .code-panel{margin-top:15px}
+      .one-explanation .explain{padding:18px 17px}
+      .explain p{font-size:13px}
+      .code{padding:18px 17px;font-size:12px}
+      .copy{padding:8px 11px;font-size:12px}
+    }
+    @media(max-width:380px){
+      .topbar{align-items:flex-start}
+      .site-link{padding:7px 10px}
+      .intro h1{font-size:35px}
+    }
   </style>
 </head>
 <body>
 <main class="wrap">
   <header class="topbar">
-    <div class="brand"><div class="brandmark" aria-hidden="true">OMG</div><div>OMG <small>Virtual Lab</small></div></div>
-    <div class="pill">ARDUINO · USCITE PWM</div>
+    <div class="brand" aria-label="Elettroni e dintorni · OMG Virtual Lab">
+      <div class="brandmark" aria-hidden="true"><span>OMG!</span></div>
+      <div class="brand-copy"><small>ELETTRONI E DINTORNI</small><strong>OMG Virtual Lab</strong></div>
+    </div>
+    <a class="site-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="Visita ohmmygod.it in una nuova scheda">ohmmygod.it <span aria-hidden="true">↗</span></a>
   </header>
   <div class="intro">
-    <p class="eyebrow">Elettronica · Esperienza interattiva</p>
-    <h1>PWM: <span>regola la luce</span></h1>
+    <p class="eyebrow">ELETTRONICA · LABORATORIO INTERATTIVO</p>
+    <h1>PWM: <span>regola la luce</span><i aria-hidden="true">.</i></h1>
     <p>Un LED rosso, due pin con la tilde e uno slider: scopri come Arduino controlla la luminosità accendendo e spegnendo il LED molto velocemente.</p>
   </div>
 
   <section class="panel" aria-labelledby="circuit-title">
     <div class="panel-head">
       <div><h2 id="circuit-title">01 · Guarda cosa succede</h2><div class="hint">Arduino, LED e onda PWM nello stesso colpo d’occhio</div></div>
-      <div class="pin-picker" role="group" aria-label="Scegli il pin PWM"><span>Pin:</span><button class="pin-btn" id="choose9" type="button" aria-pressed="true">~9</button><button class="pin-btn" id="choose10" type="button" aria-pressed="false">~10</button></div>
+      <div class="pin-picker" role="group" aria-label="Scegli il pin PWM"><span>Pin PWM</span><div class="segmented-pins"><button class="pin-btn" id="choose9" type="button" aria-pressed="true">~9</button><button class="pin-btn" id="choose10" type="button" aria-pressed="false">~10</button></div></div>
     </div>
     <div class="experiment-grid">
       <div class="experiment-cell">
