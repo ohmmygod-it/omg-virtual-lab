@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f7f5" />
+  <title>Pull-up & Pull-down | OMG Virtual Lab</title>
+  <style>
+    :root{
+      --ink:#202c34; --muted:#627481; --subtle:#e3e9ed; --paper:#f7f8f7;
+      --white:#fff; --coral:#ed5f59; --yellow:#f8d859; --teal:#08a9a4;
+      --green:#418d55; --blue:#667c89; --purple:#6c63a8; --shadow:0 9px 28px rgba(21,37,45,.06);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Avenir Next",Avenir,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+    .wrap{max-width:1330px;margin:auto;padding:20px 26px 48px}
+    .hero{display:flex;gap:28px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .kicker{font-size:11px;letter-spacing:.15em;font-weight:900;color:#647883;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+    .kicker:before{content:"";width:11px;height:11px;background:var(--teal);box-shadow:4px 4px 0 var(--yellow);border:2px solid var(--ink);transform:rotate(-8deg)}
+    h1{font-size:clamp(27px,3vw,42px);letter-spacing:-.055em;line-height:1.08;margin:7px 0 7px;font-weight:900}
+    h1 em{color:var(--coral);font-style:normal}
+    .hero-desc{color:var(--muted);font-size:13.5px;line-height:1.48;max-width:650px;margin:0}
+    .brand{flex:none;display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--ink);border-radius:13px;padding:11px 16px;box-shadow:5px 5px 0 var(--yellow)}
+    .brand-symbol{position:relative;width:34px;height:31px;flex:none}
+    .brand-symbol:before,.brand-symbol:after{content:"";position:absolute;width:21px;height:21px;border:2px solid var(--ink);border-radius:4px}
+    .brand-symbol:before{top:0;left:0;background:var(--coral)}
+    .brand-symbol:after{top:8px;left:9px;background:var(--yellow)}
+    .brand-text{line-height:1}
+    .brand-text b{font-size:19px;font-weight:950;letter-spacing:-.08em;display:block}
+    .brand-text small{display:block;font-weight:800;color:#7e8d96;font-size:10px;letter-spacing:.13em;margin-top:5px;text-transform:uppercase}
+    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:17px}
+    .step{position:relative;text-align:left;min-height:75px;display:flex;gap:12px;align-items:center;background:var(--white);border:1px solid #d9e1e6;border-radius:13px;padding:11px 13px;box-shadow:0 1px 3px rgba(0,0,0,.02);transition:transform .2s,box-shadow .2s,border-color .2s}
+    .step:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .step.active{border:2px solid var(--ink);padding:10px 12px;box-shadow:4px 5px 0 var(--yellow)}
+    .step-no{width:39px;height:39px;display:grid;place-items:center;border-radius:10px;font-weight:950;font-size:16px;flex:none;background:#ecf1f3;color:#6f7d85}
+    .step.active .step-no{background:var(--yellow);color:var(--ink)}
+    .step .step-name{display:block;font-weight:850;font-size:14px;line-height:1.2;letter-spacing:-.02em}
+    .step .step-sub{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.2}
+    .work-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(410px,.94fr);gap:15px;align-items:stretch}
+    .panel{min-width:0;background:#fff;border:1px solid #dae3e8;border-radius:17px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-pad{padding:19px 21px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;min-height:26px}
+    .section-head h2{font-size:15px;margin:0;letter-spacing:-.025em;display:flex;align-items:center;gap:9px}
+    .dot{width:9px;height:9px;background:var(--teal);border-radius:50%;display:inline-block}
+    .microtag{font-weight:850;font-size:10px;letter-spacing:.07em;padding:6px 9px;border:1px solid #e0e7ea;background:#f6f8f9;border-radius:7px;color:#677c89;text-transform:uppercase;white-space:nowrap}
+    .schematic-box{background:linear-gradient(180deg,#fafcfc,#f2f6f7);border:1px solid #e1e9eb;border-radius:13px;position:relative;overflow:hidden}
+    .schematic-box:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#b8c6ca 0.8px,transparent 0.8px);background-size:18px 18px;opacity:.19;pointer-events:none}
+    .schematic{display:block;width:100%;height:auto;min-height:275px;position:relative;z-index:1}
+    .schematic [data-toggle-button]{cursor:pointer;outline:none}
+    .schematic .svg-button-glow{opacity:0;transition:opacity .2s}
+    .schematic [data-toggle-button]:hover .svg-button-glow,.schematic [data-toggle-button]:focus .svg-button-glow{opacity:1}
+    .schematic .sig{stroke:#435d70;stroke-width:4;fill:none;stroke-linejoin:round;stroke-linecap:round}
+    .schematic .hot{stroke:var(--coral)}
+    .schematic .grounded{stroke:#399b9a}
+    .schematic .device{fill:#fff;stroke:#2b3d48;stroke-width:3}
+    .schematic .caption{font:750 15px Inter,Arial,sans-serif;fill:#344c5b}
+    .schematic .tiny{font:650 12px Inter,Arial,sans-serif;fill:#607681}
+    .schematic .title-svg{font:900 19px Inter,Arial,sans-serif;letter-spacing:-.35px;fill:#253946}
+    .schematic .node{fill:#263f4c}
+    .schematic .sourcebox{fill:#fff4f1;stroke:#ed5f59;stroke-width:3}
+    .schematic .sourcecap{fill:#ed5f59}
+    .schematic .sourcetext{font:900 15px Inter,Arial,sans-serif;fill:#ab423d}
+    .schematic .sourcehint{font:800 10px Inter,Arial,sans-serif;fill:#ab423d;letter-spacing:.08em}
+    .schematic .noise-cloud{fill:#fff4ea;stroke:#eba48e;stroke-width:2.5;stroke-dasharray:6 5}
+    .schematic .noise-arrow{stroke:#dd846d;stroke-width:3;fill:none;stroke-dasharray:6 5;stroke-linecap:round}
+    .schematic .v-bubble{fill:#ffffff;stroke:#d7e1e6;stroke-width:2.5}
+    .schematic .v-bubble.active{stroke:#08a9a4;fill:#f0fbfa}
+    .schematic .v-bubble.warn{stroke:#ed8d6f;fill:#fff7ef}
+    .schematic .v-title{font:800 10px Inter,Arial,sans-serif;letter-spacing:.08em;fill:#6b7f8c}
+    .schematic .v-text{font:950 16px Inter,Arial,sans-serif;letter-spacing:-.03em;fill:#20323d}
+    .schematic .v-sub{font:750 10px Inter,Arial,sans-serif;fill:#5e7683}
+    .schematic .wobble{animation:wobblevolt 1.15s ease-in-out infinite}
+    .schematic .source-minus{font:900 18px Inter,Arial,sans-serif;fill:#5b6e79}
+    .schematic .noise-wiggle{animation:noiseflash 1s infinite alternate;transform-origin:center}
+    @keyframes noiseflash{from{opacity:.32}to{opacity:1}}
+    @keyframes wobblevolt{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
+    .button-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:15px}
+    .press{border:2px solid var(--ink);background:var(--yellow);color:var(--ink);padding:12px 18px;border-radius:11px;font-weight:900;display:flex;gap:10px;align-items:center;box-shadow:3px 4px 0 var(--ink);transition:transform .1s,box-shadow .1s,background .1s}
+    .press:hover{transform:translateY(-1px)}
+    .press.pressed{background:#b7e8db;box-shadow:1px 1px 0 var(--ink);transform:translate(2px,3px)}
+    .press .press-round{width:13px;height:13px;border-radius:50%;background:#fff;border:2px solid var(--ink)}
+    .press.pressed .press-round{background:var(--green)}
+    .btn-state{font-size:12px;color:var(--muted);line-height:1.35}
+    .btn-state b{color:var(--ink)}
+    .button-hint{display:block;margin-top:3px;font-size:11px;color:#7b8b95}
+    .state-output{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+    .state-tile{border-radius:11px;padding:11px 12px;background:#f5f8f9;border:1px solid #e0e8eb;min-width:0}
+    .state-tile .sm{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:#82929d}
+    .state-tile .big{display:flex;align-items:center;gap:6px;font-size:19px;letter-spacing:-.045em;font-weight:950;margin-top:4px;white-space:nowrap}
+    .state-tile .big small{font-size:12px;color:#778894;font-weight:700}
+    .signal-light{width:13px;height:13px;flex:none;border-radius:50%;background:#b8c4ca;border:2px solid #80919d}
+    .signal-light.on{background:#50c979;border-color:#2f9860;box-shadow:0 0 0 4px #d9f5e2}
+    .signal-light.flicker{animation:blink .32s steps(1) infinite alternate}
+    @keyframes blink{to{background:#50c979;box-shadow:0 0 0 4px #d9f5e2}}
+    .right-content{display:flex;flex-direction:column;height:100%}
+    .scope{position:relative;background:#142833;border:1px solid #12303e;border-radius:12px;overflow:hidden;padding:8px 9px 7px;min-height:325px}
+    .scope-top{display:flex;align-items:center;justify-content:space-between;color:#a7c4cf;font-size:10px;letter-spacing:.10em;font-weight:900;text-transform:uppercase;padding:4px 8px 1px;position:relative;z-index:1}
+    .scope-top .live{display:flex;align-items:center;gap:7px;color:#cbf1e7}
+    .live:before{content:"";background:#44daa4;border-radius:50%;height:7px;width:7px;box-shadow:0 0 0 3px #44daa421}
+    .scope-legend{display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:7px 8px 0;color:#c7dae0;font-size:10px;font-weight:850;letter-spacing:.02em}
+    .scope-legend span{display:inline-flex;align-items:center;gap:6px}
+    .scope-legend i{display:inline-block;width:21px;height:3px;border-radius:3px;background:#66deed;box-shadow:0 0 7px #66deed55}
+    .scope-legend .digital i{background:#f8d859;box-shadow:0 0 7px #f8d85955}
+    .scope-legend .uncertain i{background:#d88f72;opacity:.65;box-shadow:none}
+    canvas{display:block;width:100%;height:270px}
+    .scope-insight{display:flex;align-items:center;gap:9px;margin:10px 0 0;padding:10px 12px;border:1px solid #dce9eb;background:#f0f7f7;border-radius:9px;color:#3f6571;line-height:1.45;font-weight:720;font-size:11.5px}
+    .scope-insight b{color:#244653}
+    .chart-clear{border:1px solid #d4e0e5;background:white;border-radius:7px;color:#4d6473;font-weight:850;padding:5px 8px;font-size:10px;white-space:nowrap}
+    .chart-clear:hover{background:#e9f4f2}
+    .r-current{font-size:10.5px;font-weight:800;color:#46756a;margin-top:7px;max-width:145px}
+    .lab-tip{margin-top:15px;background:#f0f8f6;border-left:4px solid var(--teal);border-radius:5px 9px 9px 5px;padding:13px 14px;min-height:95px}
+    .lab-tip strong{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#248883;margin-bottom:6px}
+    .lab-tip p{margin:0;font-size:12px;color:#49636f;line-height:1.55}
+    .resistor-explainer{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px;border:1px solid #e7e1cc;border-radius:13px;padding:14px 18px;background:#fffaf0}
+    .resistor-explainer strong{display:block;margin-bottom:4px;font-size:13px}
+    .resistor-explainer p{margin:0;color:#6a6558;font-size:12px;line-height:1.45;max-width:730px}
+    .resistor-formula{font-weight:900;color:#805d21;background:#fff2cc;border:1px solid #e9d697;padding:9px 12px;border-radius:9px;font-variant-numeric:tabular-nums;font-size:12px}
+    .scope-caption{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:8px 2px 0;font-size:11px;color:var(--muted)}
+    .controls{margin-top:17px;border-top:1px solid #e8eef1;padding-top:14px;display:grid;grid-template-columns:1fr auto;gap:14px}
+    .range-label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-weight:800;font-size:12px}
+    .range-label b{color:var(--coral);font-variant-numeric:tabular-nums}
+    input[type=range]{accent-color:var(--coral);width:100%;height:10px;cursor:pointer}
+    .resistance-wrap{display:flex;flex-direction:column;min-width:120px}
+    .resistance-wrap select{background:#f8fafb;border:1px solid #ccd7df;border-radius:9px;padding:8px 9px;font-weight:800;color:var(--ink);min-height:35px}
+    .resistance-wrap label{font-weight:800;font-size:12px;margin-bottom:8px}
+    .controls-note{grid-column:1/-1;min-height:35px;border-radius:8px;background:#fff8e6;border:1px solid #f6e3ae;font-size:11.5px;color:#756031;line-height:1.45;padding:9px 11px}
+    .concept{margin-top:16px;background:#fff;border:1px solid #dbe5e9;border-radius:16px;padding:17px 20px;box-shadow:var(--shadow)}
+    .concept-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+    .concept-head h2{font-size:18px;font-weight:900;letter-spacing:-.04em;margin:0 0 6px}
+    .concept-head p{line-height:1.55;color:#526571;font-size:13px;margin:0;max-width:970px}
+    .tag{border:1px solid #dfebec;border-radius:7px;background:#eef7f6;color:#267d79;white-space:nowrap;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;padding:7px 10px}
+    .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:16px}
+    .mini-panel{background:#fff;border:1px solid #dbe5e9;border-radius:16px;padding:18px 20px;min-width:0;box-shadow:var(--shadow)}
+    .mini-panel h3{font-size:14px;margin:0 0 12px;font-weight:900}
+    .state-table{border-collapse:collapse;width:100%;font-size:12px}
+    .state-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#718391;padding:9px 7px;border-bottom:1px solid #dee6ea}
+    .state-table td{padding:11px 7px;border-bottom:1px solid #edf1f3;font-weight:750}
+    .state-table tr:last-child td{border:0}
+    .pill{font-size:11px;padding:4px 7px;border-radius:6px;background:#e9f5ec;color:#2d8050;font-weight:900}
+    .pill.low{background:#ecf0f3;color:#526675}
+    .pill.fluct{background:#fff0da;color:#985f21}
+    .code-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .copy{font-weight:850;font-size:11px;padding:7px 10px;border:1px solid #dae3e7;background:#f4f8f9;border-radius:7px;color:#415e6b}
+    .copy:hover{background:#e8f4f3}
+    pre{margin:0;background:#182b36;color:#e2f1f4;border-radius:10px;padding:15px 17px;line-height:1.55;font:12px/1.6 "SFMono-Regular",Consolas,"Liberation Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:186px}
+    .footnote{font-size:11px;line-height:1.5;color:#84939b;margin:10px 0 0}
+    .quiz{margin-top:16px;border:1px solid #dbe5e9;background:#fff;border-radius:16px;padding:18px 20px;display:grid;grid-template-columns:190px 1fr;gap:22px;box-shadow:var(--shadow)}
+    .quiz-kicker{color:#9b6e1c;text-transform:uppercase;font-size:10px;letter-spacing:.12em;font-weight:900}
+    .quiz h3{font-size:18px;letter-spacing:-.04em;font-weight:950;margin:5px 0 9px}
+    .quiz-count{font-size:11px;color:#7a8c97;font-weight:800}
+    .quiz-q{font-weight:760;line-height:1.5;font-size:13px;margin:0 0 11px}
+    .answers{display:flex;gap:9px;flex-wrap:wrap}
+    .answer{border:1px solid #cfdbdf;background:#f9fbfc;border-radius:9px;padding:9px 15px;font-size:12px;font-weight:900;color:#344d5c}
+    .answer:hover:not(:disabled){border-color:var(--teal)}
+    .answer.correct{border-color:var(--green);background:#e9f6ec;color:#247845}
+    .answer.wrong{border-color:var(--coral);background:#fff0ef;color:#ad463f}
+    .answer:disabled{cursor:default;opacity:.75}
+    .feedback{font-size:12px;line-height:1.45;margin:10px 0 0;font-weight:750;min-height:20px;color:#557b64}
+    .quiz-next{border:0;border-radius:8px;background:var(--ink);color:white;font-weight:850;font-size:12px;padding:9px 13px;margin-top:10px;display:none}
+    .quiz-next.show{display:inline-block}
+    footer{text-align:center;margin-top:22px;color:#8999a3;font-size:11px;font-weight:650}
+    footer b{color:#405562}
+    @media(max-width:1100px){.work-grid{grid-template-columns:1fr}.scope{min-height:320px}canvas{height:270px}.bottom-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.resistor-formula{width:100%;text-align:center}.wrap{padding:16px 12px 32px}.hero{align-items:flex-start;gap:12px}.brand{padding:8px 10px}.brand-text b{font-size:14px}.brand-text small{font-size:8px}.brand-symbol{transform:scale(.78);width:28px}.hero-desc{font-size:12px}h1{font-size:29px}.steps{grid-template-columns:1fr 1fr;gap:8px}.step{min-height:69px;padding:9px}.step.active{padding:8px}.step-no{width:33px;height:33px;font-size:13px}.step .step-name{font-size:12px}.step .step-sub{font-size:10px}.panel-pad{padding:14px 12px}.schematic{min-height:195px}.bottom-grid{grid-template-columns:1fr}.quiz{grid-template-columns:1fr;gap:9px}.controls{grid-template-columns:1fr auto}.concept{padding:15px}.concept-head{gap:8px}.concept-head h2{font-size:16px}.concept-head p{font-size:12px}.tag{display:none}}
+    @media(max-width:410px){.hero{display:block}.brand{display:none}.step{gap:7px}.step-no{width:29px;height:29px}.step .step-name{font-size:11px}.state-tile{padding:10px 7px}.state-tile .big{font-size:15px}.state-tile .sm{font-size:9px}.press{padding:10px 12px;font-size:12px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+
+    /* Schema pulito: nessun badge sopra i collegamenti o sopra il simbolo R. */
+    .schematic .circ-board-title{font:900 20px Inter,Arial,sans-serif;letter-spacing:-.5px;fill:#284555}
+    .schematic .circ-power-text{font:900 22px Inter,Arial,sans-serif;fill:#c54e48}
+    .schematic .circ-help{font:750 15px Inter,Arial,sans-serif;fill:#627b88}
+    .schematic .circ-action{font:900 17px Inter,Arial,sans-serif}
+    .schematic .circ-logic{font:950 46px Inter,Arial,sans-serif;fill:#188ea8}
+    .schematic .circ-voltage{font:850 21px Inter,Arial,sans-serif;fill:#188ea8}
+    .schematic .circ-foot{font:750 15px Inter,Arial,sans-serif;fill:#6a808d}
+    .schematic .circ-vr{font:900 24px Inter,Arial,sans-serif;fill:#263e4e}
+    .schematic .circ-hint{font:700 12px Inter,Arial,sans-serif;fill:#8193a0}
+    .schematic .circ-note{font:900 13px Inter,Arial,sans-serif;fill:#b66d50}
+    .schematic .circ-int-label{font:800 14px Inter,Arial,sans-serif;fill:#986a28}
+    .schematic .circ-int-voltage{font:900 16px Inter,Arial,sans-serif;fill:#986a28}
+    .schematic .circ-noise-title{font:900 13px Inter,Arial,sans-serif;fill:#a65d3e}
+    .schematic .circ-noise-sub{font:700 12px Inter,Arial,sans-serif;fill:#af7b63}
+    .schematic .circ-footer{font:850 14px Inter,Arial,sans-serif;fill:#496574}
+    .schematic .circ-footer-warn{font:800 14px Inter,Arial,sans-serif;fill:#a87332}
+    .schematic .circ-footer-muted{font:750 13px Inter,Arial,sans-serif;fill:#718692}
+    .schematic [data-toggle-button]:hover rect:first-child,.schematic [data-toggle-button]:focus rect:first-child{opacity:.28}
+    @media(max-width:700px){.schematic-box{overflow-x:auto}.schematic{min-width:610px}.schematic-box:after{content:'Scorri lo schema per esplorarlo →';position:sticky;left:12px;display:block;width:max-content;background:#f5f8f9;color:#6a7c88;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:750;margin:0 0 6px 8px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div>
+        <div class="kicker">OMG Virtual Lab · Elettronica e componenti</div>
+        <h1>Pull-<em>up</em> & Pull-<em>down</em></h1>
+        <p class="hero-desc">Perché un pin Arduino può leggere HIGH e LOW «da solo»? Scopri i disturbi, aggiungi una resistenza e osserva come cambia il segnale.</p>
+      </div>
+      <div class="brand" aria-label="ohmmygod.it">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span class="brand-text"><b>ohmmygod.it</b><small>virtual lab</small></span>
+      </div>
+    </header>
+
+    <nav class="steps" aria-label="Le quattro tappe del laboratorio">
+      <button class="step active" data-mode="floating" aria-current="step"><span class="step-no">01</span><span><span class="step-name">Pin flottante</span><span class="step-sub">Senza resistenza</span></span></button>
+      <button class="step" data-mode="down"><span class="step-no">02</span><span><span class="step-name">Pull-down</span><span class="step-sub">Resistenza verso GND</span></span></button>
+      <button class="step" data-mode="up"><span class="step-no">03</span><span><span class="step-name">Pull-up</span><span class="step-sub">Resistenza verso +5 V</span></span></button>
+      <button class="step" data-mode="internal"><span class="step-no">04</span><span><span class="step-name">INPUT_PULLUP</span><span class="step-sub">Resistenza interna</span></span></button>
+    </nav>
+
+    <div class="work-grid">
+      <section class="panel panel-pad" aria-label="Schema del circuito">
+        <div class="section-head"><h2><span class="dot"></span> Circuito interattivo</h2><span class="microtag" id="schema-tag">Nessuna resistenza</span></div>
+        <div class="schematic-box"><svg id="schematic" class="schematic" viewBox="0 0 820 440" role="img" aria-label="Schema del circuito elettrico interattivo"></svg></div>
+        <div class="button-row">
+          <button class="press" id="press-button" type="button" aria-pressed="false"><span class="press-round"></span><span id="press-text">Premi il pulsante</span></button>
+          <div class="btn-state">Pulsante: <b id="button-state">APERTO (rilasciato)</b><span class="button-hint">Puoi cliccare anche direttamente sul pulsante nello schema.</span></div>
+        </div>
+        <div class="state-output" aria-live="off">
+          <div class="state-tile"><div class="sm">Tensione su D2</div><div class="big"><span id="voltage">—</span><small>V</small></div></div>
+          <div class="state-tile"><div class="sm">digitalRead(2)</div><div class="big"><span class="signal-light" id="signal-light"></span><span id="logic">—</span></div></div>
+          <div class="state-tile"><div class="sm">Condizione</div><div class="big" id="condition" style="font-size:15px;letter-spacing:-.025em">Instabile</div></div>
+        </div>
+        <div class="lab-tip"><strong>Esperimento guidato</strong><p id="lab-instruction">Aumenta i disturbi e guarda il pin D2: può cambiare lettura anche senza premere.</p></div>
+      </section>
+
+      <section class="panel panel-pad right-content" aria-label="Visualizzazione della tensione e disturbi">
+        <div class="section-head"><h2><span class="dot" style="background:var(--coral)"></span> Cosa legge Arduino?</h2><span class="microtag">Pin digitale D2</span></div>
+        <div class="scope">
+          <div class="scope-top"><span>Oscilloscopio didattico · D2</span><span class="live">simulazione live</span></div>
+          <div class="scope-legend"><span><i></i>Tensione sul pin (V)</span><span class="digital"><i></i>digitalRead() (0 / 1)</span></div>
+          <canvas id="scope" aria-label="Due grafici sincronizzati nel tempo: sopra tensione sul pin da zero a cinque volt; sotto lettura digitale HIGH o LOW. Le soglie 1,5 e 3 volt delimitano l'intervallo non garantito per Arduino Uno classico." role="img"></canvas>
+        </div>
+        <div class="scope-caption"><span>Due tracce, stesso tempo · 0,1 s per campione</span><span id="scope-state">Ingresso flottante</span><button class="chart-clear" id="clear-scope" type="button">Pulisci grafico</button></div>
+        <div class="scope-insight" id="scope-insight" aria-live="polite"><span>↗</span><span><b>Guarda le due tracce:</b> le interferenze sul pin possono trasformarsi in letture HIGH e LOW imprevedibili.</span></div>
+        <div class="controls">
+          <div>
+            <div class="range-label"><label for="noise">Interferenze</label><b id="noise-num">65%</b></div>
+            <input type="range" id="noise" min="0" max="100" step="1" value="65" aria-label="Intensità simulata dei disturbi ambientali" />
+          </div>
+          <div class="resistance-wrap" id="resistance-wrap">
+            <label for="resistance">Resistenza esterna</label>
+            <select id="resistance" aria-label="Valore della resistenza esterna">
+              <option value="1000">1 kΩ</option>
+              <option value="4700">4,7 kΩ</option>
+              <option value="10000" selected>10 kΩ</option>
+              <option value="47000">47 kΩ</option>
+              <option value="100000">100 kΩ</option>
+              <option value="1000000">1 MΩ</option>
+            </select>
+            <div class="r-current" id="r-current">Premuto: I ≈ 0,50 mA</div>
+          </div>
+          <div class="controls-note" id="controls-note">Regola le interferenze e osserva il grafico. A contatto aperto il pin può risentire di dita, cavi vicini o campi elettrici perché non ha un riferimento definito.</div>
+        </div>
+      </section>
+    </div>
+
+    <section class="concept" aria-live="polite">
+      <div class="concept-head"><div><h2 id="concept-title">01. Il problema: ingresso flottante</h2><p id="concept-text">Un ingresso digitale ha impedenza elevata. Se il pulsante è aperto e non c'è una resistenza di richiamo, il pin D2 non è collegato né a +5 V né a GND. Piccole interferenze e cariche elettriche possono influenzarne la tensione: <b>digitalRead()</b> può restituire HIGH o LOW senza una pressione.</p></div><span class="tag" id="concept-tag">Prima osserva</span></div>
+    </section>
+
+    <section class="resistor-explainer" aria-label="Il ruolo della resistenza">
+      <div><strong>Perché proprio una resistenza?</strong><p>La resistenza richiama il pin a un livello definito quando il contatto è aperto e limita la corrente quando il contatto è chiuso. Un valore tipico è 10 kΩ: prova a cambiarlo per osservare la diversa sensibilità ai disturbi.</p></div>
+      <div class="resistor-formula" id="resistor-formula">R = 10 kΩ · I = 5 V / 10 kΩ = 0,50 mA</div>
+    </section>
+
+    <div class="bottom-grid">
+      <section class="mini-panel">
+        <h3>Che cosa succede al pulsante?</h3>
+        <table class="state-table">
+          <thead><tr><th>Configurazione</th><th>Rilasciato</th><th>Premuto</th></tr></thead>
+          <tbody>
+            <tr><td>Senza resistenza</td><td><span class="pill fluct">Non affidabile</span></td><td><span class="pill">HIGH</span></td></tr>
+            <tr><td>Pull-down</td><td><span class="pill low">LOW</span></td><td><span class="pill">HIGH</span></td></tr>
+            <tr><td>Pull-up</td><td><span class="pill">HIGH</span></td><td><span class="pill low">LOW</span></td></tr>
+            <tr><td>INPUT_PULLUP</td><td><span class="pill">HIGH</span></td><td><span class="pill low">LOW</span></td></tr>
+          </tbody>
+        </table>
+        <p class="footnote">Il pin legge <b>tensione</b>, non la posizione del pulsante. Sono i collegamenti a determinare il livello logico.</p>
+      </section>
+      <section class="mini-panel">
+        <div class="code-head"><h3 id="code-title">Sketch Arduino · ingresso senza richiamo</h3><button class="copy" id="copy" type="button">Copia codice</button></div>
+        <pre><code id="code"></code></pre>
+        <p class="footnote" id="code-note">Esempio per Arduino Uno/Nano classico a 5 V. Il codice segue lo schema selezionato.</p>
+      </section>
+    </div>
+
+    <section class="quiz" aria-label="Mini challenge">
+      <div><div class="quiz-kicker">Verifica la comprensione</div><h3>Mini challenge</h3><div class="quiz-count" id="quiz-score">0 risposte corrette su 0</div></div>
+      <div><p class="quiz-q" id="quiz-question"></p><div class="answers" id="quiz-answers"></div><p class="feedback" id="quiz-feedback" role="status"></p><button type="button" class="quiz-next" id="quiz-next">Prossima domanda →</button></div>
+    </section>
+    <footer><b>OMG · Ohm My God</b> — Virtual Lab · Schemi semplificati e simulazione didattica, non misure reali.</footer>
+  </main>
+<script>
+(() => {
+  'use strict';
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const state = {
+    mode:'floating', pressed:false, noise:65, resistance:10000,
+    voltage:2.5, logic:'LOW', samples:[], frame:0, event:null,
+    quizIndex:0, quizTotal:0, quizScore:0, answered:false
+  };
+  const modes = {
+    floating:{tag:'Nessuna resistenza',title:'01. Il problema: ingresso flottante',badge:'Prima osserva',scope:'Ingresso flottante',
+      explanation:'Un ingresso digitale ha impedenza elevata. Se il pulsante è aperto e non c’è una resistenza di richiamo, il pin D2 non è collegato né a +5 V né a GND. Piccole interferenze e cariche elettriche possono influenzarne la tensione: <b>digitalRead()</b> può restituire HIGH o LOW senza una pressione.',
+      note:'A pulsante rilasciato D2 è «flottante». Regola le interferenze simulate: il pin può risentire di dita, cavi vicini o campo elettrico. Con il contatto chiuso D2 va a +5 V.'},
+    down:{tag:'Pull-down esterno',title:'02. Pull-down: LOW a riposo',badge:'R → GND',scope:'Riferimento a 0 V',
+      explanation:'La resistenza collega debolmente D2 a <b>GND</b>, perciò il pin legge <b>LOW</b> quando il pulsante è aperto. Premendo il pulsante, D2 si collega direttamente a +5 V e legge <b>HIGH</b>. La resistenza evita un cortocircuito tra +5 V e GND quando premi.',
+      note:'Con 10 kΩ la lettura resta stabile anche con disturbi normali. Prova 1 MΩ: un richiamo troppo debole è più sensibile alle interferenze (modello qualitativo).'},
+    up:{tag:'Pull-up esterno',title:'03. Pull-up: HIGH a riposo',badge:'R → +5 V',scope:'Riferimento a +5 V',
+      explanation:'La resistenza collega debolmente D2 a <b>+5 V</b>, perciò il pin legge <b>HIGH</b> con pulsante aperto. Premendolo, D2 viene collegato direttamente a <b>GND</b> e legge <b>LOW</b>. Il pulsante funziona con logica «attiva bassa».',
+      note:'Il pull-up fa esattamente il lavoro opposto del pull-down. Con R = 10 kΩ e pulsante premuto, la corrente nel resistore è circa 0,5 mA.'},
+    internal:{tag:'Resistenza nel microcontrollore',title:'04. INPUT_PULLUP: il pull-up è già dentro',badge:'Arduino Uno / Nano',scope:'Pull-up interno attivo',
+      explanation:'Con <b>pinMode(2, INPUT_PULLUP)</b> Arduino attiva una resistenza di pull-up <b>interna al microcontrollore</b> (indicativamente 20–50 kΩ su Uno/Nano AVR). Ti bastano un pulsante tra D2 e GND e due fili: <b>rilasciato = HIGH, premuto = LOW</b>. Su Arduino Uno/Nano classici non esiste un equivalente INPUT_PULLDOWN.',
+      note:'Qui non serve una resistenza esterna. Lo schema mostra la resistenza all’interno di Arduino, separata dai collegamenti esterni. Anche in questo caso un cavo molto lungo può captare disturbi.'}
+  };
+  const sketches = {
+    floating:`// D2 con pulsante verso +5 V\n// ATTENZIONE: manca la resistenza di richiamo.\nconst int pulsante = 2;\n\nvoid setup() {\n  pinMode(pulsante, INPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int lettura = digitalRead(pulsante);\n  Serial.println(lettura); // HIGH o LOW non affidabile a riposo\n  delay(100);\n}`,
+    down:`// Pulsante: +5 V ---- pulsante ---- D2\n// Resistenza 10 kΩ: D2 ---- R ---- GND\nconst int pulsante = 2;\n\nvoid setup() {\n  pinMode(pulsante, INPUT); // R esterna di pull-down\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int stato = digitalRead(pulsante);\n  // Rilasciato = LOW (0); premuto = HIGH (1)\n  Serial.println(stato);\n  delay(100);\n}`,
+    up:`// Pulsante: D2 ---- pulsante ---- GND\n// Resistenza 10 kΩ: +5 V ---- R ---- D2\nconst int pulsante = 2;\n\nvoid setup() {\n  pinMode(pulsante, INPUT); // R esterna di pull-up\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int stato = digitalRead(pulsante);\n  // Rilasciato = HIGH (1); premuto = LOW (0)\n  Serial.println(stato);\n  delay(100);\n}`,
+    internal:`// Pulsante collegato SOLO tra D2 e GND.\n// La resistenza di pull-up è già nel microcontrollore.\nconst int pulsante = 2;\n\nvoid setup() {\n  pinMode(pulsante, INPUT_PULLUP); // Attiva il pull-up\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int stato = digitalRead(pulsante);\n  bool premuto = (stato == LOW); // Logica invertita!\n  Serial.println(premuto ? "PREMUTO" : "RILASCIATO");\n  delay(100);\n}`
+  };
+  const codeTitles={floating:'Sketch · senza resistenza',down:'Sketch · pull-down esterno',up:'Sketch · pull-up esterno',internal:'Sketch · INPUT_PULLUP'};
+  const instructions={
+    floating:'Lascia il pulsante rilasciato e porta i disturbi al 70–100%. La traccia azzurra attraversa la fascia delle soglie: guarda come reagisce la traccia gialla. Poi premi: il segnale va a +5 V.',
+    down:'Con il pulsante rilasciato, osserva LOW stabile. Premi: il pin va a +5 V e la lettura passa a HIGH. Poi prova R = 1 MΩ per vedere come un richiamo molto debole può peggiorare l’immunità ai disturbi.',
+    up:'A pulsante rilasciato leggi HIGH. Premi: il collegamento a GND prevale sul richiamo tramite resistenza e la lettura va a LOW. Confronta sul grafico il prima e il dopo.',
+    internal:'Il circuito esterno ha soltanto pulsante e fili: la R è dentro Arduino. Premi e rilascia: LOW quando premi, HIGH a riposo. Il comportamento è quello del pull-up esterno.'
+  };
+  const eventNames={floating:'Senza R',down:'Pull-down',up:'Pull-up',internal:'R interna'};
+  function getSketch(){return sketches[state.mode].replaceAll('10 kΩ',formatR(state.resistance))}
+  function currentLabel(mA){return mA>=1?mA.toFixed(2).replace('.',',')+' mA':mA>=.01?mA.toFixed(2).replace('.',',')+' mA':(mA*1000).toFixed(1).replace('.',',')+' µA'}
+  function renderCurrent(){
+    const mode=state.mode;
+    if(mode==='floating'){$('#resistor-formula').textContent='Senza R: il pin aperto non ha un livello garantito';return}
+    if(mode==='internal'){$('#resistor-formula').textContent='R interna ≈ 20–50 kΩ · I premuto ≈ 0,10–0,25 mA';return}
+    const mA=5000/state.resistance;
+    $('#r-current').textContent='Se premi: I ≈ '+currentLabel(mA);
+    $('#resistor-formula').textContent='I = 5 V ÷ '+formatR(state.resistance)+' = '+currentLabel(mA)+' (premuto)';
+  }
+  const formatR=(r)=>r >= 1000000 ? '1 MΩ' : `${(r/1000).toLocaleString('it-IT')} kΩ`;
+  function wire(d, cls=''){return `<path class="sig ${cls}" d="${d}"/>`}
+  function circle(x,y,r=7,cls='node'){return `<circle cx="${x}" cy="${y}" r="${r}" class="${cls}" />`}
+  function vResistor(x,y1,y2,label){
+    // Standard IEC/European resistor symbol: continuous connections above and below.
+    const top=y1+8, bottom=y2-8;
+    return `${wire(`M${x} ${y1} V${top}`)}<rect x="${x-12}" y="${top}" width="24" height="${bottom-top}" rx="3" fill="#ffebe7" stroke="#db7460" stroke-width="4"/>${wire(`M${x} ${bottom} V${y2}`)}<rect x="${x+22}" y="${(y1+y2)/2-13}" width="114" height="25" rx="7" fill="#fff" stroke="#e1e9ec"/><text x="${x+30}" y="${(y1+y2)/2+5}" class="caption">${label}</text>`;
+  }
+  function ground(x,y){return `${wire(`M${x} ${y-17} V${y}`,'grounded')}<path d="M${x-21} ${y} H${x+21} M${x-14} ${y+9} H${x+14} M${x-7} ${y+18} H${x+7}" class="sig grounded" stroke-width="3"/><text class="caption" x="${x+30}" y="${y+8}">GND</text>`}
+  // Circuiti volutamente essenziali: collegamenti, potenziali, R e pulsante.
+  // Il colore del nodo indica un LIVELLO DI TENSIONE, non un flusso di corrente.
+  const svgPath=(d,stroke='#395365',width=4,extra='')=>`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+  function supplySymbol(x=570){
+    return `<g aria-label="Alimentazione positiva +5 volt">
+      <text x="${x}" y="64" text-anchor="middle" class="circ-power-text">+5 V</text>
+      ${svgPath(`M${x-19} 83 H${x+19}`,'#ed5f59',4)}
+    </g>`;
+  }
+  function groundSymbol(x=570,y=384){
+    return `<g aria-label="Massa GND, zero volt">
+      ${svgPath(`M${x-24} ${y} H${x+24} M${x-16} ${y+9} H${x+16} M${x-8} ${y+18} H${x+8}`,'#168e9d',3.5)}
+      <text x="${x+35}" y="${y+17}" class="circ-help">GND</text>
+    </g>`;
+  }
+  function resistorSymbol(x,y1,y2,internal=false){
+    const count=6,unit=(y2-y1)/count;
+    let points=`M${x} ${y1}`;
+    for(let i=1;i<count;i++)points+=` L${x+(i%2?-13:13)} ${Math.round(y1+unit*i)}`;
+    points+=` L${x} ${y2}`;
+    return `<g aria-label="Resistenza ${internal?'interna':'esterna'}"><path d="${points}" fill="none" stroke="${internal?'#d08e39':'#365365'}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/></g>`;
+  }
+  function svgButton(x,y1,y2,pressed){
+    const contact=pressed?`M${x} ${y1} V${y2}`:`M${x} ${y1} L${x+23} ${y2-14}`;
+    const chip=pressed?'RILASCIA':'PREMI QUI';
+    const cy=(y1+y2)/2;
+    return `<g data-toggle-button="1" role="button" tabindex="0" aria-label="Pulsante ${pressed?'premuto':'rilasciato'}, clicca per ${pressed?'rilasciare':'premere'}">
+       <rect x="${x-27}" y="${y1-13}" width="62" height="${y2-y1+26}" rx="12" fill="#f8d859" opacity=".10" stroke="#deb953" stroke-width="2"/>
+       <circle cx="${x}" cy="${y1}" r="6" fill="#fff" stroke="#395365" stroke-width="3"/>
+       <circle cx="${x}" cy="${y2}" r="6" fill="#fff" stroke="#395365" stroke-width="3"/>
+       ${svgPath(contact,pressed?'#418d55':'#d7655b',5.5)}
+       <rect x="${x-11}" y="${y1-27}" width="22" height="14" rx="4" fill="${pressed?'#418d55':'#ed5f59'}" stroke="#344f5c" stroke-width="1.8"/>
+       <rect x="620" y="${cy-22}" width="170" height="46" rx="10" fill="${pressed?'#e8f5ed':'#fff8df'}" stroke="${pressed?'#92caa6':'#dfca82'}" stroke-width="2"/>
+       <text x="632" y="${cy-4}" class="circ-help">PULSANTE</text>
+       <text x="632" y="${cy+15}" class="circ-action" fill="${pressed?'#24804a':'#826019'}">${chip}</text>
+    </g>`;
+  }
+  function resistorVoltage(x,y,internal=false){
+    return `<g aria-hidden="true"><rect x="${x}" y="${y}" width="173" height="76" rx="11" fill="#f7f9fa" stroke="#dce5e8" stroke-width="2"/>
+      <text x="${x+12}" y="${y+18}" class="circ-help">${internal?'RESISTENZA INTERNA':'CADUTA SU R'}</text>
+      <text id="schem-r-volt" x="${x+12}" y="${y+45}" class="circ-vr">0,00 V</text>
+      <text x="${x+12}" y="${y+65}" class="circ-hint">${internal?'circa 20–50 kΩ':'tra i due capi della R'}</text></g>`;
+  }
+  function arduinoBoard(internal){
+    const w=internal?331:292;
+    return `<g>
+      <rect x="44" y="117" width="${w}" height="236" rx="18" fill="#ffffff" stroke="#2c4655" stroke-width="3"/>
+      <rect x="59" y="132" width="${w-30}" height="41" rx="9" fill="#e8f6f4"/>
+      <text x="73" y="159" class="circ-board-title">ARDUINO UNO</text>
+      <text x="73" y="201" class="circ-help">digitalRead(2)</text>
+      <text id="schem-logic" x="73" y="249" class="circ-logic">LOW</text>
+      <text id="schem-voltage" x="73" y="286" class="circ-voltage">D2 = 0,00 V</text>
+      <text id="schem-qualifier" x="73" y="321" class="circ-foot">LOW = ingresso a 0 V</text>
+      <rect x="${44+w-6}" y="229" width="14" height="24" rx="3" fill="#f8d859" stroke="#304856" stroke-width="2"/>
+      <text x="${44+w+18}" y="221" class="circ-help">D2</text>
+      ${internal?`${svgPath('M222 184 V336','#d3dfe3',1.4,'stroke-dasharray="4 5"')}
+        <text x="266" y="189" text-anchor="middle" class="circ-int-label">Vcc +5 V</text>
+        ${svgPath('M267 194 V207','#d08e39',3.5)}
+        ${resistorSymbol(267,207,232,true)}
+        ${svgPath('M267 232 V240 H375','#d08e39',3.5)}
+        <text x="241" y="283" class="circ-int-label">R interna</text>
+        <text x="241" y="303" class="circ-hint">20–50 kΩ</text>
+        <text id="schem-r-volt" x="241" y="323" class="circ-int-voltage">ΔV = 0,00 V</text>`:''}
+    </g>`;
+  }
+  function interferenceIcon(){
+    return `<g aria-hidden="true">
+      <path d="M417 152c-2-14 10-25 23-24 6-11 27-12 34 0 19-3 28 13 26 26 14 10 7 31-11 31h-53c-18 0-24-19-19-33z" fill="#fff3e4" stroke="#e0a582" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <text x="457" y="152" text-anchor="middle" class="circ-noise-title">INTERFERENZE</text>
+      <text x="457" y="170" text-anchor="middle" class="circ-noise-sub">dita · cavi · campi</text>
+      <path d="M457 190 C456 205 468 210 473 221" fill="none" stroke="#dc9677" stroke-width="2.5" stroke-dasharray="5 6"/>
+    </g>`;
+  }
+  function renderSchematic(){
+    const {mode,pressed,resistance}=state;
+    const floating=mode==='floating';
+    const down=mode==='down',internal=mode==='internal';
+    const chipRight=internal?375:336;
+    let svg=`<title>Schema ${modes[mode].tag}: contatto ${pressed?'chiuso':'aperto'}, tensione su D2 e sulla resistenza.</title>
+      ${arduinoBoard(internal)}
+      <path id="schem-signal-wire" d="M${chipRight} 240 H570" fill="none" stroke="#168e9d" stroke-width="5.5" stroke-linecap="round"/>
+      <circle id="schem-node" cx="570" cy="240" r="7" fill="#168e9d" stroke="#fff" stroke-width="2"/>`;
+    if(down||floating){
+      svg+=`${supplySymbol()}
+        ${svgPath('M570 83 V151','#d7655b',4)}
+        ${svgButton(570,152,208,pressed)}
+        ${svgPath('M570 208 V240','#395365',4)}`;
+      if(down){
+        svg+=`${svgPath('M570 240 V287','#395365',4)}
+          ${resistorSymbol(570,287,344)}
+          ${svgPath('M570 344 V384','#395365',4)}
+          ${groundSymbol()}
+          <text x="610" y="278" class="circ-help">R = ${formatR(resistance)}</text>
+          ${resistorVoltage(615,298)}`;
+      }else{
+        svg+=`<path d="M570 240 V291" stroke="#b3c1c9" stroke-width="2.5" stroke-dasharray="5 8"/>
+          <rect x="613" y="299" width="176" height="47" rx="9" fill="#fff7ef" stroke="#e9b7a5" stroke-width="2"/>
+          <text x="626" y="320" class="circ-note">NESSUNA RESISTENZA</text>
+          <text x="626" y="336" class="circ-hint">D2 senza riferimento</text>`;
+        if(!pressed)svg+=interferenceIcon();
+      }
+    }else if(mode==='up'){
+      svg+=`${supplySymbol()}
+        ${svgPath('M570 83 V130','#395365',4)}
+        ${resistorSymbol(570,130,190)}
+        ${svgPath('M570 190 V240','#395365',4)}
+        <text x="611" y="125" class="circ-help">R = ${formatR(resistance)}</text>
+        ${resistorVoltage(614,136)}
+        ${svgPath('M570 240 V289','#395365',4)}
+        ${svgButton(570,290,337,pressed)}
+        ${svgPath('M570 337 V384','#395365',4)}
+        ${groundSymbol()}`;
+    }else{
+      svg+=`${svgPath('M570 240 V289','#395365',4)}
+        ${svgButton(570,290,337,pressed)}
+        ${svgPath('M570 337 V384','#395365',4)}
+        ${groundSymbol()}`;
+    }
+    // Le informazioni non attraversano i fili né si sovrappongono ai componenti.
+    svg+=`<rect x="44" y="386" width="260" height="33" rx="9" fill="#eef4f6"/>
+      <circle cx="61" cy="403" r="6" fill="#188eab"/><text x="74" y="407" class="circ-footer">0 V · LOW</text>
+      <circle cx="169" cy="403" r="6" fill="#ed5f59"/><text x="182" y="407" class="circ-footer">5 V · HIGH</text>`;
+    if(floating&&!pressed)svg+=`<text x="319" y="407" class="circ-footer-warn">Senza R: lettura non garantita</text>`;
+    else svg+=`<text x="319" y="407" class="circ-footer-muted">Colori = potenziale sul pin, non corrente</text>`;
+    $('#schematic').innerHTML=svg;
+    $('#schematic').setAttribute('aria-label',`Schema ${modes[mode].tag}. Pulsante ${pressed?'premuto':'rilasciato'}. Lo stato di D2 e la caduta di tensione sono mostrati nello schema.`);
+    updateSchematicValues();
+  }
+  function updateSchematicValues(){
+    const v=state.voltage;
+    if(!Number.isFinite(v))return;
+    const floating=state.mode==='floating'&&!state.pressed;
+    const clr=floating?'#b97b29':state.logic==='HIGH'?'#d95750':'#168e9d';
+    const logic=$('#schem-logic'), voltage=$('#schem-voltage');
+    if(!logic||!voltage)return;
+    logic.textContent=state.logic;
+    logic.setAttribute('fill',clr);
+    voltage.textContent=state.mode==='internal'?`${v.toFixed(2).replace('.',',')} V`:`D2 = ${v.toFixed(2).replace('.',',')} V`;
+    voltage.setAttribute('fill',clr);
+    const wire=$('#schem-signal-wire'),node=$('#schem-node');
+    if(wire)wire.setAttribute('stroke',clr);
+    if(node)node.setAttribute('fill',clr);
+    const qualifier=$('#schem-qualifier');
+    if(qualifier)qualifier.textContent=floating?'Nessun riferimento elettrico':state.mode==='internal'?'Logica invertita':state.logic==='HIGH'?'HIGH = ingresso vicino a 5 V':'LOW = ingresso vicino a 0 V';
+    const rv=$('#schem-r-volt');
+    if(rv){
+      const rDrop=(state.mode==='down')?v:(5-v);
+      const value=Math.max(0,Math.min(5,rDrop)).toFixed(2).replace('.',',');
+      rv.textContent=state.mode==='internal'?`ΔV = ${value} V`:`${value} V`;
+    }
+  }
+  function switchMode(id){
+    const isFirst=state.samples.length===0;
+    state.mode=id;state.pressed=false;
+    state.event=isFirst?null:eventNames[id];
+    $$('.step').forEach(el=>{const active=el.dataset.mode===id;el.classList.toggle('active',active); if(active)el.setAttribute('aria-current','step'); else el.removeAttribute('aria-current')});
+    const info=modes[id];
+    $('#schema-tag').textContent=info.tag;$('#concept-title').textContent=info.title;
+    $('#concept-text').innerHTML=info.explanation;$('#concept-tag').textContent=info.badge;
+    $('#scope-state').textContent=info.scope;$('#controls-note').textContent=info.note;
+    $('#lab-instruction').textContent=instructions[id];
+    $('#resistance-wrap').style.visibility=id==='up'||id==='down'?'visible':'hidden';
+    $('#resistance-wrap').style.pointerEvents=id==='up'||id==='down'?'auto':'none';
+    $('#code').textContent=getSketch(); $('#code-title').textContent=codeTitles[id];
+    $('#copy').textContent='Copia codice';
+    renderCurrent();refreshButton();renderSchematic();
+    if(isFirst){
+      for(let i=0;i<220;i++){
+        state.frame++;
+        const v=computeVoltage(state.frame);
+        state.samples.push({v,logic:readLogic(v),event:null});
+      }
+    }
+    takeSample();
+  }
+  function refreshButton(){
+    const on=state.pressed;$('#press-button').classList.toggle('pressed',on);
+    $('#press-button').setAttribute('aria-pressed',String(on));
+    $('#press-text').textContent=on?'Rilascia il pulsante':'Premi il pulsante';
+    $('#button-state').textContent=on?'CHIUSO (premuto)':'APERTO (rilasciato)';
+  }
+  function togglePress(){
+    state.pressed=!state.pressed;
+    state.event=state.pressed?'Premuto':'Rilasciato';
+    refreshButton();renderSchematic();takeSample();
+  }
+  const clamp=v=>Math.max(0,Math.min(5,v));
+  // Il modello dei disturbi è qualitativo (NON SPICE): visualizza l'effetto di un
+  // ingresso lasciato flottante e il richiamo operato dalla resistenza.
+  function computeVoltage(t){
+    const {mode,pressed,noise,resistance}=state;
+    const f=noise/100;
+    if(pressed)return (mode==='floating'||mode==='down')?5:0;
+    const wobble=Math.sin(t*.57)*.66+Math.sin(t*.13+1.9)*.65+Math.sin(t*1.73)*.32+(Math.random()-.5)*.9;
+    if(mode==='floating'){
+      const slow=2.30+Math.sin(t*.035+1.2)*.75+Math.sin(t*.011)*.43;
+      return clamp(slow + f*2.15*wobble);
+    }
+    const nominal=mode==='down'?0:5;
+    const r=mode==='internal'?35000:resistance;
+    const amplitude=f*(.012+.034*Math.pow(r/10000,.83));
+    return clamp(nominal+amplitude*wobble);
+  }
+  // V_IL <=1,5 V e V_IH >=3 V sono soglie garantite tipiche dell'ATmega328P
+  // alimentato a 5 V; nell'intervallo intermedio la lettura non è garantita.
+  // La decisione a 2,25 V è soltanto una convenzione DEL SIMULATORE.
+  function readLogic(v){return v>=2.25?'HIGH':'LOW'}
+  function takeSample(){
+    state.frame++;
+    const v=computeVoltage(state.frame);
+    state.voltage=v;state.logic=readLogic(v);
+    state.samples.push({v,logic:state.logic,event:state.event});
+    state.event=null;
+    while(state.samples.length>220)state.samples.shift();
+    $('#voltage').textContent=v.toFixed(2).replace('.',',');
+    updateSchematicValues();
+    $('#logic').textContent=state.logic;
+    const floatingOpen=state.mode==='floating'&&!state.pressed;
+    const tooWeak=!state.pressed&&(state.mode==='up'||state.mode==='down')&&state.resistance>=1000000;
+    $('#condition').textContent=floatingOpen?'Flottante':tooWeak?'Richiamo debole':'Stabile';
+    $('#condition').style.color=floatingOpen?'#bd554b':tooWeak?'#9f712b':'#387c50';
+    $('#signal-light').classList.toggle('on',state.logic==='HIGH');
+    $('#signal-light').classList.toggle('flicker',floatingOpen);
+    let insight;
+    if(floatingOpen)insight='<b>Ingresso flottante:</b> la tensione non è fissata; la lettura digitale può cambiare senza premere.';
+    else if(tooWeak)insight='<b>R molto alta:</b> nel modello i disturbi incidono di più. Un richiamo eccessivamente debole può essere inaffidabile.';
+    else if(state.pressed)insight='<b>Pulsante premuto:</b> D2 è collegato direttamente a '+(state.mode==='floating'||state.mode==='down'?'+5 V → HIGH.':'GND → LOW.');
+    else if(state.mode==='down')insight='<b>Pull-down:</b> la resistenza tiene D2 vicino a 0 V → LOW stabile.';
+    else insight='<b>Pull-up:</b> la resistenza '+(state.mode==='internal'?'interna ':'')+'tiene D2 vicino a +5 V → HIGH stabile.';
+    $('#scope-insight').innerHTML='<span aria-hidden="true">↗</span><span>'+insight+'</span>';
+    drawScope();
+  }
+  const canvas=$('#scope'),ctx=canvas.getContext('2d');
+  function drawScope(){
+    const dpr=Math.max(1,Math.min(window.devicePixelRatio||1,2));
+    const w=canvas.clientWidth||500,h=canvas.clientHeight||270;
+    if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){
+      canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+    }
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+    const L=41,R=12,graphW=w-L-R,top=16,analogH=Math.max(95,h*.45);
+    const bottomTop=top+analogH+25,digitalH=Math.max(40,h*.20);
+    const analogY=v=>top+analogH*(1-v/5);
+    const digitalY=s=>bottomTop+(s==='HIGH'?digitalH*.19:digitalH*.79);
+    ctx.fillStyle='#193642';ctx.fillRect(L,top,graphW,analogH);
+    ctx.fillStyle='#172f3c';ctx.fillRect(L,bottomTop,graphW,digitalH);
+    ctx.fillStyle='rgba(234,161,97,.12)';ctx.fillRect(L,analogY(3),graphW,analogY(1.5)-analogY(3));
+    // Reticolo sincronizzato nelle due aree.
+    for(let i=0;i<=8;i++){
+      const x=L+i*graphW/8;
+      ctx.strokeStyle='rgba(155,196,207,.12)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottomTop+digitalH);ctx.stroke();
+    }
+    [0,1.5,3,5].forEach(v=>{
+      const y=analogY(v),limit=v===1.5||v===3;
+      ctx.strokeStyle=limit?'rgba(248,216,89,.5)':'rgba(165,206,212,.22)';
+      ctx.setLineDash(limit?[5,5]:[]);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(L+graphW,y);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=limit?'#eed680':'#b3ccd4';ctx.font='bold 10px system-ui';ctx.textAlign='right';
+      ctx.fillText(`${String(v).replace('.',',')} V`,L-5,y+3);
+    });
+    ctx.fillStyle='#ca9b7d';ctx.font='700 10px system-ui';ctx.textAlign='left';
+    ctx.fillText('zona non garantita',L+7,analogY(3)+12);
+    ctx.strokeStyle='rgba(165,206,212,.2)';
+    for(const value of ['HIGH','LOW']){
+      const y=digitalY(value);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(L+graphW,y);ctx.stroke();
+      ctx.fillStyle='#f1d56e';ctx.font='bold 10px system-ui';ctx.textAlign='right';ctx.fillText(value==='HIGH'?'1':'0',L-8,y+3);
+    }
+    ctx.font='800 10px system-ui';ctx.fillStyle='#9cbfc9';ctx.textAlign='left';
+    ctx.fillText('TENSIONE ANALOGICA',L+5,11);
+    ctx.fillStyle='#dbbd5f';ctx.fillText('LETTURA DIGITALE',L+5,bottomTop-8);
+    const samples=state.samples,step=graphW/(samples.length-1);
+    ctx.save();ctx.beginPath();ctx.rect(L,top,graphW,analogH);ctx.clip();
+    ctx.beginPath();let drawn=false;
+    samples.forEach((o,i)=>{if(!o)return;const x=L+i*step,y=analogY(o.v);if(!drawn){ctx.moveTo(x,y);drawn=true}else ctx.lineTo(x,y)});
+    const ac='#6cdef0';ctx.strokeStyle=ac;ctx.lineWidth=2.35;ctx.lineJoin='round';ctx.lineCap='round';ctx.shadowColor=ac;ctx.shadowBlur=6;ctx.stroke();ctx.shadowBlur=0;
+    ctx.restore();
+    ctx.save();ctx.beginPath();ctx.rect(L,bottomTop,graphW,digitalH);ctx.clip();
+    ctx.beginPath();let prev=null;
+    samples.forEach((o,i)=>{
+      if(!o){prev=null;return}
+      const x=L+i*step,y=digitalY(o.logic);
+      if(prev===null)ctx.moveTo(x,y);
+      else {ctx.lineTo(x,prev);ctx.lineTo(x,y)}
+      prev=y;
+    });
+    ctx.strokeStyle='#f8d859';ctx.lineWidth=2.8;ctx.lineCap='square';ctx.lineJoin='miter';ctx.shadowColor='#f8d859';ctx.shadowBlur=5;ctx.stroke();ctx.shadowBlur=0;
+    ctx.restore();
+    // Le righe verticali marcano quando viene aggiunta una resistenza o premuto il pulsante.
+    let rightmostLabel=Infinity;
+    for(let i=samples.length-1;i>=0;i--){
+      const o=samples[i];if(!o||!o.event)continue;
+      const x=L+i*step;
+      ctx.strokeStyle='rgba(255,255,255,.48)';ctx.lineWidth=1.3;ctx.setLineDash([3,4]);
+      ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottomTop+digitalH);ctx.stroke();ctx.setLineDash([]);
+      // Do not stack captions when students switch circuits in quick succession.
+      if(rightmostLabel-x<94)continue;
+      rightmostLabel=x;
+      ctx.font='bold 10px system-ui';ctx.textAlign=x>L+graphW*.78?'right':'left';ctx.fillStyle='#e8f3f4';
+      const tx=x>L+graphW*.78?x-4:x+4;
+      ctx.fillText(o.event,tx,bottomTop+digitalH+13);
+    }
+    ctx.font='bold 10px system-ui';ctx.textAlign='right';ctx.fillStyle='#a4bdc8';
+    ctx.fillText('tempo →',L+graphW,h-3);
+  }
+  const quizQuestions=[
+    {q:'Un pin D2 senza pull-up né pull-down, con pulsante rilasciato, può leggere…',a:'Non affidabile',why:'Senza riferimento il pin è flottante: digitalRead restituisce HIGH o LOW, ma non sai quale.',opts:['HIGH','LOW','Non affidabile']},
+    {q:'Con pull-down esterno, quale valore legge D2 quando NON premi il pulsante?',a:'LOW',why:'La resistenza collega D2 a GND, cioè 0 V.',opts:['HIGH','LOW','Non affidabile']},
+    {q:'Con pull-down esterno, premi il pulsante verso +5 V. Che cosa legge D2?',a:'HIGH',why:'Il pulsante collega direttamente D2 a +5 V.',opts:['HIGH','LOW','Non affidabile']},
+    {q:'Con pull-up esterno, quale livello trovi a riposo?',a:'HIGH',why:'La resistenza richiama D2 al positivo, quindi HIGH.',opts:['HIGH','LOW','Non affidabile']},
+    {q:'Hai scritto pinMode(2, INPUT_PULLUP) e colleghi il pulsante tra D2 e GND: quando premi leggi…',a:'LOW',why:'Con INPUT_PULLUP la pressione porta D2 a GND: è un ingresso attivo basso.',opts:['HIGH','LOW','Non affidabile']},
+    {q:'Su Arduino Uno R3 classico puoi attivare direttamente INPUT_PULLDOWN come INPUT_PULLUP?',a:'No',why:'L’ATmega328P dell’Uno/Nano classico offre il pull-up interno, non il pull-down interno.',opts:['Sì','No']},
+  ];
+  function renderQuestion(){
+    const q=quizQuestions[state.quizIndex%quizQuestions.length];state.answered=false;
+    $('#quiz-question').textContent=q.q;$('#quiz-feedback').textContent='';$('#quiz-next').classList.remove('show');
+    $('#quiz-answers').innerHTML='';
+    q.opts.forEach(option=>{
+      const b=document.createElement('button');b.className='answer';b.type='button';b.textContent=option;
+      b.addEventListener('click',()=>{
+        if(state.answered)return;state.answered=true;state.quizTotal++;
+        const good=option===q.a;if(good)state.quizScore++;
+        [...$('#quiz-answers').children].forEach(btn=>{
+          btn.disabled=true;if(btn.textContent===q.a)btn.classList.add('correct');
+          else if(btn===b&&!good)btn.classList.add('wrong');
+        });
+        $('#quiz-feedback').textContent=(good?'Corretto! ':'Non proprio. ')+q.why;
+        $('#quiz-feedback').style.color=good?'#397c56':'#b64e48';
+        $('#quiz-score').textContent=`${state.quizScore} risposte corrette su ${state.quizTotal}`;
+        $('#quiz-next').classList.add('show');
+      });
+      $('#quiz-answers').append(b);
+    });
+  }
+  $$('.step').forEach(btn=>btn.addEventListener('click',()=>switchMode(btn.dataset.mode)));
+  $('#press-button').addEventListener('click',togglePress);
+  $('#schematic').addEventListener('click',ev=>{if(ev.target.closest('[data-toggle-button]'))togglePress()});
+  $('#schematic').addEventListener('keydown',ev=>{if(ev.target.closest('[data-toggle-button]')&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();togglePress()}});
+  $('#noise').addEventListener('input',ev=>{state.noise=Number(ev.target.value);$('#noise-num').textContent=`${state.noise}%`;takeSample()});
+  $('#resistance').addEventListener('change',ev=>{state.resistance=Number(ev.target.value);state.event='R '+formatR(state.resistance);renderSchematic();renderCurrent();$('#code').textContent=getSketch();takeSample()});
+  $('#copy').addEventListener('click',async()=>{
+    const source=getSketch();
+    try{await navigator.clipboard.writeText(source);$('#copy').textContent='Copiato ✓'}
+    catch(err){const range=document.createRange();range.selectNodeContents($('#code'));const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);$('#copy').textContent='Codice selezionato';}
+  });
+  $('#clear-scope').addEventListener('click',()=>{state.samples=Array(220).fill(null);state.event=null;takeSample()});
+  $('#quiz-next').addEventListener('click',()=>{state.quizIndex++;renderQuestion()});
+  window.addEventListener('resize',drawScope,{passive:true});
+  switchMode('floating');renderQuestion();setInterval(takeSample,100);
+})();
+</script>
+</body>
+</html>

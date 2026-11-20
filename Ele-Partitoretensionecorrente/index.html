@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f5ef">
+  <meta name="description" content="OMG Virtual Lab: partitori di tensione e di corrente, voltmetri e amperometri, formule live e sfide interattive.">
+  <title>Partitori di tensione e corrente | OMG Virtual Lab</title>
+  <style>
+    :root{--ink:#20252d;--muted:#617079;--paper:#f8f5ef;--white:#fff;--border:#dfe3e4;--yellow:#f8d859;--coral:#ed5f59;--turquoise:#52c9c1;--turquoise-soft:#e4f8f5;--blue:#667c89;--green:#418d55;--shadow:0 8px 0 #20252d0d;--radius:18px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(circle at 7% 2%,#ffe9b9 0,transparent 35%),radial-gradient(circle at 100% 0%,#daf4ef 0,transparent 40%),var(--paper);font:15px/1.48 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #188cdd;outline-offset:3px}button:disabled,input:disabled{cursor:not-allowed;opacity:.55}h1,h2,h3,p{margin:0}h2{font-size:1.1rem;letter-spacing:-.025em}h3{font-size:.94rem}small{font-size:.78rem}.mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}.wrap{max-width:1200px;margin:0 auto;padding:25px 24px 46px}
+    .masthead{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:23px}.brand{display:flex;align-items:center;gap:13px}.mark{width:57px;height:57px;display:grid;place-items:center;font-weight:1000;font-size:1.15rem;letter-spacing:-.11em;position:relative;isolation:isolate}.mark::before,.mark::after{content:"";position:absolute;inset:7px;background:var(--yellow);border:3px solid var(--ink);transform:rotate(-8deg);z-index:-2;border-radius:4px}.mark::after{background:var(--turquoise);transform:translate(8px,7px) rotate(6deg);z-index:-3}.mark span{transform:rotate(-8deg);text-shadow:1px 1px var(--white)}.kicker{text-transform:uppercase;letter-spacing:.14em;font-weight:850;font-size:.7rem;color:var(--muted)}.brand-name{font-weight:900;font-size:1.12rem;letter-spacing:-.045em}.site{border:2px solid var(--ink);border-radius:99px;background:var(--white);padding:8px 14px;font-weight:800;text-decoration:none;color:inherit;white-space:nowrap;box-shadow:3px 3px 0 var(--yellow)}.site:hover{transform:translateY(-2px)}
+    .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin:12px 0 19px}.hero h1{font-size:clamp(1.95rem,4vw,3rem);font-weight:950;letter-spacing:-.065em;line-height:1.08}.hero p{margin-top:9px;color:#51616d;max-width:650px}.eyebrow{display:inline-block;font-size:.69rem;font-weight:950;background:var(--yellow);padding:4px 9px;border:2px solid var(--ink);border-radius:6px;transform:rotate(-2deg);margin-bottom:9px;text-transform:uppercase;letter-spacing:.07em}.mode-switch{display:inline-flex;flex-shrink:0;padding:4px;border:2px solid var(--ink);background:var(--white);border-radius:12px;gap:4px}.mode-switch button{border:0;border-radius:8px;padding:10px 17px;background:transparent;color:#4f5d65;font-weight:850}.mode-switch button[aria-selected="true"]{background:var(--ink);color:var(--white)}.mode-switch button[aria-selected="true"] .star{color:var(--yellow)}
+    .grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(320px,.82fr);gap:17px;align-items:stretch}.panel{background:var(--white);border:1.5px solid var(--border);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}.panel-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:19px 21px 12px}.panel-heading p{font-size:.8rem;color:var(--muted);margin-top:3px}.label-pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;background:#ebf5f3;border:1px solid #c7e8e1;font-size:.72rem;font-weight:850;padding:5px 10px;color:#247970;white-space:nowrap}.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+    .circuit{width:100%;display:block;aspect-ratio:760/495;max-height:455px;margin:-2px auto 0}.circuit text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.wire{fill:none;stroke:#303941;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.wirehot{stroke:#e16759}.wirenode{stroke:#319d9d}.resistor{fill:#fbfaf8;stroke:#303941;stroke-width:3;rx:5}.schematic-node{fill:#303941}.svg-small{fill:#69767f;font-size:18px;font-weight:650}.svg-label{fill:#303941;font-size:23px;font-weight:900}.svg-value{fill:#404b52;font-size:19px;font-weight:700}.svg-value-big{fill:#1b7774;font-size:24px;font-weight:950}.diagram-note{fill:#829096;font-size:17px;font-weight:700}.volt-display{fill:#20252d;font-family:ui-monospace,Menlo,Consolas,monospace!important;font-weight:900;font-size:27px}.svg-orange{fill:#e16759}.svg-teal{fill:#228f89}.svg-load{display:none}.loaded .svg-load{display:block}.current-anim{fill:#eaa349;opacity:.92;visibility:hidden}.energized .current-anim{visibility:visible;animation:along 5s linear infinite}.energized .current-anim.second{animation-delay:-2.5s}@keyframes along{to{offset-distance:100%}}.current-anim{offset-path:path("M 174 371 L 174 120 L 370 120 L 370 201 L 370 277 L 370 360 L 370 448 L 174 448 L 174 370");offset-distance:0%}
+    .legend{display:flex;flex-wrap:wrap;gap:9px;padding:5px 22px 18px}.legend span{font-size:.72rem;border-radius:8px;background:#f4f6f6;padding:5px 8px;color:#59666b}.legend b{font-weight:900;color:var(--ink)}.legend .red{color:#d25c53}.legend .cyan{color:#289d95}
+    .controls{padding-bottom:21px}.controls-inner{padding:0 22px}.control{padding:13px 0 15px;border-bottom:1px solid #e8ebeb}.control-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.control-title{display:flex;align-items:center;gap:9px;font-weight:850}.chip{width:29px;height:29px;border:2px solid var(--ink);display:grid;place-items:center;border-radius:8px;font-weight:950;background:#f6f6f6;font-size:.78rem}.chip.vin{background:var(--yellow)}.chip.r1{background:#ffcdc5}.chip.r2{background:#bbefeb}.input-unit{display:flex;align-items:center;gap:5px;background:#f4f6f6;border:1px solid #dde1e1;border-radius:9px;padding:4px 9px}.input-unit input{border:0;background:transparent;text-align:right;font-weight:900;width:57px;color:var(--ink);outline:0;font-size:1.04rem;font-variant-numeric:tabular-nums;appearance:textfield}.input-unit input::-webkit-inner-spin-button,.input-unit input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.input-unit span{font-size:.72rem;color:#66747b;font-weight:750}.range{appearance:none;-webkit-appearance:none;width:100%;height:9px;border-radius:99px;background:linear-gradient(90deg,var(--fill,#70c8be) var(--pct,50%),#edf0f0 var(--pct,50%));cursor:pointer;margin:0;display:block}.range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:21px;height:21px;border-radius:50%;background:var(--white);border:4px solid var(--ink);box-shadow:0 1px 2px #0003}.range::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--white);border:4px solid var(--ink)}.range:disabled{cursor:not-allowed}.range-labels{display:flex;justify-content:space-between;color:#88939a;font-size:.7rem;margin-top:9px;font-variant-numeric:tabular-nums}
+    .load-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:12px;border:1px solid #d9e5e1;background:#f5faf8;margin-top:15px;padding:12px 14px}.load-toggle strong{display:block;font-size:.87rem}.load-toggle small{color:#637878;display:block;margin-top:2px}.switch{position:relative;flex-shrink:0;width:46px;height:26px}.switch input{opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer}.switch i{display:block;height:100%;border-radius:99px;background:#c5ced1;border:2px solid #8e9c9e;transition:background .2s}.switch i::before{content:"";position:absolute;width:18px;height:18px;background:white;left:4px;top:4px;border-radius:50%;box-shadow:0 1px 2px #0003;transition:transform .2s}.switch input:checked+i{background:#43b6aa;border-color:#168a7e}.switch input:checked+i::before{transform:translateX(19px)}.switch input:focus-visible+i{outline:3px solid #188cdd;outline-offset:3px}.load-ctrl{margin:2px 14px 0;padding:10px 0 0;border-bottom:0;display:none}.load-ctrl.shown{display:block}.hint-lock{font-size:.76rem;font-weight:750;color:#85601d;background:#fff6d9;border:1px solid #f6d988;border-radius:9px;padding:9px 10px;margin-top:10px;display:none}.hint-lock.shown{display:block}
+    .presets{padding:13px 21px 19px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}.presets b{font-size:.73rem;color:#75818a;margin-right:4px}.tiny-btn{background:white;border:1px solid #cdd4d7;border-radius:9px;padding:6px 10px;font-size:.77rem;font-weight:800;color:#47545b}.tiny-btn:hover{background:#fff5d0;border-color:#ddbb4c}.tiny-btn:disabled:hover{background:white;border-color:#cdd4d7}.btn{border:2px solid var(--ink);background:var(--yellow);border-radius:11px;box-shadow:3px 3px 0 var(--ink);font-weight:900;padding:10px 16px}.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:3px 5px 0 var(--ink)}.btn.outline{background:white;box-shadow:none}.btn.secondary{background:var(--turquoise);color:#173d3b}.btn:active:not(:disabled){transform:translateY(1px);box-shadow:1px 1px 0 var(--ink)}
+    .readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:17px}.readout{background:white;border:1.5px solid var(--border);box-shadow:var(--shadow);border-radius:16px;padding:16px 18px;min-width:0}.readout span{font-size:.74rem;font-weight:850;color:#6b7980}.readout strong{font-size:clamp(1.42rem,2.9vw,2rem);font-weight:960;letter-spacing:-.055em;line-height:1.38;display:block;white-space:nowrap}.readout strong > span:first-child{font-size:inherit;color:inherit;font-weight:inherit}.readout .unit{font-size:.84rem;color:#65767d;margin-left:3px}.readout.key{background:var(--turquoise-soft);border-color:#9ed9d0}.readout.key strong{color:#17756d}.readout .micro{font-size:.72rem;color:#75838a;display:block;margin-top:2px}
+    .theory{margin-top:18px;display:grid;grid-template-columns:minmax(0,1.07fr) minmax(300px,.93fr);gap:16px}.theory .panel{padding:20px 22px}.sub{font-size:.82rem;color:#637078;margin-top:5px}.formula{padding:13px 16px;margin:15px 0;background:#f8faf9;border:1px solid #dce6e3;border-radius:11px;text-align:center;font-size:clamp(1.1rem,2.1vw,1.38rem);font-weight:900;letter-spacing:-.045em}.frac{display:inline-flex;vertical-align:middle;flex-direction:column;align-items:center;line-height:1.16;gap:2px;margin:0 4px}.frac .top{padding:0 7px 4px;border-bottom:2px solid #27323a}.frac .bottom{padding:2px 5px 0}.formula .out{color:#16837a}.live-formula{background:#fff9e5;padding:12px 14px;border-radius:9px;font-size:.84rem;font-weight:800;line-height:1.6;font-variant-numeric:tabular-nums}.steps{display:flex;flex-direction:column;gap:8px;padding-top:12px}.steps .step{display:flex;gap:11px;align-items:flex-start;color:#56656e;font-size:.83rem}.steps i{font-style:normal;width:23px;height:23px;flex:0 0 23px;background:var(--yellow);border-radius:50%;display:grid;place-items:center;font-size:.73rem;color:var(--ink);font-weight:950}.steps b{color:var(--ink)}.theory p.note{font-size:.8rem;color:#67777d;margin-top:13px}.voltage-track{height:31px;border-radius:9px;display:flex;overflow:hidden;background:#edf0f0;border:1px solid #e0e3e4;margin:17px 0 9px}.voltage-track .r1drop{background:var(--coral);width:66.667%;transition:width .16s}.voltage-track .r2drop{background:var(--turquoise);width:33.333%;transition:width .16s}.voltage-explain{display:flex;justify-content:space-between;gap:12px;margin:0 0 12px;font-size:.82rem;font-weight:850}.voltage-explain .one{color:#be4b4b}.voltage-explain .two{color:#178b81}.lesson{margin-top:14px;background:#f2f6f8;padding:13px 14px;border-radius:11px;border-left:4px solid var(--blue);font-size:.83rem;color:#4d606a}.lesson b{color:#253740}.load-explanation{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:#e8f8f3;border:1px solid #c0e8dc;font-size:.82rem}.load-explanation.show{display:block}.app-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;color:#7a858a;margin-top:21px;font-size:.74rem;gap:8px}.app-footer b{color:#515d65}
+    .challenge{display:none;margin:0 21px 18px;border:2px solid var(--ink);border-radius:13px;background:#fff8d7;padding:15px}.challenge.show{display:block}.challenge-top{display:flex;gap:8px;align-items:center;justify-content:space-between}.challenge-mark{background:var(--ink);color:var(--yellow);border-radius:6px;font-size:.67rem;font-weight:950;padding:5px 8px;letter-spacing:.04em}.progress{display:flex;gap:5px}.progress span{height:9px;width:23px;border:1.5px solid #adab90;border-radius:99px;background:#fff}.progress span.done{background:var(--green);border-color:var(--green)}.progress span.current{background:var(--coral);border-color:#a44443}.challenge h3{font-size:1.2rem;letter-spacing:-.045em;margin-top:10px}.challenge p{font-size:.86rem;line-height:1.5;margin-top:5px}.challenge-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.challenge-actions .btn{padding:8px 12px;font-size:.8rem}.challenge-feedback{font-size:.79rem;font-weight:750;margin-top:11px;line-height:1.4;min-height:18px}.challenge-feedback.good{color:#267448}.challenge-feedback.bad{color:#a55329}.challenge-feedback.neutral{color:#626b71}.tip{margin-top:10px;background:#fffdf3;border:1px dashed #c5af4b;border-radius:8px;padding:9px 10px;font-size:.79rem;display:none}.tip.open{display:block}
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}.circuit{max-height:430px}.controls-inner{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.control{padding:13px 0}.control-top{flex-wrap:wrap}.load-toggle{grid-column:span 2}.load-ctrl{grid-column:span 3}.hint-lock{grid-column:span 3}.theory{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.wrap{padding:15px 12px 35px}.masthead{margin-bottom:18px}.site{font-size:.75rem;padding:7px 9px}.mark{width:49px;height:49px}.brand-name{font-size:1rem}.hero{align-items:flex-start;flex-direction:column;margin:8px 0 17px;gap:15px}.hero h1{font-size:2.1rem}.hero p{font-size:.88rem}.mode-switch{width:100%}.mode-switch button{flex:1}.controls-inner{display:block}.load-toggle{margin-top:15px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.readout:last-child{grid-column:span 2}.readout{padding:12px 14px}.readout strong{font-size:1.75rem}.theory{grid-template-columns:1fr;gap:12px}.panel-heading{padding:15px 14px 8px}.legend{padding:0 12px 14px}.circuit{max-height:none}.controls-inner{padding:0 17px}.challenge{margin:0 14px 14px}.presets{padding:13px 15px 18px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
+  
+
+/* OMG Virtual Lab · doppio partitore */
+[hidden]{display:none!important}
+.kindbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 17px}
+.kindbar .kind-label{font-size:.71rem;font-weight:900;color:#73808a;letter-spacing:.09em;text-transform:uppercase;margin-right:2px}
+.kind-tabs{display:flex;gap:6px;padding:5px;border:2px solid #20252d;background:white;border-radius:13px;box-shadow:3px 3px 0 #f8d859}
+.kind-tab{border:0;border-radius:9px;background:transparent;color:#57666e;font-size:.85rem;font-weight:900;padding:10px 17px;white-space:nowrap}
+.kind-tab[aria-selected=true]{background:#20252d;color:white}
+.kind-tab[aria-selected=true] .iconx{color:#f8d859}
+.kind-tab .iconx{margin-right:7px}
+.head-actions{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.head-actions small{font-weight:800;color:#829097;font-size:.69rem;text-transform:uppercase;letter-spacing:.06em}
+.circuit{aspect-ratio:800/520;max-height:440px;overflow:visible;margin:1px auto 0}
+.svg-wire{fill:none;stroke:#303941;stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.svg-wire.red{stroke:#e46157;stroke-width:3.5}
+.svg-wire.black{stroke:#555c68;stroke-width:3.5}
+.s-resistor{fill:#fff;stroke:#29313a;stroke-width:3}
+.s-node{fill:#27323a}
+.s-main{fill:#26313a;font-size:23px;font-weight:900}
+.s-sub{fill:#626e76;font-size:18px;font-weight:720}
+.s-em{fill:#16877e;font-size:22px;font-weight:950}
+.s-source{fill:#fff4d2;stroke:#303941;stroke-width:4}
+.s-meter{fill:#26323a;stroke:#141a20;stroke-width:3}
+.s-meter-screen{fill:#d2efcd;stroke:#627d78;stroke-width:2}
+.s-meter-reading{fill:#1b3834;font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:24px;font-weight:900;font-variant-numeric:tabular-nums}
+.s-meter-note{fill:#fff;font-size:13px;font-weight:850;letter-spacing:.06em}
+.s-meter-small{fill:#26323a;stroke:#111921;stroke-width:2.5}
+.s-meter-small-screen{fill:#d9f3d3;stroke:#78918b;stroke-width:1.5}
+.s-meter-small-reading{fill:#1b3834;font-size:19px;font-weight:950;font-family:ui-monospace,Menlo,monospace!important;font-variant-numeric:tabular-nums}
+.s-meter-tag{fill:#fff;font-size:11px;font-weight:800;letter-spacing:.045em}
+.s-annotation{fill:#64737b;font-size:16px;font-weight:770}
+.svg-load{display:none}.loaded .svg-load{display:block}
+.particle{fill:#f2ae36;stroke:#fff;stroke-width:1.5;animation:move-charge var(--dur,2s) linear infinite;visibility:visible}
+@keyframes move-charge{from{transform:translateY(0);opacity:.15}15%{opacity:1}85%{opacity:1}to{transform:translateY(50px);opacity:.2}}
+.situation{margin:5px 21px 17px;border-radius:10px;padding:10px 12px;background:#f4f7f7;border:1px solid #dce6e5;font-size:.8rem;color:#51646e}
+.situation b{color:#1d7470}
+.panel-heading h2{font-size:1.15rem}
+.kind-description{font-size:.81rem;color:#617079;margin-left:auto;max-width:420px}
+.principle{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#f5f7f7;border:1px solid #e0e7e6;border-radius:11px;padding:10px 13px;margin-top:12px;font-size:.83rem;font-weight:770}
+.principle strong{color:#1c7e78}
+@media(max-width:980px){.kind-description{max-width:none;margin-left:0}.kindbar{align-items:flex-start}.circuit{max-height:465px}}
+@media(max-width:700px){.kindbar{display:block;margin-bottom:14px}.kindbar .kind-label{display:block;margin-bottom:7px}.kind-tabs{width:100%}.kind-tab{flex:1;padding:10px 6px;font-size:.76rem}.kind-description{margin-top:11px}.hero{gap:13px}.hero h1{font-size:2rem}.situation{margin:0 13px 14px}.readouts strong{font-size:1.7rem}.s-main{font-size:24px}.head-actions{display:flex;align-items:stretch;width:100%}.head-actions small{display:none}.head-actions .mode-switch{width:100%}}
+@media(max-width:380px){.kind-tab{font-size:.69rem;letter-spacing:-.02em}.brand-name{font-size:.9rem}.site{font-size:.67rem}}
+@media(prefers-reduced-motion:reduce){.particle{animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="masthead">
+    <div class="brand"><div class="mark" aria-hidden="true"><span>OMG!</span></div><div><div class="kicker">Elettroni e dintorni</div><div class="brand-name">OMG Virtual Lab</div></div></div>
+    <a class="site" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it ↗</a>
+  </header>
+
+  <section class="hero" aria-label="Introduzione">
+    <div><span class="eyebrow">Elettronica · laboratorio interattivo</span><h1>I partitori di <span id="headingAccent" style="color:#198b80">tensione</span><span style="color:var(--coral)">.</span></h1>
+      <p id="intro">Due resistenze in serie: cambia i valori e osserva come si distribuisce la tensione. Il multimetro misura davvero fra Vout e GND.</p></div>
+    <div class="head-actions"><small>Attività</small><div class="mode-switch" role="tablist" aria-label="Tipo di attività">
+      <button id="tabExplore" type="button" role="tab" aria-selected="true">Esplora</button>
+      <button id="tabChallenge" type="button" role="tab" aria-selected="false"><span class="star">★</span> Sfida</button>
+    </div></div>
+  </section>
+  <div class="kindbar"><span class="kind-label">Scegli il circuito</span><div class="kind-tabs" role="tablist" aria-label="Tipo di partitore">
+      <button id="tabVoltage" class="kind-tab" type="button" role="tab" aria-selected="true"><span class="iconx">◉</span>Partitore di tensione</button>
+      <button id="tabCurrent" class="kind-tab" type="button" role="tab" aria-selected="false"><span class="iconx">◉</span>Partitore di corrente</button>
+    </div><span class="kind-description" id="kindSubtitle">Serie → stessa corrente, tensioni diverse</span>
+  </div>
+
+  <section class="grid" aria-label="Simulatore interattivo">
+    <article class="panel">
+      <div class="panel-heading"><div><h2 id="circuitHeading">Il circuito in serie</h2><p id="circuitSub">Generatore di tensione + voltmetro digitale</p></div><span class="label-pill"><span class="status-dot"></span> Simulazione attiva</span></div>
+      <!-- TENSIONE: multimetro rettangolare, rosso su Vout, nero su GND. -->
+      <svg class="circuit" id="voltageDiagram" viewBox="0 0 800 520" role="img" aria-labelledby="vTitle vDesc">
+        <title id="vTitle">Partitore di tensione con tester digitale</title>
+        <desc id="vDesc">Un generatore da Vin alimenta R1 e R2 in serie. Il puntale rosso del voltmetro è collegato a Vout, il nero a GND. Il voltmetro è in parallelo a R2. Un carico RL opzionale è anch'esso in parallelo a R2.</desc>
+        <path class="svg-wire" d="M105 291 V82 H325 V130 M325 205 V255 M325 255 V300 M325 375 V430 H105 V349"/>
+        <circle class="s-source" cx="105" cy="320" r="29"/>
+        <path d="M96 309 H114 M105 300 V318 M96 335 H114" fill="none" stroke="#29343d" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="26" y="307" class="s-main">Vin</text><text id="vVinSvg" x="18" y="336" class="s-sub" fill="#dc6155">9,0 V</text>
+        <rect class="s-resistor" x="304" y="130" width="42" height="75" rx="5"/>
+        <path d="M315 142 L335 152 L315 164 L335 176 L315 188 L335 196" fill="none" stroke="#ed5f59" stroke-width="3" stroke-linejoin="round"/>
+        <rect class="s-resistor" x="304" y="300" width="42" height="75" rx="5"/>
+        <path d="M315 312 L335 322 L315 334 L335 346 L315 358 L335 366" fill="none" stroke="#52c9c1" stroke-width="3" stroke-linejoin="round"/>
+        <text class="s-main" x="365" y="157">R1</text><text class="s-sub" id="vR1Svg" x="365" y="184">2,0 kΩ</text>
+        <text class="s-main" x="210" y="333">R2</text><text class="s-sub" id="vR2Svg" x="193" y="360">1,0 kΩ</text>
+        <circle class="s-node" cx="325" cy="255" r="6"/><circle class="s-node" cx="325" cy="430" r="6"/>
+        <text class="s-em" x="344" y="245">Vout</text>
+        <path class="svg-wire" d="M325 430 V444"/><path d="M301 444 H349 M309 453 H341 M317 462 H333" fill="none" stroke="#303941" stroke-width="3.3" stroke-linecap="round"/>
+        <text class="s-sub" x="236" y="462">GND</text>
+        <!-- Optional RL in parallel with R2 -->
+        <g class="svg-load" id="vLoadBranch">
+          <path class="svg-wire" d="M325 255 H453 V305 M453 375 V430 H325"/>
+          <rect class="s-resistor" x="433" y="305" width="40" height="70" rx="5"/>
+          <path d="M444 316 L462 327 L444 337 L462 349 L444 362" fill="none" stroke="#8b9da6" stroke-width="3"/>
+          <circle class="s-node" cx="453" cy="255" r="5"/><circle class="s-node" cx="453" cy="430" r="5"/>
+          <text class="s-sub" x="476" y="339">RL</text><text class="s-sub" id="vRlSvg" x="476" y="364">10 kΩ</text>
+        </g>
+        <!-- Test leads: a voltmeter measures in parallel, never replaces the generator -->
+        <path class="svg-wire red" d="M325 255 H513 V458 H699 V394"/>
+        <path class="svg-wire black" d="M325 430 H479 V487 H608 V394"/>
+        <!-- Handheld multimeter -->
+        <g>
+          <rect x="564" y="127" width="177" height="276" rx="23" fill="#f6a633" stroke="#27323a" stroke-width="4"/>
+          <rect class="s-meter" x="577" y="141" width="151" height="248" rx="16"/>
+          <text class="s-meter-note" x="652" y="163" text-anchor="middle">MULTIMETRO</text>
+          <rect class="s-meter-screen" x="592" y="177" width="122" height="59" rx="6"/>
+          <text id="vMeterSvg" class="s-meter-reading" x="703" y="218" text-anchor="end">3,00</text>
+          <text x="599" y="194" fill="#3d5b53" font-size="11" font-weight="850">V⎓</text>
+          <circle cx="652" cy="297" r="37" fill="#5b6871" stroke="#bbc4c6" stroke-width="3"/>
+          <circle cx="652" cy="297" r="27" fill="#252f36" stroke="#8c979d" stroke-width="2"/>
+          <path d="M651 294 L661 274" stroke="#f8d859" stroke-width="6" stroke-linecap="round"/>
+          <text x="652" y="349" fill="white" text-anchor="middle" font-size="15" font-weight="900">V⎓</text>
+          <circle cx="608" cy="394" r="10" fill="#222" stroke="#c5ccd0" stroke-width="3"/>
+          <circle cx="699" cy="394" r="10" fill="#eb6157" stroke="#c5ccd0" stroke-width="3"/>
+          <text x="608" y="375" class="s-meter-tag" text-anchor="middle">COM</text><text x="699" y="375" class="s-meter-tag" text-anchor="middle">VΩ</text>
+        </g>
+        <text x="660" y="476" fill="#de5a51" font-size="13" font-weight="800">rosso: Vout</text>
+        <text x="574" y="505" fill="#6e7881" font-size="13" font-weight="800">nero: GND</text>
+      </svg>
+      <!-- CORRENTE: due strumenti rettangolari inseriti IN SERIE nei rami -->
+      <svg class="circuit" id="currentDiagram" viewBox="0 0 800 520" role="img" aria-labelledby="iTitle iDesc" hidden>
+        <title id="iTitle">Partitore di corrente con due amperometri digitali</title>
+        <desc id="iDesc">Un generatore ideale di corrente eroga Iin a due resistenze in parallelo. Due amperometri digitali rettangolari, A1 e A2, sono inseriti in serie ai rispettivi rami. Si misura I1 e I2 e la loro somma è Iin.</desc>
+        <path class="svg-wire" d="M134 278 V92 H363 M363 92 H590 V166 M363 92 V166 M363 258 V316 M590 258 V316 M363 390 V456 H134 V349 M590 390 V456 H363"/>
+        <circle class="s-source" cx="134" cy="314" r="35"/>
+        <path d="M134 334 V293 M125 303 L134 292 L143 303" fill="none" stroke="#27323a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="35" y="301" class="s-main">Iin</text><text x="28" y="329" id="iSourceSvg" class="s-sub">9,0 mA</text>
+        <text x="131" y="77" class="s-annotation">La corrente si divide al nodo</text>
+        <circle class="s-node" cx="363" cy="92" r="6"/><circle class="s-node" cx="590" cy="92" r="6"/>
+        <circle class="s-node" cx="363" cy="456" r="6"/><circle class="s-node" cx="590" cy="456" r="6"/>
+        <!-- Amp A1, in series -->
+        <rect class="s-meter-small" x="305" y="166" width="116" height="92" rx="12"/>
+        <rect class="s-meter-small-screen" x="315" y="177" width="96" height="43" rx="5"/>
+        <text id="iMeter1Svg" class="s-meter-small-reading" x="405" y="205" text-anchor="end">3,00</text>
+        <text x="322" y="191" fill="#405f56" font-size="10" font-weight="900">mA</text>
+        <text x="363" y="244" text-anchor="middle" class="s-meter-tag">A1 · I1</text>
+        <!-- Amp A2, in series -->
+        <rect class="s-meter-small" x="532" y="166" width="116" height="92" rx="12"/>
+        <rect class="s-meter-small-screen" x="542" y="177" width="96" height="43" rx="5"/>
+        <text id="iMeter2Svg" class="s-meter-small-reading" x="632" y="205" text-anchor="end">6,00</text>
+        <text x="549" y="191" fill="#405f56" font-size="10" font-weight="900">mA</text>
+        <text x="590" y="244" text-anchor="middle" class="s-meter-tag">A2 · I2</text>
+        <rect class="s-resistor" x="342" y="316" width="42" height="74" rx="5"/>
+        <path d="M353 326 L373 337 L353 349 L373 361 L353 379" fill="none" stroke="#ed5f59" stroke-width="3"/>
+        <rect class="s-resistor" x="569" y="316" width="42" height="74" rx="5"/>
+        <path d="M580 326 L600 337 L580 349 L600 361 L580 379" fill="none" stroke="#52c9c1" stroke-width="3"/>
+        <text x="285" y="339" class="s-main">R1</text><text x="256" y="368" id="iR1Svg" class="s-sub">2,0 kΩ</text>
+        <text x="625" y="339" class="s-main">R2</text><text x="625" y="368" id="iR2Svg" class="s-sub">1,0 kΩ</text>
+        <text x="342" y="487" class="s-annotation">Stessa tensione ai capi dei due rami</text>
+        <text x="105" y="487" class="s-annotation">Ritorno</text>
+        <!-- Animated charges in unobstructed top wire, faster for greater branch current -->
+        <g id="particlesA"><circle class="particle" cx="363" cy="110" r="5"/><circle class="particle" cx="363" cy="130" r="5" style="animation-delay:-.65s"/></g>
+        <g id="particlesB"><circle class="particle" cx="590" cy="110" r="5"/><circle class="particle" cx="590" cy="130" r="5" style="animation-delay:-.65s"/></g>
+      </svg>
+      <div class="legend" id="diagramLegend"><span><b class="red">●</b> Rosso: Vout</span><span><b>●</b> Nero: GND</span><span>Voltmetro in parallelo</span><span>Generatore: simbolo + / −</span></div>
+      <div class="situation" id="meterTip"><b>Come si misura:</b> il tester in modalità V⎓ è collegato tra Vout e GND, ai capi di R2. I puntali non interrompono il circuito.</div>
+    </article>
+
+    <article class="panel controls" aria-label="Controlli">
+      <div class="panel-heading"><div><h2 id="controlsTitle">Regola il partitore</h2><p id="controlsSub">Muovi i cursori e osserva il tester.</p></div><button class="tiny-btn" id="resetBtn" type="button">↻ Reset</button></div>
+      <div id="challengeBox" class="challenge" aria-live="polite">
+        <div class="challenge-top"><span class="challenge-mark">MISSIONE <span id="missionNo">1</span> / 4</span><div id="missionProgress" class="progress" aria-label="Progresso delle sfide"></div></div>
+        <h3 id="missionTitle">Dimezza la tensione</h3><p id="missionDesc"></p>
+        <div class="challenge-actions"><button id="checkBtn" type="button" class="btn">Verifica ✓</button><button id="nextBtn" type="button" class="btn secondary" hidden>Prossima sfida →</button><button id="hintBtn" type="button" class="tiny-btn" aria-expanded="false" aria-controls="missionHint">Un suggerimento</button></div>
+        <div id="missionHint" class="tip"></div><div id="missionFeedback" class="challenge-feedback neutral" role="status">Modifica le resistenze e premi «Verifica».</div>
+      </div>
+      <div class="controls-inner">
+        <div class="control"><div class="control-top"><label for="sourceRange" class="control-title"><span class="chip vin" id="sourceChip">V</span><span id="sourceLabel">Tensione Vin</span></label><div class="input-unit"><input id="sourceNum" aria-label="Valore della sorgente" type="number" step="0.1" min="0" max="12" value="9"><span id="sourceUnit">V</span></div></div><input id="sourceRange" class="range" style="--fill:#edbf47" type="range" step="0.1" min="0" max="12" value="9"><div class="range-labels"><span id="sourceMin">0 V</span><span id="sourceMax">12 V</span></div></div>
+        <div class="control"><div class="control-top"><label for="r1Range" class="control-title"><span class="chip r1">R1</span><span id="r1Label">Resistenza sopra</span></label><div class="input-unit"><input id="r1Num" type="number" step="0.1" min="0.1" max="20" value="2" aria-label="R1 in kiloohm"><span>kΩ</span></div></div><input id="r1Range" class="range" style="--fill:#ed5f59" type="range" step="0.1" min="0.1" max="20" value="2" aria-label="Resistenza R1"><div class="range-labels"><span>0,1 kΩ</span><span>20 kΩ</span></div></div>
+        <div class="control"><div class="control-top"><label for="r2Range" class="control-title"><span class="chip r2">R2</span><span id="r2Label">Resistenza sotto</span></label><div class="input-unit"><input id="r2Num" type="number" step="0.1" min="0.1" max="20" value="1" aria-label="R2 in kiloohm"><span>kΩ</span></div></div><input id="r2Range" class="range" style="--fill:#52c9c1" type="range" step="0.1" min="0.1" max="20" value="1" aria-label="Resistenza R2"><div class="range-labels"><span>0,1 kΩ</span><span>20 kΩ</span></div></div>
+        <div class="load-toggle" id="loadToggle"><div><strong>Collega un carico RL</strong><small>In parallelo a R2 · livello avanzato</small></div><label class="switch"><span class="visually-hidden">Attiva il carico</span><input id="loadCheck" type="checkbox" aria-label="Collega il carico RL"><i aria-hidden="true"></i></label></div>
+        <div class="control load-ctrl" id="loadControl"><div class="control-top"><label for="rlRange" class="control-title"><span class="chip">RL</span> Resistenza del carico</label><div class="input-unit"><input id="rlNum" type="number" step="0.5" min="0.5" max="100" value="10" aria-label="Resistenza carico in kiloohm"><span>kΩ</span></div></div><input id="rlRange" type="range" class="range" min="0.5" max="100" step="0.5" value="10" style="--fill:#91aaa9" aria-label="Resistenza carico"><div class="range-labels"><span>0,5 kΩ</span><span>100 kΩ</span></div></div>
+        <div id="lockNote" class="hint-lock">Nella sfida la sorgente è fissata: puoi modificare R1 e R2.</div>
+      </div>
+      <div class="presets"><b>PROVA AL VOLO</b><button class="tiny-btn preset" data-preset="half" type="button">A metà</button><button class="tiny-btn preset" data-preset="ratio" type="button">Rapporto 2:1</button><button class="tiny-btn preset" data-preset="arduino" type="button" id="arduinoPreset">Arduino 5 V</button><button class="tiny-btn" id="swapBtn" type="button">⇆ Scambia R1/R2</button></div>
+    </article>
+  </section>
+
+  <section class="readouts" aria-label="Risultati delle misure" aria-live="polite">
+    <div class="readout key"><span id="readout1Title">Vout · voltmetro</span><strong class="mono"><span id="readout1">3,00</span><span class="unit" id="unit1">V</span></strong><span class="micro" id="micro1">Tra Vout e GND</span></div>
+    <div class="readout"><span id="readout2Title">Caduta su R1</span><strong class="mono"><span id="readout2">6,00</span><span class="unit" id="unit2">V</span></strong><span class="micro" id="micro2">Vin − Vout</span></div>
+    <div class="readout"><span id="readout3Title">Corrente erogata</span><strong class="mono"><span id="readout3">3,00</span><span class="unit" id="unit3">mA</span></strong><span class="micro" id="micro3">Uguale in R1 e R2</span></div>
+  </section>
+
+  <section class="theory" aria-label="Spiegazione e calcoli">
+    <article class="panel"><h2 id="whyHeading">Perché funziona?</h2><p id="whySub" class="sub">La tensione si ripartisce tra le resistenze in serie.</p>
+      <div class="voltage-track" id="proportionBar" role="img" aria-label="Ripartizione fra i due componenti"><div class="r1drop" id="barR1"></div><div class="r2drop" id="barR2"></div></div>
+      <div class="voltage-explain"><span class="one" id="share1">R1 · 6,00 V</span><span class="two" id="share2">R2 · 3,00 V</span></div>
+      <div class="steps" id="conceptSteps"><div class="step"><i>1</i><span>Le resistenze sono in serie.</span></div></div>
+      <div class="lesson" id="lessonNote">Osserva cosa succede cambiando i valori.</div>
+    </article>
+    <article class="panel"><h2 id="formulaHeading">La formula del partitore</h2><p class="sub" id="formulaSub">Due resistenze in serie, senza carico.</p>
+      <div class="formula" id="formulaDisplay" aria-label="Formula del partitore di tensione"><span class="out">Vout</span> = Vin × <span class="frac"><span class="top">R2</span><span class="bottom">R1 + R2</span></span></div>
+      <div class="live-formula mono" id="formulaLive">Vout = 9 × 1 / (2 + 1) = 3 V</div>
+      <div class="steps"><div class="step"><i>1</i><span id="step1">Resistenza equivalente: <b>R1 + R2</b></span></div><div class="step"><i>2</i><span id="step2">Calcola la corrente <b>I = Vin / Rtot</b></span></div><div class="step"><i>3</i><span id="step3">Calcola la tensione su R2.</span></div></div>
+      <div class="load-explanation" id="advancedInfo"></div>
+      <p class="note" id="unitsNote">Con R in kΩ e V in V, la corrente risulta in mA: <b>1 V / 1 kΩ = 1 mA</b>.</p>
+    </article>
+  </section>
+  <footer class="app-footer"><span><b>OMG Virtual Lab</b> · Elettroni e dintorni · Modelli ideali a scopo didattico</span><span id="footerWarn">⚡ Attenzione: non applicare 12 V direttamente a un ingresso Arduino da 5 V.</span></footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const fmt = (n, digits = 2) => Number(n).toLocaleString('it-IT', {minimumFractionDigits:digits, maximumFractionDigits:digits});
+  const clamp = (x,a,b) => Math.min(b,Math.max(a,x));
+  const values = {
+    voltage: {source:9,r1:2,r2:1,rl:10,loaded:false},
+    current: {source:9,r1:2,r2:1,rl:10,loaded:false}
+  };
+  let kind='voltage', activity='explore';
+  const status = {voltage:{mission:0,solved:[false,false,false,false]},current:{mission:0,solved:[false,false,false,false]}};
+  const missions = {
+    voltage:[
+      {title:'Dimezza la tensione',desc:'Con Vin = 10 V e nessun carico, ottieni Vout = 5 V.',source:10,loaded:false,targetKey:'out',target:5,hint:'Se le due resistenze sono uguali, la tensione si divide in due.'},
+      {title:'Un terzo della tensione',desc:'Con Vin = 9 V e nessun carico, ottieni Vout = 3 V.',source:9,loaded:false,targetKey:'out',target:3,hint:'Per ottenere 1/3 della tensione, R1 deve essere il doppio di R2.'},
+      {title:'Ingresso Arduino',desc:'Una sorgente è a 12 V: ottieni Vout = 4 V, adatta a un ingresso analogico da 5 V di Arduino Uno. Nessun carico.',source:12,loaded:false,targetKey:'out',target:4,hint:'Ti serve una tensione di uscita che sia un terzo della tensione iniziale.'},
+      {title:'Collega un carico',desc:'Vin = 10 V e RL = 3 kΩ in parallelo a R2. Ottieni Vout = 2 V.',source:10,loaded:true,rl:3,targetKey:'out',target:2,hint:'Con R2 = 3 kΩ e RL = 3 kΩ ottieni Req = 1,5 kΩ. Trova R1 per far cadere 8 V.'}
+    ],
+    current:[
+      {title:'Due rami uguali',desc:'Con Iin = 10 mA, regola R1 e R2 affinché I2 = 5 mA.',source:10,targetKey:'i2',target:5,hint:'Quando le resistenze sono uguali, la corrente si divide in due.'},
+      {title:'Due terzi della corrente',desc:'Con Iin = 9 mA, fai passare I2 = 6 mA nel ramo R2.',source:9,targetKey:'i2',target:6,hint:'Per avere più corrente in R2, quel ramo deve avere meno resistenza. Prova R1 doppia di R2.'},
+      {title:'Un quarto nel ramo R1',desc:'Con Iin = 8 mA, ottieni I1 = 2 mA nel ramo R1.',source:8,targetKey:'i1',target:2,hint:'Il ramo che riceve un quarto della corrente deve avere una resistenza tripla rispetto all’altro.'},
+      {title:'La resistenza opposta',desc:'Con Iin = 12 mA, ottieni I2 = 3 mA nel ramo R2.',source:12,targetKey:'i2',target:3,hint:'Il rapporto I2/Iin vale R1/(R1 + R2). Per avere un quarto, R2 deve valere tre volte R1.'}
+    ]
+  };
+  const s=()=>values[kind];
+  function calc(){
+    const x=s();
+    if(kind==='voltage'){
+      const req=x.loaded?x.r2*x.rl/(x.r2+x.rl):x.r2;
+      const total=x.r1+req, i=x.source/total;
+      const out=i*req;
+      return {req,total,i,out,drop:x.source-out,iR2:out/x.r2,iRL:x.loaded?out/x.rl:0,ideal:x.source*x.r2/(x.r1+x.r2)};
+    }
+    const req=x.r1*x.r2/(x.r1+x.r2), v=x.source*req;
+    return {req,v,i1:v/x.r1,i2:v/x.r2,total:x.source};
+  }
+  const fieldNames=['source','r1','r2','rl'];
+  function syncFields(){
+    const x=s();
+    for(const key of fieldNames){
+      const field=$(key+'Range'), num=$(key+'Num');
+      field.value=String(x[key]);num.value=String(x[key]);
+      field.style.setProperty('--pct', `${100*(x[key]-Number(field.min))/(Number(field.max)-Number(field.min))}%`);
+    }
+    $('loadCheck').checked=x.loaded;
+    $('loadControl').classList.toggle('shown',kind==='voltage'&&x.loaded);
+    $('vLoadBranch').style.display=kind==='voltage'&&x.loaded?'block':'none';
+  }
+  function render(){
+    const x=s(),c=calc();syncFields();
+    if(kind==='voltage'){
+      $('vVinSvg').textContent=fmt(x.source,1)+' V';
+      $('vR1Svg').textContent=fmt(x.r1,1)+' kΩ';$('vR2Svg').textContent=fmt(x.r2,1)+' kΩ';$('vRlSvg').textContent=fmt(x.rl,1)+' kΩ';
+      $('vMeterSvg').textContent=fmt(c.out);
+      setReadout(1,c.out,'V');setReadout(2,c.drop,'V');setReadout(3,c.i,'mA');
+      $('micro3').textContent=x.loaded?'Attraversa R1; poi si divide':'Identica in R1 e R2';
+      const portion=x.source>0?c.drop/x.source*100:50;
+      setBar(portion,`R1 · ${fmt(c.drop)} V`,`R2 · ${fmt(c.out)} V`, 'Ripartizione della tensione');
+      if(x.loaded){
+        $('formulaSub').innerHTML='Con carico collegato: <b>R2 e RL sono in parallelo</b>.';
+        $('formulaDisplay').innerHTML='<span class="out">Vout</span> = Vin × <span class="frac"><span class="top">Req</span><span class="bottom">R1 + Req</span></span>';
+        $('formulaLive').textContent=`Req = (${fmt(x.r2,1)} × ${fmt(x.rl,1)}) / (${fmt(x.r2,1)} + ${fmt(x.rl,1)}) = ${fmt(c.req)} kΩ · Vout = ${fmt(x.source)} × ${fmt(c.req)} / (${fmt(x.r1,1)} + ${fmt(c.req)}) = ${fmt(c.out)} V`;
+        stepText('1',`Req = R2 // RL = ${fmt(c.req)} kΩ`);
+        stepText('2',`I = ${fmt(x.source)} V / ${fmt(c.total)} kΩ = ${fmt(c.i)} mA`);
+        stepText('3',`Vout = I × Req = ${fmt(c.out)} V`);
+        $('advancedInfo').classList.add('show');
+        $('advancedInfo').textContent=`Senza RL avresti ${fmt(c.ideal)} V, con RL la tensione scende a ${fmt(c.out)} V. Nel ramo R2 scorrono ${fmt(c.iR2)} mA; nel carico ${fmt(c.iRL)} mA.`;
+        $('lessonNote').innerHTML=`<b>Carico reale:</b> parte della corrente passa in RL. Il voltmetro ideale non assorbe corrente; il carico invece modifica il partitore.`;
+      } else {
+        $('formulaSub').innerHTML='Vale per due resistenze in serie, <b>senza carico</b> collegato all’uscita.';
+        $('formulaDisplay').innerHTML='<span class="out">Vout</span> = Vin × <span class="frac"><span class="top">R2</span><span class="bottom">R1 + R2</span></span>';
+        $('formulaLive').textContent=`Vout = ${fmt(x.source)} × ${fmt(x.r2,1)} / (${fmt(x.r1,1)} + ${fmt(x.r2,1)}) = ${fmt(c.out)} V`;
+        stepText('1',`Rtot = R1 + R2 = ${fmt(c.total)} kΩ`);
+        stepText('2',`I = ${fmt(x.source)} V / ${fmt(c.total)} kΩ = ${fmt(c.i)} mA`);
+        stepText('3',`Vout = I × R2 = ${fmt(c.out)} V`);
+        $('advancedInfo').classList.remove('show');
+        $('lessonNote').innerHTML='<b>Osserva:</b> a Vin costante, più è grande R2 rispetto a R1, maggiore è la quota di tensione su R2. Il tester è in parallelo.';
+      }
+    } else {
+      $('iSourceSvg').textContent=fmt(x.source,1)+' mA';
+      $('iR1Svg').textContent=fmt(x.r1,1)+' kΩ';$('iR2Svg').textContent=fmt(x.r2,1)+' kΩ';
+      $('iMeter1Svg').textContent=fmt(c.i1);$('iMeter2Svg').textContent=fmt(c.i2);
+      setReadout(1,c.i2,'mA');setReadout(2,c.i1,'mA');setReadout(3,c.v,'V');
+      $('micro3').textContent='Uguale ai capi di R1 e R2';
+      const portion=x.source>0?c.i1/x.source*100:50;
+      setBar(portion,`R1 · ${fmt(c.i1)} mA`,`R2 · ${fmt(c.i2)} mA`, 'Ripartizione della corrente');
+      $('formulaSub').innerHTML='Vale per due resistenze in <b>parallelo</b> alimentate da una sorgente di corrente ideale.';
+      $('formulaDisplay').innerHTML='<span class="out">I2</span> = Iin × <span class="frac"><span class="top">R1</span><span class="bottom">R1 + R2</span></span>';
+      $('formulaLive').textContent=`I2 = ${fmt(x.source)} × ${fmt(x.r1,1)} / (${fmt(x.r1,1)} + ${fmt(x.r2,1)}) = ${fmt(c.i2)} mA`;
+      stepText('1',`Req = (R1 × R2) / (R1 + R2) = ${fmt(c.req)} kΩ`);
+      stepText('2',`V sui rami = Iin × Req = ${fmt(c.v)} V`);
+      stepText('3',`I2 = V / R2 = ${fmt(c.i2)} mA; I1 = ${fmt(c.i1)} mA`);
+      $('advancedInfo').classList.add('show');
+      $('advancedInfo').innerHTML=`<b>Perché R1 è sopra?</b> I2 = Iin × R1 / (R1 + R2): al numeratore compare la resistenza dell’<b>altro ramo</b>. Verifica: ${fmt(c.i1)} + ${fmt(c.i2)} = ${fmt(x.source)} mA.`;
+      $('lessonNote').innerHTML='<b>Osserva:</b> la corrente si divide in modo inversamente proporzionale alle resistenze. Se R2 è più piccola di R1, in R2 passa più corrente.';
+      // speed represents relative branch current, not electron drift velocity
+      for(const [group,val] of [['particlesA',c.i1],['particlesB',c.i2]]){
+        const g=$(group);g.style.visibility=val>0?'visible':'hidden';
+        const duration=val>0?clamp(3.7/(.5+val/3),.45,5):5;
+        g.style.setProperty('--dur',duration+'s');
+      }
+    }
+  }
+  function setBar(p,a,b,label){
+    $('barR1').style.width=clamp(p,0,100)+'%';$('barR2').style.width=(100-clamp(p,0,100))+'%';
+    $('share1').textContent=a;$('share2').textContent=b;
+    $('proportionBar').setAttribute('aria-label',label+': '+a+'; '+b);
+  }
+  function setReadout(n,value,unit){$('readout'+n).textContent=fmt(value);$('unit'+n).textContent=unit;}
+  function stepText(index, content){const el=$('step'+index);el.textContent=content;}
+  function switchKind(next){
+    if(kind===next)return;kind=next;
+    const current=kind==='current';
+    $('tabVoltage').setAttribute('aria-selected',String(!current));$('tabCurrent').setAttribute('aria-selected',String(current));
+    $('voltageDiagram').toggleAttribute('hidden',current);$('currentDiagram').toggleAttribute('hidden',!current);
+    $('headingAccent').textContent=current?'corrente':'tensione';
+    $('intro').textContent=current?'Due resistenze in parallelo: scopri come la corrente si divide e confronta le letture dei due amperometri digitali.':'Due resistenze in serie: cambia i valori e osserva come si distribuisce la tensione. Il multimetro misura davvero fra Vout e GND.';
+    $('kindSubtitle').textContent=current?'Parallelo → stessa tensione, correnti diverse':'Serie → stessa corrente, tensioni diverse';
+    $('circuitHeading').textContent=current?'Il circuito in parallelo':'Il circuito in serie';
+    $('circuitSub').textContent=current?'Sorgente di corrente + due amperometri in serie ai rami':'Generatore di tensione + voltmetro digitale';
+    $('controlsSub').textContent=current?'Regola le resistenze e confronta I1 e I2.':'Muovi i cursori e osserva il tester.';
+    $('sourceChip').textContent=current?'I':'V';$('sourceLabel').textContent=current?'Corrente Iin':'Tensione Vin';
+    $('sourceUnit').textContent=current?'mA':'V';$('sourceMin').textContent=current?'0 mA':'0 V';
+    $('sourceMax').textContent=current?'15 mA':'12 V';
+    $('sourceRange').max=current?'15':'12';$('sourceNum').max=current?'15':'12';
+    $('sourceRange').setAttribute('aria-label',current?'Corrente ideale in ingresso in milliampere':'Tensione di ingresso in volt');
+    $('sourceNum').setAttribute('aria-label',current?'Corrente ideale in ingresso in milliampere':'Tensione di ingresso in volt');
+    $('r1Label').textContent=current?'Resistenza ramo 1':'Resistenza sopra';
+    $('r2Label').textContent=current?'Resistenza ramo 2':'Resistenza sotto';
+    $('loadToggle').hidden=current;
+    $('readout1Title').textContent=current?'I2 · amperometro A2':'Vout · voltmetro';
+    $('readout2Title').textContent=current?'I1 · amperometro A1':'Caduta su R1';
+    $('readout3Title').textContent=current?'Tensione sui rami':'Corrente erogata';
+    $('micro1').textContent=current?'In serie al ramo R2':'Tra Vout e GND';
+    $('micro2').textContent=current?'In serie al ramo R1':'Vin − Vout';
+    $('whyHeading').textContent=current?'Come si divide la corrente?':'Perché funziona?';
+    $('whySub').textContent=current?'Più resistenza significa meno corrente nel ramo.':'La tensione si ripartisce tra le resistenze in serie.';
+    $('conceptSteps').innerHTML=current?'<div class="step"><i>1</i><span><b>R1 e R2 sono in parallelo.</b> Ai capi dei due rami trovi la stessa tensione.</span></div><div class="step"><i>2</i><span><b>La corrente sceglie i due percorsi.</b> Nel ramo con resistenza minore passa più corrente.</span></div><div class="step"><i>3</i><span><b>Iin = I1 + I2.</b> Gli amperometri A1 e A2 sono ciascuno in serie al proprio ramo.</span></div>':'<div class="step"><i>1</i><span><b>R1 e R2 sono in serie.</b> Senza carico, la stessa corrente attraversa entrambe.</span></div><div class="step"><i>2</i><span><b>Ogni resistenza causa una caduta di tensione.</b> A parità di corrente, una resistenza più alta ha una caduta maggiore.</span></div><div class="step"><i>3</i><span><b>Vout è ai capi di R2.</b> Il voltmetro è collegato in parallelo tra Vout e GND.</span></div>';
+    $('diagramLegend').innerHTML=current?'<span><b class="red">●</b> Ramo R1 → I1</span><span><b class="cyan">●</b> Ramo R2 → I2</span><span>Amperometri in serie</span><span>Iin = I1 + I2</span>':'<span><b class="red">●</b> Rosso: Vout</span><span><b>●</b> Nero: GND</span><span>Voltmetro in parallelo</span><span>Generatore: simbolo + / −</span>';
+    $('meterTip').innerHTML=current?'<b>Come si misura:</b> gli amperometri A1 e A2 interrompono ciascuno il proprio ramo e sono collegati <b>in serie</b>. Un amperometro non va messo direttamente in parallelo alla sorgente.':'<b>Come si misura:</b> il tester in modalità V⎓ è collegato tra Vout e GND, ai capi di R2. I puntali non interrompono il circuito.';
+    $('unitsNote').innerHTML=current?'Con I in mA e R in kΩ, la tensione risulta in volt: <b>1 mA × 1 kΩ = 1 V</b>. Sorgente di corrente <b>ideale</b>, senza limite di tensione simulato.':'Con R in kΩ e V in V, la corrente risulta in mA: <b>1 V / 1 kΩ = 1 mA</b>.';
+    $('footerWarn').textContent=current?'⚡ Una sorgente di corrente reale ha un limite di tensione: qui si usa un modello ideale.':'⚡ Non applicare 12 V direttamente a un ingresso Arduino da 5 V.';
+    $('arduinoPreset').textContent=current?'Rami diversi':'Arduino 5 V';
+    $('lockNote').textContent=current?'Nelle sfide Iin è fissata: modifica R1 e R2.':'Nelle sfide Vin e carico sono fissati: modifica R1 e R2.';
+    if(activity==='challenge')loadMission();else render();
+  }
+  function updateField(key,value){
+    if(value===''||!Number.isFinite(Number(value)))return;
+    const field=$(key+'Range'),min=Number(field.min),max=Number(field.max),step=Number(field.step)||.1;
+    s()[key]=clamp(Math.round(Number(value)/step)*step,min,max);
+    s()[key]=Math.round(s()[key]*1000)/1000;
+    invalidate();render();
+  }
+  for(const key of fieldNames){
+    const range=$(key+'Range'),num=$(key+'Num');
+    range.addEventListener('input',e=>updateField(key,e.target.value));
+    num.addEventListener('change',e=>updateField(key,e.target.value===''?s()[key]:e.target.value));
+    num.addEventListener('input',e=>{if(e.target.value!==''&&Number.isFinite(Number(e.target.value))&&Number(e.target.value)>=Number(num.min)&&Number(e.target.value)<=Number(num.max))updateField(key,e.target.value);});
+  }
+  $('loadCheck').addEventListener('change',e=>{values.voltage.loaded=e.target.checked;invalidate();render()});
+  function invalidate(){if(activity!=='challenge')return;const el=$('missionFeedback');el.className='challenge-feedback neutral';el.textContent='Valori modificati. Premi «Verifica». ';$('nextBtn').hidden=true;}
+  function reset(){if(activity==='challenge'){loadMission();return;}values[kind]=kind==='voltage'?{source:9,r1:2,r2:1,rl:10,loaded:false}:{source:9,r1:2,r2:1,rl:10,loaded:false};render();}
+  $('resetBtn').addEventListener('click',reset);
+  $('swapBtn').addEventListener('click',()=>{const x=s();[x.r1,x.r2]=[x.r2,x.r1];invalidate();render();});
+  const presets = {
+    voltage:{half:{source:10,r1:2,r2:2,rl:10,loaded:false},ratio:{source:9,r1:2,r2:1,rl:10,loaded:false},arduino:{source:5,r1:10,r2:10,rl:10,loaded:false}},
+    current:{half:{source:10,r1:2,r2:2,rl:10,loaded:false},ratio:{source:9,r1:2,r2:1,rl:10,loaded:false},arduino:{source:8,r1:3,r2:1,rl:10,loaded:false}}
+  };
+  document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{Object.assign(s(),presets[kind][b.dataset.preset]);render();}));
+  function progress(){const box=$('missionProgress'),st=status[kind];box.replaceChildren();st.solved.forEach((done,i)=>{const dot=document.createElement('span');dot.className=done?'done':i===st.mission?'current':'';dot.title=`Sfida ${i+1} ${done?'completata':''}`;box.appendChild(dot);});}
+  function loadMission(){
+    const st=status[kind],m=missions[kind][st.mission],x=s();Object.assign(x,{source:m.source,r1:2,r2:1,rl:m.rl||10,loaded:kind==='voltage'&&!!m.loaded});
+    $('missionNo').textContent=String(st.mission+1);$('missionTitle').textContent=m.title;$('missionDesc').textContent=m.desc;
+    $('missionHint').textContent=m.hint;$('missionHint').classList.remove('open');$('hintBtn').textContent='Un suggerimento';$('hintBtn').setAttribute('aria-expanded','false');
+    $('missionFeedback').className='challenge-feedback neutral';$('missionFeedback').textContent='Modifica le resistenze, poi premi «Verifica».';
+    $('nextBtn').hidden=true;$('nextBtn').textContent=st.mission===3?'Ricomincia ↻':'Prossima sfida →';progress();render();
+  }
+  function switchActivity(next){
+    activity=next;const challenge=next==='challenge';
+    $('tabExplore').setAttribute('aria-selected',String(!challenge));$('tabChallenge').setAttribute('aria-selected',String(challenge));
+    $('challengeBox').classList.toggle('show',challenge);$('lockNote').classList.toggle('shown',challenge);
+    for(const key of ['source','rl']){ $(key+'Range').disabled=challenge;$(key+'Num').disabled=challenge; }
+    $('loadCheck').disabled=challenge;
+    document.querySelectorAll('.preset').forEach(b=>b.disabled=challenge);
+    if(challenge)loadMission();else reset();
+  }
+  $('tabVoltage').addEventListener('click',()=>switchKind('voltage'));
+  $('tabCurrent').addEventListener('click',()=>switchKind('current'));
+  $('tabExplore').addEventListener('click',()=>switchActivity('explore'));
+  $('tabChallenge').addEventListener('click',()=>switchActivity('challenge'));
+  $('hintBtn').addEventListener('click',()=>{const hint=$('missionHint'),open=hint.classList.toggle('open');$('hintBtn').setAttribute('aria-expanded',String(open));$('hintBtn').textContent=open?'Nascondi suggerimento':'Un suggerimento';});
+  $('checkBtn').addEventListener('click',()=>{
+    const st=status[kind],m=missions[kind][st.mission],c=calc(),actual=c[m.targetKey],diff=Math.abs(actual-m.target),f=$('missionFeedback');
+    if(diff<=.08+1e-10){st.solved[st.mission]=true;f.className='challenge-feedback good';f.textContent=`Perfetto! ${kind==='voltage'?'Vout':m.targetKey.toUpperCase()} = ${fmt(actual)} ${kind==='voltage'?'V':'mA'}. Obiettivo raggiunto (±0,08).`;$('nextBtn').hidden=false;progress();}
+    else{f.className='challenge-feedback bad';f.textContent=`Misura attuale: ${fmt(actual)} ${kind==='voltage'?'V':'mA'}; obiettivo ${fmt(m.target)}. Mancano ${fmt(diff)}. Riprova.`;$('nextBtn').hidden=true;}
+  });
+  $('nextBtn').addEventListener('click',()=>{
+    const st=status[kind];if(st.mission===3){st.mission=0;st.solved=[false,false,false,false];}else st.mission++;loadMission();
+  });
+  // default: tensione, esplorazione
+  $('conceptSteps').innerHTML='<div class="step"><i>1</i><span><b>R1 e R2 sono in serie.</b> Senza carico, la stessa corrente attraversa entrambe.</span></div><div class="step"><i>2</i><span><b>Ogni resistenza causa una caduta di tensione.</b> A parità di corrente, una resistenza più alta ha una caduta maggiore.</span></div><div class="step"><i>3</i><span><b>Vout è ai capi di R2.</b> Il voltmetro è collegato in parallelo tra Vout e GND.</span></div>';
+  render();
+})();
+</script>
+</body></html>

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>LED RGB • PWM a tre canali | OMG Virtual Lab</title>
+  <style>
+    :root { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #162b3a; background: #edf2f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .app { max-width: 1320px; margin: auto; padding: clamp(16px, 2.5vw, 32px); }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 22px; }
+    .brand { display: inline-flex; align-items: center; gap: 13px; }
+    .mark { width: 52px; height: 52px; position: relative; flex: none; }
+    .mark::before,.mark::after { content: ''; position: absolute; width: 31px; height: 31px; border-radius: 5px; }
+    .mark::before { background: #f8d859; top: 3px; left: 3px; transform: rotate(-8deg); }
+    .mark::after { background: #ed5f59; right: 2px; bottom: 3px; transform: rotate(7deg); mix-blend-mode: multiply; }
+    .mark span { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 1000; font-size: 15px; letter-spacing: -1.5px; z-index: 1; color: #152b3c; }
+    .site { font-weight: 850; font-size: 15px; letter-spacing: -.035em; }
+    .section-tag { color: #688091; font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .13em; margin-top: 5px; }
+    .tag { font-size: 11px; font-weight: 850; letter-spacing: .12em; border: 1px solid #d1dce2; color: #657d8d; border-radius: 99px; padding: 9px 12px; background: #fff; white-space: nowrap; }
+    h1 { font-size: clamp(32px,4.6vw,54px); line-height: 1.05; letter-spacing: -.065em; margin: 10px 0 9px; font-weight: 900; }
+    .intro { max-width: 680px; margin: 0 0 22px; color: #617689; font-size: 14px; line-height: 1.5; }
+    .intro strong { color: #1e4657; }
+    .main { display: grid; grid-template-columns: minmax(320px, .9fr) minmax(0, 1.25fr); gap: 16px; align-items: stretch; }
+    .panel { border: 1px solid #dde6ec; background: #fff; border-radius: 21px; box-shadow: 0 7px 24px #1a40550b; overflow: hidden; }
+    .panel-pad { padding: 22px; }
+    .label-top { font-size: 11px; font-weight: 900; letter-spacing: .12em; color: #6d8290; text-transform: uppercase; margin: 0 0 6px; }
+    .panel h2 { margin: 0 0 16px; font-size: 21px; font-weight: 850; letter-spacing: -.04em; }
+    .channels { display: grid; gap: 22px; margin-top: 23px; }
+    .channel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .channel-name { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; }
+    .dot { width: 12px; height: 12px; display: inline-block; background: var(--tone); border-radius: 50%; box-shadow: 0 0 0 4px color-mix(in srgb,var(--tone) 12%,white); }
+    .value { display: flex; align-items: baseline; gap: 5px; font-variant-numeric: tabular-nums; }
+    .value strong { font-size: 24px; line-height: 1; letter-spacing: -.04em; }
+    .value small { color: #81939e; font-weight: 700; font-size: 12px; }
+    .channel input[type="range"] { width: 100%; margin: 7px 0 8px; display: block; appearance: none; -webkit-appearance: none; height: 9px; border-radius: 99px; background: linear-gradient(to right,var(--tone) 0 var(--pct), #e8eff2 var(--pct) 100%); outline-offset: 5px; touch-action: none; }
+    .channel input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 23px; height: 23px; background: #fff; border: 6px solid var(--tone); border-radius: 50%; box-shadow: 0 1px 6px #193f4c27; }
+    .channel input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; background: #fff; border: 6px solid var(--tone); border-radius: 50%; box-shadow: 0 1px 6px #193f4c27; }
+    .channel-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: #7b8f9a; font-variant-numeric: tabular-nums; }
+    .channel-info b { color: #344e5f; }
+    .chip { color: #637e8c; font-size: 11px; background: #f3f6f7; border: 1px solid #e4ecef; border-radius: 6px; padding: 5px 7px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .controls-footer { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 25px; }
+    .action { border: 1px solid #d9e4e9; border-radius: 10px; background: #f7fafb; font-size: 12px; font-weight: 800; color: #375264; padding: 10px 14px; transition: transform .15s, background .15s; }
+    .action:active { transform: scale(.96); }
+    .action:hover { background: #e9f0f3; }
+    .action.primary { background: #233e4f; border-color: #233e4f; color: white; }
+    .stage { background: #142b3b; color: #e8f1f6; display: flex; flex-direction: column; position: relative; isolation: isolate; }
+    .stage::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(#bcd4e01c .8px, transparent .8px); background-size: 19px 19px; pointer-events: none; z-index: -1; }
+    .stage-head { padding: 22px 25px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .stage-head .label-top { color: #9cbbc7; margin: 0; }
+    .live { font-weight: 800; color: #cde0e6; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; background: #ffffff14; border: 1px solid #ffffff22; padding: 8px 10px; border-radius: 99px; }
+    .live::before { content: ''; width: 7px; height: 7px; background: #63caa6; border-radius: 50%; display: inline-block; margin-right: 7px; }
+    .led-zone { min-height: 254px; display: grid; align-content: center; justify-items: center; position: relative; padding: 4px 0 8px; }
+    .light-aura { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(255,92,45,.62), rgba(255,92,45,.18) 37%,transparent 70%); filter: blur(13px); opacity: .8; pointer-events: none; transition: background .09s; }
+    .led-wrap { z-index: 1; position: relative; width: 164px; height: 183px; margin-top: 12px; }
+    .led-body { position: absolute; top: 8px; left: 26px; width: 112px; height: 132px; border-radius: 65px 65px 12px 12px; border: 2px solid #d5e2e4a6; background: radial-gradient(ellipse at 35% 22%, #ffffffb8 0%, #ffffff45 13%,transparent 41%),linear-gradient(125deg, #ff816e, #ff5c2d); box-shadow: inset -12px -9px 22px #101c2b40, inset 7px 8px 19px #ffffff6b, 0 0 34px #f66d48a6; transition: background .1s,box-shadow .1s; }
+    .led-body::after { content: ''; position: absolute; left: -6px; right: -6px; bottom: -4px; height: 13px; background: #c1ccd3; border: 2px solid #d9e1e6; border-radius: 4px; box-shadow: 0 3px 4px #101b24aa; }
+    .leg { position: absolute; top: 144px; width: 8px; height: 29px; background: linear-gradient(to right,#748d9c,#e4ecf1,#718695); border-radius: 0 0 3px 3px; }
+    .leg:nth-child(2) { left: 46px; }.leg:nth-child(3) { left: 66px; height: 36px; }.leg:nth-child(4) { left: 88px; }.leg:nth-child(5) { left: 110px; }
+    .color-badge { position: relative; z-index: 1; margin: 0 20px 16px; text-align: center; font-size: 12px; color: #b1ccd5; }
+    .color-badge strong { color: white; font-size: 19px; font-family: ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .03em; display: block; margin-top: 5px; }
+    .color-badge .swatch { display: inline-block; vertical-align: middle; width: 9px; height: 9px; border-radius: 3px; background: #ff462d; margin-right: 6px; }
+    .stage-bottom { background: #203c4e; margin-top: auto; border-top: 1px solid #ffffff14; display: flex; justify-content: space-between; gap: 9px; flex-wrap: wrap; padding: 13px 20px; color: #b8cbd4; font-size: 12px; }
+    .stage-bottom strong { color: white; }
+    .detail-grid { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); gap: 16px; margin-top: 16px; }
+    .wires svg { width: 100%; height: auto; max-height: 280px; display: block; }
+    .wires .footnote { margin: 4px 0 0; font-size: 12px; color: #758b99; line-height: 1.5; }
+    .signal-panel { padding: 22px; }
+    .signal-head { display:flex; justify-content: space-between;align-items:center;gap:10px; }
+    .signal-head small { font-size: 10px; color: #668394; font-weight: 800; white-space: nowrap; }
+    .signal-row { display: grid; grid-template-columns: 32px minmax(0,1fr) 59px; align-items: center; gap: 9px; margin: 16px 0 11px; }
+    .signal-row label { font-weight: 900; font-size: 13px; }
+    .signal-row svg { width: 100%; height: 51px; overflow: visible; display: block; background: #f4f8fa; border: 1px solid #e2ebef; border-radius: 7px; }
+    .signal-row path { fill: none; stroke-width: 3; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+    .percent { font-variant-numeric: tabular-nums; text-align: right; color: #4a6574; font-size: 13px; font-weight: 800; }
+    .explain { margin-top: 12px; background: #fff9e5; border: 1px solid #f5e7b1; border-radius: 10px; padding: 12px 13px; font-size: 12px; line-height: 1.6; color: #655c38; }
+    .explain b { color: #353c36; }
+    .code-panel { margin-top: 16px; }
+    .code-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 20px 22px 0; }
+    .code-title h2 { margin: 0; }
+    .code-lead { font-size: 12px; margin: 8px 22px 15px; color: #698392; line-height: 1.6; }
+    pre { background: #142b3b; color: #d8edf5; margin: 0; padding: 19px 22px 24px; font-size: 12.5px; line-height: 1.8; max-height: 315px; overflow: auto; tab-size: 2; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .comment { color: #83afbd; }.key { color: #f8d859; }.num { color: #ed9c8d; }
+    .footer-note { color: #728895; text-align: center; font-size: 11px; margin: 16px 0 5px; line-height: 1.5; }
+    @media (max-width: 850px) { .main, .detail-grid { grid-template-columns: 1fr; } .stage { min-height: 410px; } .led-zone { min-height: 290px; } }
+    @media (max-width: 490px) { .header { align-items:center; } .tag { display:none; } .panel-pad,.signal-panel { padding: 17px; } .signal-row { grid-template-columns: 20px minmax(0,1fr) 50px; gap: 7px; } .signal-row svg { height: 44px; } .app { padding: 13px; } .intro { font-size: 13px; } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <div class="brand"><div class="mark" aria-hidden="true"><span>OMG</span></div><div><div class="site">ohmmygod.it</div><div class="section-tag">Virtual Lab / Arduino</div></div></div>
+    <div class="tag">ELETTRONICA &amp; COMPONENTI</div>
+  </header>
+  <h1>LED RGB <span style="color:#ed5f59">×</span> PWM</h1>
+  <p class="intro">Muovi i <strong>tre slider</strong> per regolare indipendentemente i canali rosso, verde e blu. Osserva come cambiano <strong>colore, luminosità e duty cycle</strong> dei segnali Arduino.</p>
+  <div class="main">
+    <section class="panel panel-pad" aria-labelledby="control-title">
+      <p class="label-top">01 / Regola i canali</p><h2 id="control-title">Mixer RGB</h2>
+      <div class="channels">
+        <div class="channel" style="--tone:#e95756;--pct:100%"><div class="channel-head"><span class="channel-name"><i class="dot"></i> Rosso <span class="chip">D9 ~</span></span><span class="value"><strong id="r-number">255</strong><small>/255</small></span></div><input id="red" type="range" min="0" max="255" value="255" aria-label="PWM rosso, pin D9"><div class="channel-info"><span>Duty cycle <b id="r-duty">100%</b></span><span>ON ≈ <b id="r-on">2,04 ms</b></span></div></div>
+        <div class="channel" style="--tone:#35a870;--pct:27.45%"><div class="channel-head"><span class="channel-name"><i class="dot"></i> Verde <span class="chip">D10 ~</span></span><span class="value"><strong id="g-number">70</strong><small>/255</small></span></div><input id="green" type="range" min="0" max="255" value="70" aria-label="PWM verde, pin D10"><div class="channel-info"><span>Duty cycle <b id="g-duty">27%</b></span><span>ON ≈ <b id="g-on">0,56 ms</b></span></div></div>
+        <div class="channel" style="--tone:#4088d4;--pct:17.65%"><div class="channel-head"><span class="channel-name"><i class="dot"></i> Blu <span class="chip">D11 ~</span></span><span class="value"><strong id="b-number">45</strong><small>/255</small></span></div><input id="blue" type="range" min="0" max="255" value="45" aria-label="PWM blu, pin D11"><div class="channel-info"><span>Duty cycle <b id="b-duty">18%</b></span><span>ON ≈ <b id="b-on">0,36 ms</b></span></div></div>
+      </div>
+      <div class="controls-footer"><button class="action primary" id="white-button">Tutti al 100% · Bianco</button><button class="action" id="off-button">Spegni LED</button></div>
+    </section>
+    <section class="panel stage" aria-label="Simulazione LED RGB">
+      <div class="stage-head"><p class="label-top">02 / Mescola la luce</p><span class="live">Simulazione attiva</span></div>
+      <div class="led-zone"><div class="light-aura" id="aura" aria-hidden="true"></div><div class="led-wrap" aria-hidden="true"><div class="led-body" id="led"></div><div class="leg"></div><div class="leg"></div><div class="leg"></div><div class="leg"></div></div></div>
+      <div class="color-badge"><span class="swatch" id="swatch"></span> Colore risultante <strong id="hex">#FF462D</strong></div>
+      <div class="stage-bottom"><span>3 canali PWM <strong>indipendenti</strong></span><span>Miscela della luce <strong>additiva</strong></span></div>
+    </section>
+  </div>
+  <div class="detail-grid">
+    <section class="panel panel-pad wires" aria-labelledby="wiring-title">
+      <p class="label-top">03 / Realizza il circuito</p><h2 id="wiring-title">Collegamenti Arduino</h2>
+      <svg viewBox="0 0 640 328" role="img" aria-label="Arduino Uno D9, D10 e D11 ciascuno con resistenza da 220 ohm ai tre anodi del LED RGB a catodo comune; catodo a GND">
+        <rect x="20" y="23" width="166" height="267" rx="17" fill="#e5f1f3" stroke="#a6c1cf" stroke-width="2"/>
+        <text x="103" y="56" font-size="17" font-weight="900" text-anchor="middle" fill="#255269">ARDUINO</text><text x="103" y="76" font-size="13" font-weight="800" text-anchor="middle" fill="#648698">UNO</text>
+        <rect x="38" y="91" width="130" height="185" rx="9" fill="#cae4ea" opacity=".58"/>
+        <g font-size="13" font-weight="800" fill="#294a60"><text x="70" y="121">D9 ~</text><text x="60" y="169">D10 ~</text><text x="60" y="217">D11 ~</text><text x="65" y="263">GND</text></g>
+        <g fill="#fff" stroke="#577888" stroke-width="2"><circle cx="175" cy="116" r="5"/><circle cx="175" cy="164" r="5"/><circle cx="175" cy="212" r="5"/><circle cx="175" cy="259" r="5"/></g>
+        <path d="M180 116 H305 M180 164 H305 M180 212 H305" fill="none" stroke-width="3" stroke-linecap="round"/>
+        <path d="M180 116 H305" stroke="#df6561" stroke-width="3"/><path d="M180 164 H305" stroke="#36a676" stroke-width="3"/><path d="M180 212 H305" stroke="#518cca" stroke-width="3"/>
+        <g><rect x="305" y="102" width="68" height="28" rx="8" fill="#fff7dc" stroke="#bea65d" stroke-width="2"/><rect x="305" y="150" width="68" height="28" rx="8" fill="#fff7dc" stroke="#bea65d" stroke-width="2"/><rect x="305" y="198" width="68" height="28" rx="8" fill="#fff7dc" stroke="#bea65d" stroke-width="2"/><g text-anchor="middle" font-size="11" font-weight="850" fill="#77612b"><text x="339" y="120">220 Ω</text><text x="339" y="168">220 Ω</text><text x="339" y="216">220 Ω</text></g></g>
+        <path d="M373 116 H470 M373 164 H470 M373 212 H470" fill="none" stroke-width="3"/><path d="M373 116 H470" stroke="#df6561" stroke-width="3"/><path d="M373 164 H470" stroke="#36a676" stroke-width="3"/><path d="M373 212 H470" stroke="#518cca" stroke-width="3"/>
+        <rect x="470" y="74" width="147" height="177" rx="15" fill="#f6f9fb" stroke="#c5d6de" stroke-width="2"/><text x="543" y="99" text-anchor="middle" font-size="14" font-weight="850" fill="#294a5f">LED RGB</text>
+        <g font-size="12" font-weight="900"><circle cx="480" cy="116" r="5" fill="#e95756"/><text x="499" y="121" fill="#c95751">R</text><circle cx="480" cy="164" r="5" fill="#35a870"/><text x="499" y="169" fill="#278b5b">G</text><circle cx="480" cy="212" r="5" fill="#4088d4"/><text x="499" y="217" fill="#397db5">B</text></g>
+        <path d="M531 116 H570 V238 M531 164 H570 M531 212 H570" fill="none" stroke="#8fa7b0" stroke-width="2" stroke-dasharray="4 5"/>
+        <path d="M570 238 V281 H211 V259 H180" fill="none" stroke="#5d7788" stroke-width="3" stroke-linejoin="round"/><circle cx="570" cy="238" r="5" fill="#5d7788"/>
+        <text x="558" y="311" text-anchor="end" font-size="12" fill="#66818e">Catodo comune → GND</text>
+      </svg>
+      <p class="footnote">Usa <strong>una resistenza da 220 Ω per ogni colore</strong> e un LED RGB <strong>a catodo comune</strong>. La disposizione fisica dei quattro piedini dipende dal componente: verifica il datasheet.</p>
+    </section>
+    <section class="panel signal-panel" aria-labelledby="signal-title">
+      <p class="label-top">04 / Osserva il segnale</p><div class="signal-head"><h2 id="signal-title" style="margin:0">PWM sui tre pin</h2><small>≈ 490 Hz · T ≈ 2,04 ms</small></div>
+      <div class="signal-row"><label style="color:#e95756" for="red">R</label><svg viewBox="0 0 720 56" preserveAspectRatio="none" aria-label="Onda quadra canale rosso"><path id="wave-r" stroke="#e95756"/></svg><div class="percent" id="p-r">100%</div></div>
+      <div class="signal-row"><label style="color:#35a870" for="green">G</label><svg viewBox="0 0 720 56" preserveAspectRatio="none" aria-label="Onda quadra canale verde"><path id="wave-g" stroke="#35a870"/></svg><div class="percent" id="p-g">27%</div></div>
+      <div class="signal-row"><label style="color:#4088d4" for="blue">B</label><svg viewBox="0 0 720 56" preserveAspectRatio="none" aria-label="Onda quadra canale blu"><path id="wave-b" stroke="#4088d4"/></svg><div class="percent" id="p-b">18%</div></div>
+      <div class="explain"><b>Come funziona?</b> <code>analogWrite(pin, valore)</code> usa valori da <b>0 a 255</b>. A parità di periodo, aumentando il <b>duty cycle</b> aumenta la frazione di tempo in cui il pin è HIGH. Per esempio, <b>128 ≈ 50%</b>. L'occhio integra i lampeggiamenti rapidi e percepisce una luminosità media.</div>
+    </section>
+  </div>
+  <section class="panel code-panel" aria-labelledby="sketch-title">
+    <div class="code-title"><div><p class="label-top">05 / Dal simulatore al banco</p><h2 id="sketch-title">Sketch Arduino d'esempio</h2></div><button class="action" id="copy-button" type="button">Copia lo sketch</button></div>
+    <p class="code-lead">Questo sketch imposta il LED sui valori iniziali mostrati nel simulatore. Per cambiarli durante l'esecuzione, inserisci altri valori in <code>analogWrite()</code> o usa tre potenziometri con <code>analogRead()</code> e <code>map()</code>.</p>
+    <pre><code id="arduino-code"><span class="comment">// LED RGB a catodo comune: 220 Ω in serie a ogni colore</span>
+<span class="key">const int</span> pinRosso = <span class="num">9</span>;
+<span class="key">const int</span> pinVerde = <span class="num">10</span>;
+<span class="key">const int</span> pinBlu   = <span class="num">11</span>;
+
+<span class="key">void</span> setup() {
+  pinMode(pinRosso, OUTPUT);
+  pinMode(pinVerde, OUTPUT);
+  pinMode(pinBlu, OUTPUT);
+}
+
+<span class="key">void</span> loop() {
+  <span class="comment">// PWM: 0 = spento, 255 = acceso al massimo</span>
+  analogWrite(pinRosso, <span id="code-r">255</span>);
+  analogWrite(pinVerde, <span id="code-g">70</span>);
+  analogWrite(pinBlu,   <span id="code-b">45</span>);
+}</code></pre>
+  </section>
+  <p class="footer-note">OMG Virtual Lab · Simulazione didattica. I colori dello schermo sono indicativi: il risultato reale dipende dal LED, dalle resistenze e dalla percezione visiva. Non è un collegamento USB con Arduino.</p>
+</main>
+<script>
+(() => {
+  const ids = ['r','g','b'];
+  const sliders = {r:document.querySelector('#red'), g:document.querySelector('#green'), b:document.querySelector('#blue')};
+  const period = 1000/490;
+  const elements = {};
+  for (const c of ids) elements[c] = {
+    number:document.querySelector(`#${c}-number`),
+    duty:document.querySelector(`#${c}-duty`),
+    on:document.querySelector(`#${c}-on`),
+    wave:document.querySelector(`#wave-${c}`),
+    percent:document.querySelector(`#p-${c}`),
+    code:document.querySelector(`#code-${c}`)
+  };
+  function waveform(value) {
+    const duty = value/255, w = 720, base = 46, top = 9, block = 180;
+    if (value === 0) return `M0 ${base} H${w}`;
+    if (value === 255) return `M0 ${top} H${w}`;
+    let d = `M0 ${base}`;
+    for (let i = 0; i < 4; i++) {
+      const x = i*block;
+      d += ` H${x} V${top} H${(x+block*duty).toFixed(2)} V${base} H${x+block}`;
+    }
+    return d;
+  }
+  function update() {
+    const v = Object.fromEntries(ids.map(c => [c, Number(sliders[c].value)]));
+    const color = `rgb(${v.r},${v.g},${v.b})`;
+    const hex = `#${ids.map(c=>v[c].toString(16).padStart(2,'0')).join('').toUpperCase()}`;
+    const peak = Math.max(v.r,v.g,v.b)/255;
+    for (const c of ids) {
+      const pct = 100*v[c]/255, rounded = `${Math.round(pct)}%`;
+      const els = elements[c];
+      els.number.textContent = v[c];
+      els.duty.textContent = rounded;
+      els.percent.textContent = rounded;
+      els.on.textContent = `${(period*v[c]/255).toFixed(2).replace('.',',')} ms`;
+      els.wave.setAttribute('d', waveform(v[c]));
+      els.code.textContent = v[c];
+      sliders[c].closest('.channel').style.setProperty('--pct', `${pct}%`);
+    }
+    document.querySelector('#led').style.background = peak === 0 ? 'linear-gradient(125deg,#b5c2c8,#566a74)' : `radial-gradient(ellipse at 35% 22%,#ffffffa9 0%,#ffffff30 13%,transparent 42%), linear-gradient(125deg,${color},${color})`;
+    document.querySelector('#led').style.boxShadow = peak === 0 ? 'inset -12px -9px 22px #101c2b40, inset 7px 8px 19px #ffffff6b' : `inset -12px -9px 22px #101c2b40, inset 7px 8px 19px #ffffff6b, 0 0 ${Math.round(18+25*peak)}px ${color}`;
+    document.querySelector('#aura').style.background = `radial-gradient(circle,rgba(${v.r},${v.g},${v.b},${0.56*peak}),rgba(${v.r},${v.g},${v.b},${0.2*peak}) 37%, transparent 70%)`;
+    document.querySelector('#hex').textContent = hex;
+    document.querySelector('#swatch').style.background = color;
+  }
+  ids.forEach(c => sliders[c].addEventListener('input',update));
+  document.querySelector('#white-button').addEventListener('click',() => {ids.forEach(c=>sliders[c].value=255); update();});
+  document.querySelector('#off-button').addEventListener('click',() => {ids.forEach(c=>sliders[c].value=0); update();});
+  document.querySelector('#copy-button').addEventListener('click', async () => {
+    const button = document.querySelector('#copy-button');
+    const code = `// LED RGB a catodo comune: 220 ohm in serie a ogni colore\nconst int pinRosso = 9;\nconst int pinVerde = 10;\nconst int pinBlu = 11;\n\nvoid setup() {\n  pinMode(pinRosso, OUTPUT);\n  pinMode(pinVerde, OUTPUT);\n  pinMode(pinBlu, OUTPUT);\n}\n\nvoid loop() {\n  analogWrite(pinRosso, ${sliders.r.value});\n  analogWrite(pinVerde, ${sliders.g.value});\n  analogWrite(pinBlu, ${sliders.b.value});\n}`;
+    try {
+      await navigator.clipboard.writeText(code);
+      button.textContent = 'Sketch copiato ✓';
+    } catch (err) {
+      const area = document.createElement('textarea'); area.value=code; area.style.position='fixed'; area.style.left='-9999px';document.body.appendChild(area);area.select();const success=document.execCommand('copy');area.remove();button.textContent=success?'Sketch copiato ✓':'Seleziona il codice per copiarlo';
+    }
+    window.setTimeout(()=>{button.textContent='Copia lo sketch'},2400);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
