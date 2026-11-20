@@ -1,170 +1,331 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#152a42">
-<meta name="description" content="OMG Virtual Lab: osserva come la resistenza riduce il flusso di corrente, sperimenta la legge di Ohm e confronta i risultati con il multimetro.">
-<title>La corrente incontra la resistenza · OMG Virtual Lab</title>
-<style>
-:root{--navy:#152a42;--navy2:#0d2539;--ink:#20334b;--muted:#62788c;--paper:#f6f8fb;--line:#dce5eb;--blue:#176cba;--bluepale:#e9f4fd;--orange:#ec7837;--orangepale:#fff3e9;--green:#138364;--red:#b84338;--shadow:0 12px 38px rgba(20,42,65,.065)}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #73b7f4;outline-offset:3px}
-.shell{max-width:1190px;margin:0 auto;padding:25px 22px 40px}
-.hero{border-radius:23px;background:var(--navy);color:#fff;position:relative;overflow:hidden;padding:26px 31px 29px}
-.hero:before{content:"";position:absolute;right:-95px;top:-80px;width:400px;height:280px;background:radial-gradient(circle,rgba(76,170,250,.18) 1.5px,transparent 2px) 0 0/17px 17px;transform:rotate(-10deg)}
-.hero .eyebrow{display:flex;gap:10px;align-items:center;position:relative;color:#8bcfff;text-transform:uppercase;letter-spacing:.17em;font-weight:800;font-size:11px}
-.mark{width:10px;height:10px;background:var(--orange);border-radius:3px;transform:rotate(45deg)}
-.hero h1{position:relative;font-size:clamp(28px,3.4vw,40px);line-height:1.15;letter-spacing:-.035em;margin:13px 0 8px}
-.hero p{position:relative;color:#d0ddea;max-width:740px;margin:0;font-size:15px}
-.navbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:19px 0 16px}
-.tabs{display:flex;gap:3px;padding:4px;background:#e5edf4;border-radius:13px}
-.tab{background:none;border:0;border-radius:10px;color:#536f84;font-weight:800;font-size:14px;padding:10px 18px}
-.tab[aria-selected=true]{background:#fff;color:#173a61;box-shadow:0 2px 9px #10283e16}
-.btn{border:0;background:var(--blue);color:#fff;font-weight:800;border-radius:11px;padding:11px 16px;font-size:13px;min-height:43px}
-.btn:hover{background:#0c599d}.btn.secondary{background:#e3f0fb;color:#1a5f91}.btn.secondary:hover{background:#cee7f9}
-.btn.outline{background:#fff;color:#245e8e;border:1px solid #b9d8ed}.btn.orange{background:var(--orange)}.btn.orange:hover{background:#d05e1f}
-.mode-label{color:#72899d;font-size:12px;font-weight:700}
-.workspace{display:grid;grid-template-columns:minmax(0,1.53fr) minmax(318px,.87fr);gap:18px;align-items:stretch}
-.panel{border:1px solid #e4ebf1;border-radius:20px;background:#fff;padding:23px;box-shadow:var(--shadow);min-width:0}
-.panel h2{color:var(--navy);font-size:19px;letter-spacing:-.025em;margin:0}
-.panel-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-bottom:13px}
-.subdued{font-size:12px;color:#6b8297}
-.stage{position:relative;border-radius:17px;overflow:hidden;background:#10273e;border:1px solid #1e415e}
-.stage canvas{display:block;width:100%;height:auto;aspect-ratio:860 / 368}
-.stage-overlay{position:absolute;pointer-events:none;inset:0;padding:14px 17px;display:flex;justify-content:space-between;align-items:flex-start}
-.stage-overlay span{border:1px solid #45637b;background:rgba(11,31,50,.86);border-radius:99px;color:#c1e3fb;padding:5px 10px;font-size:10px;letter-spacing:.06em;font-weight:800}
-.stage-legend{display:flex;align-items:center;gap:11px;color:#59758b;font-size:12px;margin:10px 2px 1px;flex-wrap:wrap}
-.stage-legend i{display:inline-block;width:9px;height:9px;background:#ffbc63;border-radius:50%;box-shadow:0 0 9px #ffb76b7c;margin-right:3px}
-.stage-legend strong{color:#1c5e93}.pause{margin-left:auto;background:#ecf3f8;border:1px solid #deebf4;border-radius:8px;padding:5px 10px;color:#315a7b;font-size:12px;font-weight:750}
-.control-section{margin-top:21px;padding-top:20px;border-top:1px solid #e7edf2}
-.control-header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:11px}
-.control-title{font-weight:800;font-size:16px;color:#20394f}.control-value{color:#b75d27;font-size:24px;font-weight:850;letter-spacing:-.035em;line-height:1}
-.control-caption{font-size:12px;color:#6a8093;margin-top:3px}
-.slider-wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:13px}
-.endpoint{font-size:11px;color:#7d8e9b;min-width:36px}.endpoint:last-child{text-align:right}
-input[type=range]{width:100%;accent-color:var(--orange);cursor:pointer;height:30px;margin:0}
-.presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
-.preset{background:#f6f9fc;border:1px solid #dfe8ee;color:#45647c;padding:7px 12px;border-radius:9px;font-weight:750;font-size:12px}
-.preset.active{background:#fff2e7;border-color:#f0bc94;color:#a94f18}
-.voltage-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}
-.voltage{background:#f6f9fc;border:1px solid #dfebf3;border-radius:10px;color:#45657d;min-height:42px;font-weight:800}
-.voltage:disabled{opacity:.66;cursor:not-allowed}.voltage[aria-pressed=true]{background:#e7f4ff;border-color:#73b8ec;color:#0f60a4;box-shadow:inset 0 0 0 1px #a3d2f3}
-.micro-note{font-size:12px;color:#667d90;margin:14px 0 0}
-.value-hero{background:#eff7ff;border:1px solid #cfe6f9;padding:20px;border-radius:15px;margin:12px 0 14px}
-.overline{font-weight:850;letter-spacing:.115em;text-transform:uppercase;font-size:10px;color:#627e98}
-.big-reading{color:#1263b1;font-size:clamp(32px,4vw,48px);font-weight:850;letter-spacing:-.05em;line-height:1.16;margin:5px 0 7px;font-variant-numeric:tabular-nums}
-.value-hero .tiny{font-size:12px;color:#456f91}
-.meter{height:8px;background:#d5e7f7;border-radius:20px;overflow:hidden;margin-top:15px}.meter>span{display:block;width:10%;height:100%;border-radius:20px;background:linear-gradient(90deg,#63c7f7,#1d79c3);transition:width .22s}
-.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.data-box{border:1px solid #e1e9ee;background:#fafcfe;border-radius:12px;padding:12px 13px}
-.data-box small{color:#758ca0;font-size:11px;font-weight:750;display:block}.data-box strong{display:block;font-size:20px;letter-spacing:-.03em;color:#1f415f;margin-top:2px;font-variant-numeric:tabular-nums}
-.formula{border-top:1px solid #e7edf2;margin-top:20px;padding-top:16px}
-.formula h3{font-size:13px;color:#273f55;margin:0 0 10px}.equation{background:#f6f8fa;border:1px solid #e5edf2;border-radius:10px;padding:12px;text-align:center;color:#254b6b;font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
-.interpretation{margin-top:14px;background:#f7fbfe;border-left:3px solid #6eb5ea;border-radius:0 9px 9px 0;padding:11px 12px;color:#45627b;font-size:13px;line-height:1.52}
-.warn{display:none;background:#fff2e8;border:1px solid #f6c9a8;color:#955015;font-size:12px;border-radius:11px;margin-top:13px;padding:12px}.warn.show{display:block}
-.challenge{background:#fff7f0;border:1px solid #f4dfca;border-radius:15px;padding:17px 19px;margin-bottom:16px}
-.challenge-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.challenge h3{font-size:16px;margin:0;color:#9b511e}.challenge p{font-size:13px;color:#715d4e;margin:5px 0 10px}.challenge-target{font-size:22px;color:#a9541c;font-weight:850;letter-spacing:-.025em}.challenge-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.score{border-radius:999px;background:#ffe3c5;color:#92521b;font-size:12px;padding:5px 10px;font-weight:850}.feedback{font-size:13px;border-radius:9px;padding:10px 12px;margin-top:11px;display:none;font-weight:700}.feedback.visible{display:block}.feedback.good{background:#e5f6ee;color:#17734e}.feedback.bad{background:#feece7;color:#a3422e}
-.below{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:19px}.below .panel{box-shadow:none}
-.below h2{margin-bottom:8px}.steps{display:flex;gap:10px;align-items:flex-start;margin-top:15px}.step-num{min-width:26px;height:26px;display:grid;place-items:center;color:#1564a5;background:#e2f2ff;font-weight:800;border-radius:8px;font-size:12px}.steps p{margin:1px 0 0;color:#586f83;font-size:13px}
-.small-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:850;color:#6d8498}
-.log-head{display:flex;justify-content:space-between;gap:9px;align-items:baseline;flex-wrap:wrap}
-.log-empty{margin-top:16px;color:#71889d;font-size:13px;background:#f6f9fc;border-radius:10px;padding:16px;text-align:center}
-.table-scroll{overflow-x:auto;margin-top:13px}table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}th{text-align:left;color:#698197;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:9px 7px;border-bottom:1px solid #dfe8ef}td{padding:9px 7px;border-bottom:1px solid #edf1f5;font-variant-numeric:tabular-nums}
-td input{width:82px;max-width:100%;border:1px solid #cfdde7;border-radius:7px;padding:6px 7px;background:white;color:var(--ink);font-size:12px}
-.log-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.remove-row{background:transparent;color:#a44c46;border:0;font-size:18px;padding:0 5px}
-.footer{font-size:11px;color:#718498;text-align:center;margin:23px 0 0}.footer a{color:#4d789f;text-decoration:none}
-.hidden{display:none!important}
-@media(max-width:900px){.workspace{grid-template-columns:1fr}.below{grid-template-columns:1fr}.panel{padding:21px}}
-@media(max-width:570px){.shell{padding:11px 10px 26px}.hero{border-radius:17px;padding:21px}.hero p{font-size:13px}.navbar{gap:9px}.tabs{width:100%}.tab{flex:1}.panel{padding:16px;border-radius:16px}.stage-overlay{padding:9px}.stage-overlay span{font-size:9px;padding:4px 7px}.control-value{font-size:22px}.stage-legend{font-size:11px}.control-section{margin-top:17px}.voltage-options{gap:5px}.data-box strong{font-size:17px}.value-hero{padding:16px}.below{gap:12px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8f3">
+  <meta name="description" content="OMG Virtual Lab: scopri come la resistenza influenza la corrente, sperimenta la legge di Ohm e registra le misure di laboratorio.">
+  <title>La corrente incontra la resistenza · OMG Virtual Lab</title>
+  <style>
+    /* OMG design system — Partitore / Oscilloscopio visual language · 20/11/2026 */
+    :root {
+      --ink: #20262f;
+      --ink-soft: #39434d;
+      --muted: #65757b;
+      --teal: #169587;
+      --teal-dark: #10786f;
+      --teal-soft: #e9f7f2;
+      --yellow: #ffdc59;
+      --yellow-soft: #fff9df;
+      --coral: #ef615b;
+      --coral-soft: #fff0ed;
+      --canvas: #f8f9f5;
+      --white: #ffffff;
+      --border: #303942;
+      --line: #dce6e0;
+      --shadow: 0 9px 25px rgba(30,50,42,.05);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 3% -6%, rgba(249,223,172,.38), transparent 36%),
+        radial-gradient(ellipse at 94% 28%, rgba(163,232,218,.30), transparent 44%),
+        linear-gradient(120deg, #fff9ef 0%, #ffffff 47%, #effbf6 100%);
+      font: 15px/1.58 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; }
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 3px solid var(--teal); outline-offset: 3px;
+    }
+    a { color: inherit; }
+    .shell { max-width: 1210px; margin: auto; padding: 24px 24px 36px; }
+
+    /* OMG identity */
+    .site-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 15px; min-width: 0; text-decoration: none; }
+    .brand-symbol { width: 58px; height: 56px; flex: 0 0 58px; position: relative; }
+    .brand-symbol::before, .brand-symbol::after {
+      content: ""; position: absolute; width: 43px; height: 43px;
+      border: 2px solid var(--ink); border-radius: 8px;
+    }
+    .brand-symbol::before { background: var(--yellow); top: 0; left: 0; transform: rotate(-8deg); }
+    .brand-symbol::after { background: #53c9b8; top: 11px; left: 14px; transform: rotate(7deg); }
+    .brand-symbol span { position: absolute; left: 17px; top: 23px; z-index: 1; color: var(--ink); font-size: 15px; line-height: 1; font-weight: 900; letter-spacing: -.09em; transform: rotate(7deg); }
+    .brand-copy { display: grid; gap: 1px; }
+    .brand-kicker { font-size: 10px; letter-spacing: .16em; font-weight: 800; color: var(--muted); }
+    .brand-name { font-weight: 850; font-size: 19px; letter-spacing: -.04em; line-height: 1.15; }
+    .home-link {
+      display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
+      white-space: nowrap; color: var(--ink); background: #fff;
+      border: 1.5px solid var(--ink); border-radius: 999px;
+      padding: 10px 17px; font-size: 13px; font-weight: 750;
+      box-shadow: 3px 3px 0 var(--yellow); transition: transform .18s, box-shadow .18s;
+    }
+    .home-link:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--yellow); }
+    .hero { padding: 48px 0 29px; }
+    .eyebrow {
+      display: inline-block; transform: rotate(-2deg); transform-origin: left center;
+      background: var(--yellow); color: var(--ink);
+      border: 1.5px solid var(--ink); border-radius: 6px;
+      font-size: 10px; font-weight: 850; letter-spacing: .12em;
+      padding: 8px 12px; line-height: 1.25; box-shadow: 3px 3px 0 rgba(32,38,47,.10);
+    }
+    h1 { font-size: clamp(38px, 5.5vw, 71px); letter-spacing: -.065em; line-height: 1.055; font-weight: 850; max-width: 1050px; margin: 22px 0 15px; }
+    h1 .accent { color: var(--teal); }
+    h1 .dot { color: var(--coral); }
+    .hero p { color: #536269; font-size: clamp(14px, 1.35vw, 16px); max-width: 720px; margin: 0; line-height: 1.7; }
+
+    /* modes */
+    .navbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 9px 0 17px; }
+    .tabs { display: inline-flex; gap: 6px; background: rgba(255,255,255,.7); border: 1.5px solid var(--ink); padding: 5px; border-radius: 14px; }
+    .tab { border: 1.5px solid transparent; padding: 9px 19px; border-radius: 9px; color: var(--ink-soft); background: transparent; font-size: 13px; font-weight: 650; transition: background .15s, color .15s; }
+    .tab:hover:not([aria-selected="true"]) { background: var(--teal-soft); }
+    .tab[aria-selected="true"] { background: var(--teal); color: white; border-color: var(--teal-dark); }
+    .mode-label { font-size: 11px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; color: #667579; }
+
+    /* panels */
+    .workspace { display: grid; grid-template-columns: minmax(0,1.48fr) minmax(310px,.88fr); gap: 18px; align-items: stretch; }
+    .panel { min-width: 0; background: var(--white); border: 1.4px solid var(--border); border-radius: 20px; padding: 23px; box-shadow: var(--shadow); }
+    .panel h2 { color: var(--ink); font-size: 20px; letter-spacing: -.035em; font-weight: 750; line-height: 1.25; margin: 0; }
+    .panel-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .subdued { font-size: 11px; color: var(--muted); }
+    .stage { position: relative; overflow: hidden; border-radius: 15px; border: 1px solid #254749; background: #172e34; }
+    .stage canvas { display: block; width: 100%; height: auto; aspect-ratio: 860 / 368; }
+    .stage-overlay { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; position: absolute; inset: 0; pointer-events: none; padding: 13px; }
+    .stage-overlay span { color: #cef9eb; background: rgba(16,39,44,.83); border: 1px solid rgba(177,236,219,.30); border-radius: 99px; font-size: 9px; font-weight: 750; letter-spacing: .055em; padding: 6px 10px; line-height: 1.35; }
+    .stage-overlay span:last-child { color: #ffe9a2; }
+    .stage-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 12px; margin: 11px 2px 0; color: var(--muted); }
+    .stage-legend i { display: inline-block; width: 9px; height: 9px; background: var(--yellow); border-radius: 50%; margin-right: 4px; vertical-align: baseline; box-shadow: 0 0 8px #f3d46290; }
+    .pause { margin-left: auto; min-width: 84px; border: 1px solid #bfdcd4; border-radius: 9px; padding: 6px 11px; color: #176e65; background: var(--teal-soft); font-size: 12px; font-weight: 650; }
+    .pause:hover { border-color: var(--teal); }
+    .control-section { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 18px; }
+    .control-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    .control-title { font-size: 15px; font-weight: 730; letter-spacing: -.01em; }
+    .control-symbol { font-size: 14px; font-weight: 500; color: var(--muted); }
+    .control-value { font-size: 24px; line-height: 1; color: var(--coral); font-weight: 760; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+    .control-value.teal { color: var(--teal); }
+    .control-caption { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .slider-wrap { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 13px; }
+    .endpoint { font-size: 11px; color: #718087; white-space: nowrap; }
+    .slider-wrap .endpoint:last-child { text-align: right; }
+    input[type="range"] { width: 100%; height: 29px; accent-color: var(--teal); cursor: pointer; margin: 0; }
+    .presets { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+    .preset, .voltage { border: 1px solid #cadbd5; background: #f9fcfa; color: var(--ink-soft); border-radius: 9px; font-size: 12px; font-weight: 650; padding: 8px 12px; transition: background .15s, border-color .15s; }
+    .preset:hover:not(.active), .voltage:hover:not(:disabled):not([aria-pressed="true"]) { border-color: var(--teal); background: var(--teal-soft); }
+    .preset.active { background: var(--yellow-soft); color: var(--ink); border-color: #dfbb45; box-shadow: inset 0 0 0 1px #f3df8e; }
+    .voltage-options { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; margin-top: 11px; }
+    .voltage { padding: 9px 6px; font-size: 13px; min-height: 42px; }
+    .voltage[aria-pressed="true"] { border-color: var(--teal-dark); color: white; background: var(--teal); }
+    .voltage:disabled { opacity: .6; }
+    .micro-note { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 14px 0 0; }
+    .check-line { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+    .check-line input { margin: 3px 0 0; accent-color: var(--teal); width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* readings */
+    .value-hero { background: linear-gradient(135deg,#edf9f5,#f7fcfa); border: 1px solid #bbded2; border-radius: 15px; padding: 19px; margin: 7px 0 12px; }
+    .overline { font-size: 10px; color: #5d7e76; letter-spacing: .11em; text-transform: uppercase; font-weight: 750; }
+    .big-reading { color: var(--teal-dark); font-size: clamp(34px,3.8vw,49px); font-weight: 790; letter-spacing: -.065em; line-height: 1.1; margin: 5px 0 9px; font-variant-numeric: tabular-nums; }
+    .value-hero .tiny { font-size: 12px; color: #4e746b; }
+    .meter { height: 7px; background: #cfe9e1; overflow: hidden; border-radius: 100px; margin-top: 14px; }
+    .meter > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#65cfbb,#169587); transition: width .2s ease; }
+    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .data-box { border: 1px solid #e3e9e5; background: #fbfcfa; border-radius: 12px; padding: 12px 13px; }
+    .data-box small { color: #778582; font-size: 11px; display: block; }
+    .data-box strong { color: var(--ink); font-weight: 750; font-size: 19px; letter-spacing: -.04em; display: block; margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .formula { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .formula h3 { margin: 0 0 9px; font-weight: 750; font-size: 14px; }
+    .equation { padding: 12px 9px; background: #f8faf7; border: 1px solid #dbe5de; border-radius: 10px; text-align: center; color: #385451; font-weight: 690; font-size: 15px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .interpretation { color: #556b66; background: #f7fbf8; border-left: 3px solid var(--teal); margin-top: 13px; padding: 10px 12px; font-size: 12px; border-radius: 0 9px 9px 0; line-height: 1.65; }
+    .warn { display: none; border: 1px solid #f6b5ad; border-radius: 11px; background: var(--coral-soft); color: #9d3e37; padding: 11px 12px; font-size: 12px; margin-top: 14px; }
+    .warn.show { display: block; }
+    .note-model { padding-top: 13px; border-top: 1px dashed #d9e5df; margin-top: 16px; }
+    .note-model strong { color: var(--ink-soft); font-weight: 750; }
+
+    /* challenge */
+    .challenge { border: 1.4px solid var(--border); border-radius: 17px; background: #fffdf5; padding: 20px 23px; margin-bottom: 17px; box-shadow: var(--shadow); }
+    .challenge-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .challenge h3 { font-size: 18px; letter-spacing: -.025em; margin: 0; font-weight: 750; }
+    .challenge p { font-size: 13px; color: #66746c; margin: 5px 0 8px; }
+    .score { background: var(--yellow); border: 1px solid #e1c358; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 750; white-space: nowrap; }
+    .challenge-target { color: var(--teal-dark); font-size: 25px; font-weight: 800; letter-spacing: -.045em; }
+    .challenge-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 11px; }
+    .btn { border: 1.4px solid var(--ink); background: var(--coral); color: #fff; border-radius: 10px; font-weight: 720; padding: 9px 15px; font-size: 12px; min-height: 39px; transition: transform .15s, background .15s; }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); background: #dc514c; }
+    .btn.secondary { border-color: #9fd4c6; background: var(--teal-soft); color: #176e64; }
+    .btn.secondary:hover:not(:disabled) { background: #d8f1e8; }
+    .btn.outline { background: white; color: var(--ink-soft); border-color: #bfcfca; }
+    .btn.outline:hover:not(:disabled) { background: #f4faf7; }
+    .btn:disabled { opacity: .46; }
+    .feedback { display: none; border-radius: 10px; padding: 10px 12px; margin-top: 12px; font-size: 13px; }
+    .feedback.visible { display: block; }
+    .feedback.good { background: #e8f9ed; color: #23754c; }
+    .feedback.bad { background: var(--coral-soft); color: #a4463d; }
+
+    /* practice and log */
+    .below { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; margin-top: 18px; }
+    .below h2 { margin-bottom: 11px; }
+    .steps { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; }
+    .step-num { flex: 0 0 26px; width: 26px; height: 26px; display: grid; place-items: center; font-size: 12px; font-weight: 770; border: 1px solid #e7cf68; border-radius: 7px; color: var(--ink); background: var(--yellow-soft); }
+    .steps p { margin: 1px 0 0; color: #65716f; font-size: 13px; line-height: 1.55; }
+    .steps p strong { color: var(--ink-soft); font-weight: 720; }
+    .small-label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; font-weight: 750; color: var(--teal-dark); }
+    .log-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .log-empty { border: 1px dashed #c9dad3; background: #fafcf9; color: #7e8b86; text-align: center; padding: 18px 10px; margin-top: 16px; border-radius: 11px; font-size: 12px; }
+    .table-scroll { overflow-x: auto; margin-top: 13px; }
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; font-size: 12px; }
+    th { text-align: left; border-bottom: 1px solid #dce5de; color: #6c7d77; font-size: 10px; letter-spacing: .04em; font-weight: 750; padding: 10px 7px; }
+    td { border-bottom: 1px solid #eaf0eb; padding: 9px 7px; font-variant-numeric: tabular-nums; }
+    td input { width: 85px; max-width: 100%; border: 1px solid #c7d7cf; background: #fff; border-radius: 7px; padding: 6px; font-size: 12px; color: var(--ink); }
+    .log-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .remove-row { color: #c4504b; background: transparent; border: 0; padding: 0 5px; font-size: 18px; }
+    .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #7a8680; margin: 28px 1px 0; border-top: 1px solid rgba(32,38,47,.12); padding-top: 15px; }
+    .footer a { color: var(--teal-dark); text-underline-offset: 3px; font-weight: 700; }
+    .hidden { display: none !important; }
+    @media (max-width: 950px) {
+      .workspace { grid-template-columns: minmax(0,1fr); }
+      .below { grid-template-columns: minmax(0,1fr); }
+      h1 { font-size: clamp(39px,6.2vw,60px); }
+    }
+    @media (max-width: 610px) {
+      .shell { padding: 15px 12px 29px; }
+      .brand { gap: 9px; }
+      .brand-symbol { transform: scale(.80); transform-origin: left center; flex-basis: 47px; width: 47px; }
+      .brand-name { font-size: 16px; }
+      .brand-kicker { font-size: 8px; }
+      .home-link { font-size: 11px; padding: 8px 10px; box-shadow: 2px 2px 0 var(--yellow); }
+      .hero { padding: 38px 3px 25px; }
+      .eyebrow { font-size: 9px; padding: 7px 9px; }
+      h1 { font-size: clamp(34px,9vw,49px); margin: 19px 0 12px; line-height: 1.09; }
+      .hero p { font-size: 13px; }
+      .navbar { gap: 8px; }
+      .tabs { width: 100%; }
+      .tab { flex: 1; }
+      .mode-label { font-size: 10px; }
+      .panel { padding: 16px; border-radius: 17px; }
+      .panel h2 { font-size: 18px; }
+      .stage-overlay { padding: 7px; }
+      .stage-overlay span { padding: 4px 6px; font-size: 7.8px; letter-spacing: 0; }
+      .stage-legend { font-size: 11px; }
+      .control-section { margin-top: 16px; padding-top: 15px; }
+      .control-value { font-size: 21px; }
+      .big-reading { font-size: 41px; }
+      .data-box strong { font-size: 17px; }
+      .below { gap: 13px; }
+      .challenge { padding: 16px; }
+    }
+    @media (max-width: 365px) {
+      .brand-name { font-size: 14px; }
+      .home-link { padding: 7px 8px; font-size: 10px; }
+      .stage-overlay span { font-size: 7px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
 <main class="shell">
-<header class="hero">
-  <div class="eyebrow"><i class="mark" aria-hidden="true"></i> OMG · Virtual Lab</div>
-  <h1>La corrente incontra la resistenza</h1>
-  <p>Più resistenza, meno corrente. Stringi il passaggio, osserva le cariche in movimento e scopri cosa cambia quando aumenti la tensione.</p>
-</header>
-<div class="navbar">
-  <div class="tabs" role="tablist" aria-label="Modalità laboratorio">
-    <button class="tab" type="button" role="tab" aria-selected="true" data-tab="explore">Esplora</button>
-    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="challenge">Sfida</button>
-  </div>
-  <span class="mode-label">Esperienza 01 · Legge di Ohm</span>
-</div>
-<section id="challenge" class="challenge hidden" aria-label="Sfida">
- <div class="challenge-top"><h3>Riesci a controllare il flusso?</h3><span class="score" id="score">0 punti</span></div>
- <p id="challengeIntro">Modifica la resistenza per raggiungere la corrente richiesta.</p>
- <div class="challenge-target" id="challengeTarget">10 mA</div>
- <div class="challenge-actions"><button type="button" class="btn orange" id="checkChallenge">Verifica</button><button type="button" class="btn secondary" id="nextChallenge">Nuova sfida</button></div>
- <div class="feedback" id="challengeFeedback" role="status" aria-live="polite"></div>
-</section>
-<section class="workspace" aria-label="Simulazione del flusso di corrente">
-  <div class="panel">
-    <div class="panel-head"><h2>Dentro il circuito</h2><span class="subdued">Modello visivo interattivo</span></div>
-    <div class="stage" id="stage">
-      <canvas id="flow" width="860" height="368" role="img" aria-label="Conduttore con strozzatura variabile e cariche elettriche in movimento"></canvas>
-      <div class="stage-overlay"><span id="directionLabel">→ CORRENTE CONVENZIONALE</span><span id="pinchLabel">RESTRINGIMENTO · 48%</span></div>
+  <header class="site-header">
+    <a class="brand" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer" aria-label="OMG — Elettroni e dintorni, torna al sito">
+      <span class="brand-symbol" aria-hidden="true"><span>OMG!</span></span>
+      <span class="brand-copy"><span class="brand-kicker">ELETTRONI E DINTORNI</span><span class="brand-name">OMG Virtual Lab</span></span>
+    </a>
+    <a class="home-link" href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it ↗</a>
+  </header>
+
+  <section class="hero" aria-labelledby="page-title">
+    <span class="eyebrow">ELETTRONICA · LABORATORIO INTERATTIVO</span>
+    <h1 id="page-title">La corrente incontra<br><span class="accent">la resistenza</span><span class="dot">.</span></h1>
+    <p>Più resistenza, meno corrente. Stringi il passaggio, osserva le cariche in movimento e scopri cosa cambia quando aumenti la tensione.</p>
+  </section>
+
+  <nav class="navbar" aria-label="Modalità del laboratorio">
+    <div class="tabs" role="tablist" aria-label="Modalità laboratorio">
+      <button class="tab" type="button" role="tab" aria-selected="true" data-tab="explore">Esplora</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="challenge">Sfida</button>
     </div>
-    <div class="stage-legend"><span><i aria-hidden="true"></i> Puntini = rappresentazione delle cariche</span><button type="button" class="pause" id="pauseBtn" aria-pressed="false">Ⅱ Pausa</button></div>
-    <div class="control-section">
-      <div class="control-header"><div><div class="control-title">Resistenza <span style="font-weight:500;color:#7e91a1">R</span></div><div class="control-caption">Sposta il cursore: il passaggio cambia ampiezza</div></div><output class="control-value" id="resistanceOut" for="resistance">1 kΩ</output></div>
-      <div class="slider-wrap"><span class="endpoint">100 Ω</span><input type="range" id="resistance" min="0" max="12" step="1" value="6" aria-label="Valore della resistenza"><span class="endpoint">10 kΩ</span></div>
-      <div class="presets" aria-label="Valori rapidi della resistenza">
-        <button class="preset" type="button" data-r="220">220 Ω</button><button class="preset" type="button" data-r="1000">1 kΩ</button><button class="preset" type="button" data-r="2200">2,2 kΩ</button><button class="preset" type="button" data-r="4700">4,7 kΩ</button>
+    <span class="mode-label">ESPERIMENTO 01 · LEGGE DI OHM</span>
+  </nav>
+
+  <section id="challenge" class="challenge hidden" aria-label="Sfida">
+    <div class="challenge-top"><h3>Riesci a controllare il flusso?</h3><span class="score" id="score">0 punti</span></div>
+    <p id="challengeIntro">Modifica la resistenza per raggiungere la corrente richiesta.</p>
+    <div class="challenge-target" id="challengeTarget">10 mA</div>
+    <div class="challenge-actions"><button type="button" class="btn orange" id="checkChallenge">Verifica</button><button type="button" class="btn secondary" id="nextChallenge">Nuova sfida</button></div>
+    <div class="feedback" id="challengeFeedback" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="workspace" aria-label="Simulazione del flusso di corrente">
+    <div class="panel">
+      <div class="panel-head"><h2>Dentro il circuito</h2><span class="subdued">Modello visivo interattivo</span></div>
+      <div class="stage" id="stage">
+        <canvas id="flow" width="860" height="368" role="img" aria-label="Conduttore con strozzatura variabile e cariche elettriche in movimento"></canvas>
+        <div class="stage-overlay"><span id="directionLabel">→ CORRENTE CONVENZIONALE</span><span id="pinchLabel">STROZZATURA · 50%</span></div>
+      </div>
+      <div class="stage-legend"><span><i aria-hidden="true"></i> Puntini = rappresentazione delle cariche</span><button type="button" class="pause" id="pauseBtn" aria-pressed="false">Ⅱ Pausa</button></div>
+      <div class="control-section">
+        <div class="control-header"><div><div class="control-title">Resistenza <span class="control-symbol">R</span></div><div class="control-caption">Sposta il cursore: il passaggio cambia ampiezza</div></div><output class="control-value" id="resistanceOut" for="resistance">1 kΩ</output></div>
+        <div class="slider-wrap"><span class="endpoint">100 Ω</span><input type="range" id="resistance" min="0" max="12" step="1" value="6" aria-label="Valore della resistenza"><span class="endpoint">10 kΩ</span></div>
+        <div class="presets" aria-label="Valori rapidi della resistenza">
+          <button class="preset" type="button" data-r="220">220 Ω</button><button class="preset active" type="button" data-r="1000">1 kΩ</button><button class="preset" type="button" data-r="2200">2,2 kΩ</button><button class="preset" type="button" data-r="4700">4,7 kΩ</button>
+        </div>
+      </div>
+      <div class="control-section">
+        <div class="control-header"><div><div class="control-title">Tensione del generatore <span class="control-symbol">V</span></div><div class="control-caption">Aumenta la spinta mantenendo la resistenza</div></div><output class="control-value teal" id="voltageOut">5 V</output></div>
+        <div class="voltage-options" aria-label="Selezione della tensione">
+          <button type="button" class="voltage" data-v="3" aria-pressed="false">3 V</button><button type="button" class="voltage" data-v="5" aria-pressed="true">5 V</button><button type="button" class="voltage" data-v="9" aria-pressed="false">9 V</button><button type="button" class="voltage" data-v="12" aria-pressed="false">12 V</button>
+        </div>
+        <p class="micro-note"><label class="check-line"><input type="checkbox" id="electrons"><span>Mostra il verso degli elettroni invece della corrente convenzionale</span></label></p>
       </div>
     </div>
-    <div class="control-section">
-      <div class="control-header"><div><div class="control-title">Tensione del generatore <span style="font-weight:500;color:#7e91a1">V</span></div><div class="control-caption">Aumenta la spinta mantenendo la resistenza</div></div><output class="control-value" id="voltageOut" style="color:#156baa">5 V</output></div>
-      <div class="voltage-options" aria-label="Selezione della tensione">
-        <button type="button" class="voltage" data-v="3" aria-pressed="false">3 V</button><button type="button" class="voltage" data-v="5" aria-pressed="true">5 V</button><button type="button" class="voltage" data-v="9" aria-pressed="false">9 V</button><button type="button" class="voltage" data-v="12" aria-pressed="false">12 V</button>
+
+    <aside class="panel" aria-label="Letture e spiegazioni">
+      <div class="panel-head"><h2>Che cosa sta succedendo?</h2><span class="subdued">Calcoli in tempo reale</span></div>
+      <div class="value-hero">
+        <div class="overline">Intensità della corrente · I</div>
+        <div class="big-reading" id="currentReadout" aria-live="polite">5 mA</div>
+        <div class="tiny">A tensione costante, aumentando R diminuisce I.</div>
+        <div class="meter" aria-hidden="true"><span id="meterFill" style="width:19%"></span></div>
       </div>
-      <p class="micro-note"><label><input type="checkbox" id="electrons"> Mostra il verso degli elettroni invece della corrente convenzionale</label></p>
+      <div class="data-grid">
+        <div class="data-box"><small>Tensione · V</small><strong id="voltageReadout">5 V</strong></div>
+        <div class="data-box"><small>Resistenza · R</small><strong id="resistanceReadout">1 kΩ</strong></div>
+        <div class="data-box" style="grid-column:span 2"><small>Potenza dissipata · P</small><strong id="powerReadout">25 mW</strong></div>
+      </div>
+      <div class="formula"><h3>La legge di Ohm</h3><div class="equation" id="equation">I = 5 V ÷ 1000 Ω = 5 mA</div><p class="interpretation" id="interpretation">Con 5 V e 1 kΩ circolano 5 mA. A tensione costante, raddoppiando R la corrente si dimezza.</p></div>
+      <div class="warn" id="powerWarning"><strong>Attenzione alla potenza!</strong> Questo carico supera 0,25 W: un normale resistore da ¼ W non è adeguato.</div>
+      <p class="micro-note note-model"><strong>Nota sul modello:</strong> la strozzatura è un'analogia, non l'aspetto fisico del resistore. Nel circuito reale la corrente in serie è uguale in ogni punto: le cariche non si consumano e non si accumulano davanti alla resistenza. Animazione qualitativa, non in scala.</p>
+    </aside>
+  </section>
+
+  <section class="below" aria-label="Attività didattica">
+    <div class="panel">
+      <h2>Prova, osserva, ragiona</h2>
+      <div class="steps"><span class="step-num">1</span><p><strong>Fissa la tensione a 5 V.</strong> Porta la resistenza da 1 kΩ a 2,2 kΩ: la corrente aumenta o diminuisce?</p></div>
+      <div class="steps"><span class="step-num">2</span><p><strong>Blocca la resistenza a 1 kΩ.</strong> Passa da 3 V a 9 V: cosa cambia nell'animazione e nel valore calcolato?</p></div>
+      <div class="steps"><span class="step-num">3</span><p><strong>Vai al banco.</strong> Monta un circuito in sicurezza, misura la corrente con il multimetro collegato in serie e confronta il valore con <strong>I = V/R</strong>.</p></div>
+      <p class="micro-note">Nella simulazione è presente un unico resistore ideale e un generatore ideale. La situazione reale può differire per tolleranze e limiti degli strumenti e dell'alimentazione.</p>
     </div>
-  </div>
-  <aside class="panel" aria-label="Letture e spiegazioni">
-    <div class="panel-head"><h2>Che cosa sta succedendo?</h2><span class="subdued">Calcoli in tempo reale</span></div>
-    <div class="value-hero">
-      <div class="overline">Intensità della corrente · I</div>
-      <div class="big-reading" id="currentReadout" aria-live="polite">5,00 mA</div>
-      <div class="tiny">A tensione costante, aumentando R diminuisce I.</div>
-      <div class="meter" aria-hidden="true"><span id="meterFill"></span></div>
+    <div class="panel">
+      <div class="log-head"><h2>Il tuo quaderno di misura</h2><span class="small-label">Teoria ↔ laboratorio</span></div>
+      <p class="micro-note" style="margin-top:0">Salva i valori della simulazione, poi inserisci la corrente misurata al banco (mA).</p>
+      <div id="logEmpty" class="log-empty">Nessuna misura registrata.</div>
+      <div class="table-scroll"><table id="logTable" class="hidden"><thead><tr><th>V</th><th>R</th><th>I teorica</th><th>I misurata (mA)</th><th>Errore %</th><th></th></tr></thead><tbody id="logBody"></tbody></table></div>
+      <div class="log-actions"><button class="btn secondary" type="button" id="addLog">+ Registra valori</button><button class="btn outline" type="button" id="exportLog" disabled>Esporta CSV</button><button class="btn outline" type="button" id="clearLog" disabled>Cancella</button></div>
+      <p class="micro-note" id="logMessage" role="status" aria-live="polite"></p>
     </div>
-    <div class="data-grid">
-      <div class="data-box"><small>Tensione · V</small><strong id="voltageReadout">5 V</strong></div>
-      <div class="data-box"><small>Resistenza · R</small><strong id="resistanceReadout">1 kΩ</strong></div>
-      <div class="data-box" style="grid-column:span 2"><small>Potenza dissipata · P</small><strong id="powerReadout">25 mW</strong></div>
-    </div>
-    <div class="formula"><h3>La legge di Ohm</h3><div class="equation" id="equation">I = V ÷ R = 5 V ÷ 1000 Ω = 5 mA</div><p class="interpretation" id="interpretation">La resistenza limita la corrente che attraversa il circuito.</p></div>
-    <div class="warn" id="powerWarning"><strong>Attenzione alla potenza!</strong><br>Questo carico supera 0,25 W: un normale resistore da ¼ W non è adeguato.</div>
-    <p class="micro-note"><strong>Nota sul modello:</strong> la strozzatura è un'analogia, non l'aspetto fisico del resistore. Nel circuito reale la corrente in serie è uguale in ogni punto: le cariche non si consumano e non si accumulano davanti alla resistenza. Animazione qualitativa, non in scala.</p>
-  </aside>
-</section>
-<section class="below" aria-label="Attività didattica">
-  <div class="panel">
-    <h2>Prova, osserva, ragiona</h2>
-    <div class="steps"><span class="step-num">1</span><p><strong>Fissa la tensione a 5 V.</strong> Porta la resistenza da 1 kΩ a 2,2 kΩ: la corrente aumenta o diminuisce?</p></div>
-    <div class="steps"><span class="step-num">2</span><p><strong>Blocca la resistenza a 1 kΩ.</strong> Passa da 3 V a 9 V: cosa cambia nell'animazione e nel valore calcolato?</p></div>
-    <div class="steps"><span class="step-num">3</span><p><strong>Vai al banco.</strong> Monta un circuito in sicurezza, misura la corrente con il multimetro collegato in serie e confronta il valore con <strong>I = V/R</strong>.</p></div>
-    <p class="micro-note">Nella simulazione è presente un unico resistore ideale e un generatore ideale. La situazione reale può differire per tolleranze e limiti degli strumenti e dell'alimentazione.</p>
-  </div>
-  <div class="panel">
-    <div class="log-head"><h2>Il tuo quaderno di misura</h2><span class="small-label">Teoria ↔ laboratorio</span></div>
-    <p class="micro-note" style="margin-top:0">Salva i valori della simulazione, poi inserisci la corrente misurata al banco (mA).</p>
-    <div id="logEmpty" class="log-empty">Nessuna misura registrata.</div>
-    <div class="table-scroll"><table id="logTable" class="hidden"><thead><tr><th>V</th><th>R</th><th>I teorica</th><th>I misurata (mA)</th><th>Errore %</th><th></th></tr></thead><tbody id="logBody"></tbody></table></div>
-    <div class="log-actions"><button class="btn secondary" type="button" id="addLog">+ Registra valori</button><button class="btn outline" type="button" id="exportLog" disabled>Esporta CSV</button><button class="btn outline" type="button" id="clearLog" disabled>Cancella</button></div>
-    <p class="micro-note" id="logMessage" role="status" aria-live="polite"></p>
-  </div>
-</section>
-<footer class="footer">OMG – Elettroni e dintorni · Virtual Lab · <a href="https://sites.google.com/view/omg-elettroniedintorni/" target="_blank" rel="noopener noreferrer">Torna al sito</a></footer>
+  </section>
+  <footer class="footer"><span>OMG! · Elettroni e dintorni · Virtual Lab</span><span>Un laboratorio per sperimentare, osservare e capire · <a href="https://ohmmygod.it" target="_blank" rel="noopener noreferrer">ohmmygod.it ↗</a></span></footer>
 </main>
 <script>
+
 (()=>{'use strict';
 const values=[100,150,220,330,470,680,1000,1500,2200,3300,4700,6800,10000];
 const el=id=>document.getElementById(id);
@@ -203,31 +364,31 @@ const particles=Array.from({length:82},(_,i)=>({p:(i+rand(i+7))/82,lane:rand(i*3
 function halfAt(x){const n=pinch(),base=79,cut=n*63;return base-cut*Math.exp(-Math.pow((x-W/2)/119,4)/1.3)}
 function pathPipe(){ctx.beginPath();for(let x=22;x<=838;x+=5){let y=H/2-halfAt(x);if(x===22)ctx.moveTo(x,y);else ctx.lineTo(x,y)}for(let x=838;x>=22;x-=5){ctx.lineTo(x,H/2+halfAt(x))}ctx.closePath()}
 function draw(time){ctx.clearRect(0,0,W,H);
- const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#142d45');bg.addColorStop(1,'#091d32');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#26363a');bg.addColorStop(1,'#142a31');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
  ctx.strokeStyle='#fff';ctx.globalAlpha=.035;ctx.lineWidth=1;for(let x=20;x<W;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=20;y<H;y+=32){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.globalAlpha=1;
  // Energia applicata tra le estremità; frecce esplicative, non collegamento elettrico completo.
- ctx.save();ctx.font='800 18px system-ui';ctx.textBaseline='middle';ctx.fillStyle='#8bd3ff';ctx.fillText('+',25,184);ctx.fillStyle='#9eb5c8';ctx.fillText('−',823,184);ctx.restore();
- ctx.save();ctx.shadowColor='#40b8ec';ctx.shadowBlur=25;pathPipe();ctx.fillStyle='#142f49';ctx.fill();ctx.restore();
- pathPipe();const tint=ctx.createLinearGradient(0,0,0,H);tint.addColorStop(0,'#2d7196');tint.addColorStop(.5,'#236487');tint.addColorStop(1,'#2d7196');ctx.fillStyle=tint;ctx.fill();
+ ctx.save();ctx.font='800 18px system-ui';ctx.textBaseline='middle';ctx.fillStyle='#93e2d8';ctx.fillText('+',25,184);ctx.fillStyle='#b3c9c6';ctx.fillText('−',823,184);ctx.restore();
+ ctx.save();ctx.shadowColor='#46c4b7';ctx.shadowBlur=25;pathPipe();ctx.fillStyle='#18383d';ctx.fill();ctx.restore();
+ pathPipe();const tint=ctx.createLinearGradient(0,0,0,H);tint.addColorStop(0,'#2a797b');tint.addColorStop(.5,'#1d676d');tint.addColorStop(1,'#2a797b');ctx.fillStyle=tint;ctx.fill();
  ctx.save();pathPipe();ctx.clip();
  // Filamenti che si adeguano alla variazione di sezione.
- for(let j=-3;j<=3;j++){const f=j/4;ctx.beginPath();for(let x=25;x<=835;x+=6){const y=H/2+f*halfAt(x);if(x===25)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle=j===0?'rgba(126,219,244,.20)':'rgba(119,218,248,.095)';ctx.lineWidth=j===0?1.5:1;ctx.stroke()}
+ for(let j=-3;j<=3;j++){const f=j/4;ctx.beginPath();for(let x=25;x<=835;x+=6){const y=H/2+f*halfAt(x);if(x===25)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle=j===0?'rgba(163,243,229,.20)':'rgba(163,243,229,.095)';ctx.lineWidth=j===0?1.5:1;ctx.stroke()}
  // Corrente come rate di trasporto: stessa velocità lungo tutte le sezioni, nessun accumulo alla strettoia.
  for(const particle of particles){const x=22+particle.p*816;const y=H/2+particle.lane*halfAt(x)+Math.sin(time*.002+particle.phase)*1.2;
    if(x<26||x>834)continue;
-   ctx.beginPath();ctx.arc(x,y,particle.size,0,Math.PI*2);ctx.fillStyle=electrons?'#9de6ff':'#ffc37a';ctx.shadowColor=electrons?'#6ecdf7':'#ffb15e';ctx.shadowBlur=11;ctx.fill();ctx.shadowBlur=0;
+   ctx.beginPath();ctx.arc(x,y,particle.size,0,Math.PI*2);ctx.fillStyle=electrons?'#a4f1e6':'#ffdc59';ctx.shadowColor=electrons?'#63e0d3':'#ffdc59';ctx.shadowBlur=11;ctx.fill();ctx.shadowBlur=0;
  }
  ctx.restore();
  // Bordo della condotta, rinforzato sul restringimento.
- pathPipe();ctx.strokeStyle='rgba(154,214,246,.63)';ctx.lineWidth=3;ctx.stroke();
- ctx.beginPath();for(let x=290;x<=570;x+=4){let y=H/2-halfAt(x);if(x===290)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle='rgba(247,153,83,.65)';ctx.lineWidth=4;ctx.stroke();
+ pathPipe();ctx.strokeStyle='rgba(173,242,226,.63)';ctx.lineWidth=3;ctx.stroke();
+ ctx.beginPath();for(let x=290;x<=570;x+=4){let y=H/2-halfAt(x);if(x===290)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle='rgba(239,97,91,.78)';ctx.lineWidth=4;ctx.stroke();
  ctx.beginPath();for(let x=290;x<=570;x+=4){let y=H/2+halfAt(x);if(x===290)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
  // Tratti di quota che rendono leggibile l'ampiezza variabile.
- const x=W/2;ctx.strokeStyle='#ffc384';ctx.lineWidth=1.3;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x,H/2-halfAt(x)+4);ctx.lineTo(x,H/2+halfAt(x)-4);ctx.stroke();ctx.setLineDash([]);
+ const x=W/2;ctx.strokeStyle='#ffdc59';ctx.lineWidth=1.3;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x,H/2-halfAt(x)+4);ctx.lineTo(x,H/2+halfAt(x)-4);ctx.stroke();ctx.setLineDash([]);
  // Etichetta graduata inferiore.
- ctx.fillStyle='#99b5c9';ctx.font='13px system-ui';ctx.textAlign='center';ctx.fillText('RESTRINGIMENTO VARIABILE',W/2,H-22);
+ ctx.fillStyle='#a8cbc7';ctx.font='13px system-ui';ctx.textAlign='center';ctx.fillText('RESTRINGIMENTO VARIABILE',W/2,H-22);
  // Indicatori estremi del percorso del flusso.
- ctx.fillStyle='#77aaca';ctx.font='11px system-ui';ctx.fillText(electrons?'verso gli elettroni  ←':'corrente convenzionale  →',W/2,41);
+ ctx.fillStyle='#b5d6d1';ctx.font='11px system-ui';ctx.fillText(electrons?'verso gli elettroni  ←':'corrente convenzionale  →',W/2,41);
 }
 let last=0;function animate(ts){let dt=Math.min(50,ts-(last||ts));last=ts;
  if(!paused){const mA=currentmA();const speed=.06+1.32*Math.log1p(mA)/Math.log1p(120);const inc=dt/1000*speed*.31;
@@ -257,6 +418,7 @@ el('exportLog').addEventListener('click',()=>{const rows=[['Tensione (V)','Resis
 if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){paused=true;el('pauseBtn').textContent='▶ Riprendi';el('pauseBtn').setAttribute('aria-pressed','true')}
 update();renderLog();requestAnimationFrame(animate);
 })();
+
 </script>
 </body>
 </html>
