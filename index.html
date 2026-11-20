@@ -4,64 +4,154 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#00b9c8">
-  <meta name="description" content="OMG Virtual Lab: simulatori interattivi per imparare elettrotecnica, elettronica e laboratorio.">
-  <title>OMG Virtual Lab — Simulatori didattici</title>
+  <meta name="description" content="OMG Virtual Lab: esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.">
+  <title>OMG Virtual Lab — Il tuo laboratorio virtuale</title>
   <link rel="stylesheet" href="assets/omg.css">
   <style>
-    /* Solo il riquadro introduttivo: mantiene intatto lo stile OMG condiviso. */
-    .omg-home-hero { background: linear-gradient(120deg, #d9e8f1 0%, #bed8e7 62%, #9fc4d7 100%); }
-    .omg-home-hero p { color: #31495a; }
+    .omg-home-hero.omg-home-hero--split{
+      background: linear-gradient(135deg,#d9edf7 0%, #ebf6fb 55%, #f5fbfd 100%);
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr);
+      gap:20px;
+      align-items:stretch;
+    }
+    .omg-home-hero--split p{max-width:62ch}
+    .omg-hero-copy{display:flex;flex-direction:column;justify-content:center}
+    .omg-hero-copy h1{margin-top:10px}
+    .omg-hero-mark{
+      display:flex;align-items:center;justify-content:center;
+      min-height:190px;border:2px solid var(--omg-ink);border-radius:18px;
+      background:rgba(255,255,255,.72);box-shadow:4px 4px 0 var(--omg-ink);
+      padding:18px;
+    }
+    .omg-mark-card{width:min(100%,290px)}
+    .omg-mark-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .omg-mark-title{font-size:30px;line-height:.95;font-weight:950;letter-spacing:-.07em;color:var(--omg-ink)}
+    .omg-mark-title b{display:block;color:#009fac}
+    .omg-mark-sub{margin-top:10px;font-size:16px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#3f6170}
+    .omg-mark-url{margin-top:12px;font-size:20px;font-weight:900;letter-spacing:-.04em;color:var(--omg-ink)}
+    .omg-mark-url span{color:#009fac}
+    .omg-double-square{position:relative;width:64px;height:64px;flex:none}
+    .omg-double-square::before,.omg-double-square::after{content:"";position:absolute;width:42px;height:42px;border:3px solid var(--omg-ink);border-radius:8px}
+    .omg-double-square::before{left:4px;top:16px;background:#ffe45d}
+    .omg-double-square::after{right:2px;top:4px;background:#00b9c8}
+    .omg-category-head{display:block;margin:0 0 12px}
+    .omg-category-head h2{margin-bottom:6px}
+    .omg-category-head p{max-width:62ch}
+    .omg-category-num{display:none}
+    @media (max-width: 780px){
+      .omg-home-hero.omg-home-hero--split{grid-template-columns:1fr}
+      .omg-hero-mark{min-height:unset}
+      .omg-mark-card{width:100%}
+    }
   </style>
 </head>
 <body>
 <main class="omg-page">
   <div class="omg-brandline"><span class="omg-wordmark">OMG <b>Virtual Lab</b></span><span class="omg-kicker">Elettroni e dintorni</span></div>
-  <section class="omg-home-hero">
-    <span class="omg-eyebrow">ESPERIENZE INTERATTIVE</span>
-    <h1>Il tuo laboratorio virtuale.</h1>
-    <p>Esplora, modifica e osserva. Esperienze virtuali per capire meglio i circuiti e gli strumenti.</p>
+
+  <section class="omg-home-hero omg-home-hero--split">
+    <div class="omg-hero-copy">
+      <span class="omg-eyebrow">ESPERIENZE INTERATTIVE</span>
+      <h1>Il tuo laboratorio virtuale.</h1>
+      <p>Esplora, modifica e osserva. Esperienze virtuali per capire meglio i circuiti, i componenti e gli strumenti.</p>
+    </div>
+    <div class="omg-hero-mark" aria-label="OMG mygod punto it">
+      <div class="omg-mark-card">
+        <div class="omg-mark-top">
+          <div class="omg-mark-title">OMG<b>Virtual Lab</b></div>
+          <div class="omg-double-square" aria-hidden="true"></div>
+        </div>
+        <div class="omg-mark-sub">Elettroni e dintorni</div>
+        <div class="omg-mark-url">omg<span>mygod</span>.it</div>
+      </div>
+    </div>
   </section>
-<section class="omg-category" aria-labelledby="cat01">
-  <div class="omg-category-head"><div><h2 id="cat01">Circuiti ed elettronica</h2><p>Esperimenti interattivi sui principi dell’elettronica.</p></div></div>
-  <div class="omg-grid">
-    <article class="omg-tile">
-      <h3>La legge di Ohm</h3>
-      <p>Modifica tensione e resistenza, osserva corrente, circuito e grafici.</p>
-      <a class="omg-link" href="Ele-Legge-Ohm/" target="_blank" rel="noopener noreferrer" aria-label="Apri La legge di Ohm in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-    <article class="omg-tile">
-      <h3>Resistenze: serie, parallelo e misto</h3>
-      <p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p>
-      <a class="omg-link" href="Ele-resistenze-serie-parallelo/" target="_blank" rel="noopener noreferrer" aria-label="Apri Resistenze: serie, parallelo e misto in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-    <article class="omg-tile">
-      <h3>Resistenza e corrente</h3>
-      <p>Scopri come una resistenza modifica il flusso di corrente.</p>
-      <a class="omg-link" href="Lab-resistenza-corrente/" target="_blank" rel="noopener noreferrer" aria-label="Apri Resistenza e corrente in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-    <article class="omg-tile">
-      <h3>Codice colori delle resistenze</h3>
-      <p>Esplora le bande dei resistori e mettiti alla prova.</p>
-      <a class="omg-link" href="Lab-Codice-colori-Resistenze/" target="_blank" rel="noopener noreferrer" aria-label="Apri Codice colori delle resistenze in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-  </div>
-</section>
-<section class="omg-category" aria-labelledby="cat02">
-  <div class="omg-category-head"><div><h2 id="cat02">Laboratorio elettrico ed elettronico</h2><p>Strumenti, misure e sperimentazione pratica.</p></div></div>
-  <div class="omg-grid">
-    <article class="omg-tile">
-      <h3>Multimetro virtuale</h3>
-      <p>Esercitati con il selettore, i puntali e le misure elettriche.</p>
-      <a class="omg-link" href="Lab-multimetro/" target="_blank" rel="noopener noreferrer" aria-label="Apri Multimetro virtuale in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-    <article class="omg-tile">
-      <h3>Dentro la breadboard</h3>
-      <p>Esplora le piste, monta i componenti e sperimenta i collegamenti.</p>
-      <a class="omg-link" href="Lab-breadboard/" target="_blank" rel="noopener noreferrer" aria-label="Apri Dentro la breadboard in una nuova scheda">Apri simulatore <span aria-hidden="true">↗</span></a>
-    </article>
-  </div>
-</section>
-  <p class="omg-small">OMG Virtual Lab · I simulatori sono strumenti didattici: confronta sempre i risultati con le misure reali. <a href="catalogo/">Catalogo compatto per Google Sites</a>.</p>
+
+  <section class="omg-category" aria-labelledby="cat01">
+    <div class="omg-category-head">
+      <div>
+        <h2 id="cat01">Elettronica e componenti</h2>
+        <p>Esperimenti interattivi sulle basi dell'elettronica e sul comportamento dei principali componenti.</p>
+      </div>
+    </div>
+    <div class="omg-grid">
+      <article class="omg-tile">
+        <h3>La legge di Ohm</h3>
+        <p>Modifica tensione e resistenza, osserva corrente, circuito e grafici.</p>
+        <a class="omg-link" href="Ele-Legge-Ohm/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Resistenze: serie, parallelo e misto</h3>
+        <p>Confronta i tre collegamenti e osserva come cambiano tensioni e correnti.</p>
+        <a class="omg-link" href="Ele-resistenze-serie-parallelo/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Resistenza e corrente</h3>
+        <p>Scopri come una resistenza modifica il flusso di corrente nel circuito.</p>
+        <a class="omg-link" href="Lab-resistenza-corrente/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Codice colori delle resistenze</h3>
+        <p>Esplora le bande dei resistori e mettiti alla prova con la modalità sfida.</p>
+        <a class="omg-link" href="Lab-Codice-colori-Resistenze/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Il potenziometro</h3>
+        <p>Visualizza i terminali, osserva la variazione di tensione e capisci come si comporta il cursore.</p>
+        <a class="omg-link" href="Ele-potenziometro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="omg-category" aria-labelledby="cat02">
+    <div class="omg-category-head">
+      <div>
+        <h2 id="cat02">Laboratorio elettrico ed elettronico</h2>
+        <p>Strumenti, misure e prototipazione per capire meglio il lavoro al banco e le connessioni reali.</p>
+      </div>
+    </div>
+    <div class="omg-grid">
+      <article class="omg-tile">
+        <h3>Multimetro virtuale</h3>
+        <p>Esercitati con selettore, puntali e misure elettriche in un ambiente guidato.</p>
+        <a class="omg-link" href="Lab-multimetro/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Dentro la breadboard</h3>
+        <p>Esplora le piste, monta i componenti e sperimenta i collegamenti prima del banco reale.</p>
+        <a class="omg-link" href="Lab-breadboard/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="omg-category" aria-labelledby="cat03">
+    <div class="omg-category-head">
+      <div>
+        <h2 id="cat03">Arduino e microcontrollori</h2>
+        <p>Prime esperienze interattive con letture analogiche, PWM e sensori.</p>
+      </div>
+    </div>
+    <div class="omg-grid">
+      <article class="omg-tile">
+        <h3>ADC — Ingresso analogico</h3>
+        <p>Capisci come Arduino legge un valore analogico e lo trasforma in numeri interpretabili.</p>
+        <a class="omg-link" href="Ard-ADC/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>PWM e LED</h3>
+        <p>Osserva il duty cycle e la variazione della luminosità del LED al cambiare del segnale PWM.</p>
+        <a class="omg-link" href="Ard-PWM/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="omg-tile">
+        <h3>Sensore a ultrasuoni</h3>
+        <p>Visualizza trigger, echo, tempo di ritorno e distanza misurata dal sensore.</p>
+        <a class="omg-link" href="Ard-sensore-ultrasuoni/" target="_blank" rel="noopener noreferrer">Apri simulatore <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </section>
+
+  <p class="omg-small">OMG Virtual Lab · I simulatori sono strumenti didattici: confronta sempre i risultati con le misure reali in laboratorio. <a href="catalogo/">Catalogo compatto per Google Sites</a>.</p>
 </main>
 </body>
 </html>
