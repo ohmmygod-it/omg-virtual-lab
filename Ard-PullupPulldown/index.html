@@ -363,6 +363,98 @@
       h1{font-size:36px}
       .step .step-name{font-size:11px}
     }
+
+    /* === OMG / FINITURA LEGGERA — SELETTORI E STRUMENTAZIONE ===
+       Le linee dei grafici vengono rifinite nel canvas, non cambia il modello. */
+    .step-header{margin-bottom:10px}
+    .section-label{font-weight:760;letter-spacing:.14em;color:#718592}
+    .step-summary{font-weight:490;color:#8795a0}
+    .steps{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;
+      padding:6px;background:#fff;border:2px solid var(--ink);
+      border-radius:20px;box-shadow:4px 5px 0 var(--yellow);
+      margin-bottom:24px;
+    }
+    .steps .step,.steps .step.active{
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      min-height:64px;padding:10px 12px;border:0;border-radius:13px;
+      box-shadow:none;transform:none;gap:0;
+    }
+    .steps .step{color:#53616c;background:transparent}
+    .steps .step:hover:not(.active){background:#f2f7f5}
+    .steps .step.active{color:#fff;background:#20242c}
+    .steps .step-no{display:none}
+    .steps .step>span:last-child{display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0}
+    .steps .step-name{font-size:15px;font-weight:760;line-height:1.15;letter-spacing:-.025em}
+    .steps .step-sub{font-size:11px;font-weight:440;line-height:1.2;color:#71828d;margin:0}
+    .steps .step.active .step-sub{color:#c9d1d5}
+
+    /* Le intestazioni seguono la gerarchia OMG: assertive ma non tutte extra-bold. */
+    .panel,.concept,.mini-panel,.quiz{
+      border:1px solid #d7e2e6;box-shadow:0 5px 19px rgba(28,45,52,.042);
+    }
+    .panel-pad{padding:19px 20px}
+    .section-head h2{font-size:16px;font-weight:740;letter-spacing:-.025em}
+    .section-head .dot{border:0;width:8px;height:8px}
+    .microtag{
+      font-size:10px;font-weight:720;letter-spacing:.06em;
+      background:#f8faf9;border:1px solid #e0e9e8;color:#687d87;
+    }
+    .state-tile{border:1px solid #e2eae9;background:#f8faf9}
+    .state-tile .sm{font-weight:700;letter-spacing:.085em}
+    .state-tile .big{font-size:20px;font-weight:790;letter-spacing:-.035em}
+    .btn-state b{font-weight:740}
+    .press{font-weight:790;box-shadow:3px 3px 0 var(--ink)}
+    .lab-tip{border-left-width:3px;background:#f0f8f6}
+    .lab-tip strong{font-weight:760}
+
+    /* Oscilloscopio: pannello pulito, griglia e segnale sottili. */
+    .scope{border:1px solid #263f4c;border-radius:12px;background:#142833}
+    .scope-top{font-weight:660;letter-spacing:.085em;color:#abc3cb}
+    .scope-legend{font-weight:610;color:#c4d6db;gap:14px}
+    .scope-legend i{height:2px;box-shadow:none}
+    .scope-legend .digital i{box-shadow:none}
+    .scope-insight{font-weight:480;border:1px solid #deebea;background:#f5faf9;color:#4d6870}
+    .scope-insight b{font-weight:720}
+    .scope-caption{font-weight:440;color:#778d98}
+    .chart-clear{border:1px solid #b9c8ce;border-radius:9px;box-shadow:none;font-weight:650;padding:7px 11px;color:#3d5663}
+    .chart-clear:hover{border-color:var(--teal);background:#f1f8f7}
+    .controls{border-top:1px solid #e8eef0}
+    .range-label,.resistance-wrap label{font-weight:720}
+    .range-label b{font-weight:700}
+    .resistance-wrap select{border:1px solid #c3d0d4;border-radius:10px;font-weight:700}
+    .r-current{font-weight:580}
+    .controls-note{border-width:1px;font-weight:430}
+    .concept-head h2{font-size:19px;font-weight:750}
+    .concept-head p{font-weight:430}
+    .tag{font-weight:700}
+    .resistor-explainer{border:1px solid #ecdcae;background:#fffaef}
+    .resistor-explainer strong{font-weight:750;font-size:14px}
+    .resistor-formula{border-width:1px;font-weight:720}
+    .mini-panel h3{font-weight:750;font-size:15px}
+    .state-table td{font-weight:570}
+    .state-table th{font-weight:700}
+    .pill{font-weight:750}
+    .copy{border:1px solid #b8c8ce;box-shadow:none;font-weight:720}
+    .quiz-kicker{font-weight:750}
+    .quiz h3{font-weight:780;font-size:20px}
+    .quiz-q{font-weight:550}
+    .answer{border:1px solid #cdd9dc;font-weight:720}
+    .feedback{font-weight:540}
+    .quiz-next{font-weight:720}
+    @media(max-width:770px){
+      .steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+      .steps .step,.steps .step.active{min-height:60px;padding:9px 7px}
+      .steps .step-name{font-size:13px}
+      .steps .step-sub{font-size:10px}
+    }
+    @media(max-width:520px){
+      .steps{padding:5px;border-radius:16px}
+      .steps .step,.steps .step.active{border-radius:10px;min-height:57px}
+      .panel-pad{padding:15px 13px}
+      .section-head h2{font-size:14px}
+      .state-tile .big{font-size:18px}
+    }
   </style>
 </head>
 <body>
@@ -788,24 +880,24 @@
       const y=analogY(v),limit=v===1.5||v===3;
       ctx.strokeStyle=limit?'rgba(248,216,89,.5)':'rgba(165,206,212,.22)';
       ctx.setLineDash(limit?[5,5]:[]);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(L+graphW,y);ctx.stroke();ctx.setLineDash([]);
-      ctx.fillStyle=limit?'#eed680':'#b3ccd4';ctx.font='bold 10px system-ui';ctx.textAlign='right';
+      ctx.fillStyle=limit?'#eed680':'#b3ccd4';ctx.font='550 10px system-ui';ctx.textAlign='right';
       ctx.fillText(`${String(v).replace('.',',')} V`,L-5,y+3);
     });
-    ctx.fillStyle='#ca9b7d';ctx.font='700 10px system-ui';ctx.textAlign='left';
+    ctx.fillStyle='#ca9b7d';ctx.font='500 10px system-ui';ctx.textAlign='left';
     ctx.fillText('zona non garantita',L+7,analogY(3)+12);
     ctx.strokeStyle='rgba(165,206,212,.2)';
     for(const value of ['HIGH','LOW']){
       const y=digitalY(value);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(L+graphW,y);ctx.stroke();
-      ctx.fillStyle='#f1d56e';ctx.font='bold 10px system-ui';ctx.textAlign='right';ctx.fillText(value==='HIGH'?'1':'0',L-8,y+3);
+      ctx.fillStyle='#f1d56e';ctx.font='550 10px system-ui';ctx.textAlign='right';ctx.fillText(value==='HIGH'?'1':'0',L-8,y+3);
     }
-    ctx.font='800 10px system-ui';ctx.fillStyle='#9cbfc9';ctx.textAlign='left';
+    ctx.font='660 10px system-ui';ctx.fillStyle='#9cbfc9';ctx.textAlign='left';
     ctx.fillText('TENSIONE ANALOGICA',L+5,11);
     ctx.fillStyle='#dbbd5f';ctx.fillText('LETTURA DIGITALE',L+5,bottomTop-8);
     const samples=state.samples,step=graphW/(samples.length-1);
     ctx.save();ctx.beginPath();ctx.rect(L,top,graphW,analogH);ctx.clip();
     ctx.beginPath();let drawn=false;
     samples.forEach((o,i)=>{if(!o)return;const x=L+i*step,y=analogY(o.v);if(!drawn){ctx.moveTo(x,y);drawn=true}else ctx.lineTo(x,y)});
-    const ac='#6cdef0';ctx.strokeStyle=ac;ctx.lineWidth=2.35;ctx.lineJoin='round';ctx.lineCap='round';ctx.shadowColor=ac;ctx.shadowBlur=6;ctx.stroke();ctx.shadowBlur=0;
+    const ac='#6cdef0';ctx.strokeStyle=ac;ctx.lineWidth=1.55;ctx.lineJoin='round';ctx.lineCap='round';ctx.shadowBlur=0;ctx.stroke();
     ctx.restore();
     ctx.save();ctx.beginPath();ctx.rect(L,bottomTop,graphW,digitalH);ctx.clip();
     ctx.beginPath();let prev=null;
@@ -816,7 +908,7 @@
       else {ctx.lineTo(x,prev);ctx.lineTo(x,y)}
       prev=y;
     });
-    ctx.strokeStyle='#f8d859';ctx.lineWidth=2.8;ctx.lineCap='square';ctx.lineJoin='miter';ctx.shadowColor='#f8d859';ctx.shadowBlur=5;ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle='#f8d859';ctx.lineWidth=1.8;ctx.lineCap='square';ctx.lineJoin='miter';ctx.shadowBlur=0;ctx.stroke();
     ctx.restore();
     // Le righe verticali marcano quando viene aggiunta una resistenza o premuto il pulsante.
     let rightmostLabel=Infinity;
@@ -828,11 +920,11 @@
       // Do not stack captions when students switch circuits in quick succession.
       if(rightmostLabel-x<94)continue;
       rightmostLabel=x;
-      ctx.font='bold 10px system-ui';ctx.textAlign=x>L+graphW*.78?'right':'left';ctx.fillStyle='#e8f3f4';
+      ctx.font='550 10px system-ui';ctx.textAlign=x>L+graphW*.78?'right':'left';ctx.fillStyle='#e8f3f4';
       const tx=x>L+graphW*.78?x-4:x+4;
       ctx.fillText(o.event,tx,bottomTop+digitalH+13);
     }
-    ctx.font='bold 10px system-ui';ctx.textAlign='right';ctx.fillStyle='#a4bdc8';
+    ctx.font='500 10px system-ui';ctx.textAlign='right';ctx.fillStyle='#a4bdc8';
     ctx.fillText('tempo →',L+graphW,h-3);
   }
   const quizQuestions=[
